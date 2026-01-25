@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paula Educa | Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</title>
+  <style>
+    :root {
+      --cor-primaria: #1e88e5;
+      --cor-secundaria: #f5f7fa;
+      --cor-destaque: #43a047;
+      --texto: #333;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--cor-secundaria);
+      color: var(--texto);
+    }
+
+    header {
+      background: var(--cor-primaria);
+      color: white;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    header img {
+      height: 60px;
+    }
+
+    nav {
+      background: #1565c0;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 12px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      padding: 30px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    section {
+      display: none;
+      animation: fade 0.4s ease-in-out;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    footer {
+      background: #0d47a1;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
+
+    .admin {
+      background: #fff3cd;
+      border: 1px solid #ffeeba;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+    }
+
+    button {
+      background: var(--cor-destaque);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img id="logo" src="LOGO_FUNDO_BRANCO_-removebg-preview.png" alt="Logo da Escola" />
+  <h1 id="tituloSite">Paula Educa</h1>
+</header>
+
+<nav>
+  <a href="#" onclick="mostrar('inicio')">Início</a>
+  <a href="#" onclick="mostrar('conteudos')">Conteúdos</a>
+  <a href="#" onclick="mostrar('atividades')">Atividades</a>
+  <a href="#" onclick="mostrar('simulados')">Simulados</a>
+  <a href="#" onclick="mostrar('resultados')">Resultados</a>
+</nav>
+
+<main>
+
+  <div class="admin">
+    <strong>Área do Administrador</strong>
+    <p>Edite textos, título do site e logotipo (URL da imagem).</p>
+    <label>Título do site:</label>
+    <input id="novoTitulo" />
+    <label>URL do logotipo:</label>
+    <input id="novaLogo" />
+    <button onclick="salvarAdmin()">Salvar Alterações</button>
+  </div>
+
+  <section id="inicio" class="active">
+    <div class="card" contenteditable="true" id="inicioTexto">
+      <h2>Bem-vindos!</h2>
+      <p>Esta é a plataforma educativa da Escola Municipal Professora Paula Aliomar Ribeiro Beltrão.</p>
+    </div>
+  </section>
+
+  <section id="conteudos">
+    <div class="card" contenteditable="true">Adicione aqui os conteúdos por série e disciplina.</div>
+  </section>
+
+  <section id="atividades">
+    <div class="card" contenteditable="true">Atividades interativas, exercícios e desafios.</div>
+  </section>
+
+  <section id="simulados">
+    <div class="card" contenteditable="true">Simulados online com correção automática.</div>
+  </section>
+
+  <section id="resultados">
+    <div class="card" contenteditable="true">Resultados, relatórios e desempenho dos alunos.</div>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 – Escola Municipal Professora Paula Aliomar Ribeiro Beltrão
+</footer>
+
+<script>
+  function mostrar(id) {
+    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function salvarAdmin() {
+    const titulo = document.getElementById('novoTitulo').value;
+    const logo = document.getElementById('novaLogo').value;
+
+    if (titulo) {
+      document.getElementById('tituloSite').innerText = titulo;
+      localStorage.setItem('tituloSite', titulo);
+    }
+
+    if (logo) {
+      document.getElementById('logo').src = logo;
+      localStorage.setItem('logoSite', logo);
+    }
+
+    alert('Alterações salvas com sucesso!');
+  }
+
+  window.onload = () => {
+    const tituloSalvo = localStorage.getItem('tituloSite');
+    const logoSalvo = localStorage.getItem('logoSite');
+
+    if (tituloSalvo) document.getElementById('tituloSite').innerText = tituloSalvo;
+    if (logoSalvo) document.getElementById('logo').src = logoSalvo;
+  };
+</script>
+
+</body>
+</html>
