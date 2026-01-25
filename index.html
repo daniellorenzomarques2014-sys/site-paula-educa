@@ -3,206 +3,251 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Português em Foco</title>
+<title>Portal Educacional Paula Aliomar</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+:root{
+  --primaria:#1e40af;
+  --secundaria:#0f172a;
+  --claro:#f8fafc;
+  --cinza:#e5e7eb;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background: #f1f5f9;
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Segoe UI',Tahoma,sans-serif;
+  background:linear-gradient(135deg,#e0e7ff,#f8fafc);
+  color:#111827;
+}
+
+/* TOPO */
+header{
+  position:fixed;
+  top:0;left:0;right:0;
+  height:90px;
+  background:white;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  box-shadow:0 2px 10px rgba(0,0,0,.1);
+  z-index:100;
+}
+
+header img{
+  height:70px;
+  max-width:200px;
+  object-fit:contain;
+}
+
+header h1{
+  margin-left:15px;
+  font-size:20px;
+  color:var(--primaria);
+}
+
+nav{
+  margin-left:auto;
+}
+
+nav a{
+  margin-left:15px;
+  text-decoration:none;
+  font-weight:600;
+  color:#1e293b;
 }
 
 /* BOTÃO ADMIN */
-#btn-admin {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  z-index: 1000;
+#btnAdmin{
+  position:fixed;
+  top:100px;
+  left:10px;
+  background:var(--primaria);
+  color:white;
+  border:none;
+  padding:10px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  z-index:99;
 }
 
 /* PAINEL ADMIN */
-#admin-panel {
-  position: fixed;
-  top: 0;
-  left: -280px;
-  width: 280px;
-  height: 100%;
-  background: #1e293b;
-  color: white;
-  padding: 20px;
-  transition: 0.3s;
-  overflow-y: auto;
-  z-index: 999;
+#admin{
+  position:fixed;
+  top:0;left:-320px;
+  width:320px;
+  height:100%;
+  background:var(--secundaria);
+  color:white;
+  padding:20px;
+  transition:.3s;
+  overflow-y:auto;
+  z-index:101;
 }
 
-/* LOGO */
-#admin-panel img {
-  width: 100%;
-  max-width: 220px;
-  display: block;
-  margin: 0 auto 20px auto;
+#admin h2{margin-bottom:15px;font-size:18px}
+
+#admin button{
+  width:100%;
+  margin-bottom:10px;
+  padding:10px;
+  background:#334155;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
 }
 
-/* BOTÕES ADMIN */
-#admin-panel button {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  background: #334155;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+#admin button:hover{background:#475569}
+
+/* CONTEÚDO */
+main{
+  padding:120px 20px 40px;
+  max-width:1200px;
+  margin:auto;
 }
 
-#admin-panel button:hover {
-  background: #475569;
+section{
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  margin-bottom:25px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
 }
 
-/* CONTEÚDO PRINCIPAL */
-#main-content {
-  padding: 80px 20px 20px 20px;
-  max-width: 1200px;
-  margin: auto;
+section h2{
+  color:var(--primaria);
+  margin-bottom:10px;
 }
 
-header {
-  text-align: center;
-  margin-bottom: 30px;
+/* MODAL SIMPLES */
+.modal{
+  display:none;
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,.6);
+  align-items:center;
+  justify-content:center;
+  z-index:200;
 }
 
-header img {
-  max-width: 280px;
-  width: 100%;
+.modal-content{
+  background:white;
+  width:90%;
+  max-width:600px;
+  padding:20px;
+  border-radius:10px;
 }
 
-nav {
-  margin-top: 20px;
-}
-
-nav a {
-  margin: 0 10px;
-  text-decoration: none;
-  color: #2563eb;
-  font-weight: bold;
-}
-
-section {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+.modal-content input,
+.modal-content textarea{
+  width:100%;
+  margin-bottom:10px;
+  padding:8px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- BOTÃO ADMIN -->
-<button id="btn-admin" onclick="abrirAdmin()">Administrador</button>
+<header>
+  <img src="logo.png" alt="Logotipo da Escola">
+  <h1>Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</h1>
+  <nav>
+    <a href="#">Início</a>
+    <a href="#">Conteúdos</a>
+    <a href="#">Atividades</a>
+    <a href="#">Simulados</a>
+    <a href="#">Resultados</a>
+  </nav>
+</header>
 
-<!-- PAINEL ADMINISTRADOR -->
-<div id="admin-panel">
-  <img src="logo.png" alt="Logotipo">
+<button id="btnAdmin" onclick="loginAdmin()">⚙️ Admin</button>
 
-  <h3>Área do Administrador</h3>
-
-  <button onclick="editarConteudo()">✏️ Editar Conteúdo</button>
-  <button onclick="enviarImagem()">🖼️ Enviar Imagens</button>
-  <button onclick="criarAtividade()">📘 Criar Atividade</button>
-  <button onclick="criarSimulado()">📝 Criar Simulado</button>
-  <button onclick="gerenciarMenus()">📂 Gerenciar Menus</button>
-  <button onclick="fecharAdmin()">❌ Fechar Painel</button>
+<div id="admin">
+  <h2>Área Administrativa</h2>
+  <button onclick="abrirModal('conteudo')">Criar Conteúdo</button>
+  <button onclick="abrirModal('atividade')">Criar Atividade</button>
+  <button onclick="abrirModal('simulado')">Criar Simulado</button>
+  <button onclick="abrirModal('imagem')">Enviar Imagem</button>
+  <button onclick="fecharAdmin()">Fechar</button>
 </div>
 
-<!-- CONTEÚDO DO SITE -->
-<div id="main-content">
-
-  <header>
-    <img src="logo.png" alt="Português em Foco">
-    <h1>PORTUGUÊS EM FOCO</h1>
-    <nav>
-      <a href="#">Início</a>
-      <a href="#">Conteúdos</a>
-      <a href="#">Simulados</a>
-      <a href="#">Resultados</a>
-      <a href="#">Contato</a>
-    </nav>
-  </header>
-
+<main>
   <section>
-    <h2>Bem-vindo!</h2>
-    <p>
-      Este ambiente foi criado para apoiar o ensino de Língua Portuguesa,
-      com atividades, simulados e conteúdos organizados por série.
-    </p>
+    <h2>Bem-vindo ao Portal Educacional</h2>
+    <p>Plataforma oficial da escola para organização de conteúdos, atividades e simulados.</p>
   </section>
 
-  <section>
+  <section id="areaConteudos">
     <h2>Conteúdos</h2>
-    <p>Aqui você poderá acessar textos, exercícios e materiais de estudo.</p>
+    <p>Nenhum conteúdo publicado ainda.</p>
   </section>
 
-  <section>
+  <section id="areaAtividades">
+    <h2>Atividades</h2>
+    <p>Nenhuma atividade disponível.</p>
+  </section>
+
+  <section id="areaSimulados">
     <h2>Simulados</h2>
-    <p>Realize simulados com correção automática e acompanhe seu desempenho.</p>
+    <p>Nenhum simulado disponível.</p>
   </section>
+</main>
 
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3 id="modalTitulo"></h3>
+    <input id="titulo" placeholder="Título">
+    <textarea id="texto" rows="5" placeholder="Descrição / Questões"></textarea>
+    <button onclick="salvar()">Salvar</button>
+    <button onclick="fecharModal()">Cancelar</button>
+  </div>
 </div>
 
 <script>
-const SENHA_ADMIN = "profely123";
+const SENHA_ADMIN = 'profely123';
+let tipoAtual = '';
 
-function abrirAdmin() {
-  const senha = prompt("Digite a senha do administrador:");
-  if (senha === SENHA_ADMIN) {
-    document.getElementById("admin-panel").style.left = "0";
-  } else {
-    alert("Senha incorreta!");
-  }
+function loginAdmin(){
+  const s = prompt('Senha do administrador:');
+  if(s===SENHA_ADMIN){
+    document.getElementById('admin').style.left='0';
+  } else alert('Senha incorreta');
 }
 
-function fecharAdmin() {
-  document.getElementById("admin-panel").style.left = "-280px";
+function fecharAdmin(){
+  document.getElementById('admin').style.left='-320px';
 }
 
-/* FUNÇÕES BASE – PRONTAS PARA EVOLUIR */
-function editarConteudo() {
-  alert("Área de edição de textos e conteúdos.");
+function abrirModal(tipo){
+  tipoAtual = tipo;
+  document.getElementById('modalTitulo').innerText = 'Novo ' + tipo;
+  document.getElementById('modal').style.display='flex';
 }
 
-function enviarImagem() {
-  alert("Aqui será o envio de imagens para atividades e questões.");
+function fecharModal(){
+  document.getElementById('modal').style.display='none';
 }
 
-function criarAtividade() {
-  alert("Área de criação de atividades.");
-}
+function salvar(){
+  const t = document.getElementById('titulo').value;
+  const tx = document.getElementById('texto').value;
+  if(!t||!tx){alert('Preencha tudo');return}
 
-function criarSimulado() {
-  alert("Área de criação de simulados.");
-}
+  let area;
+  if(tipoAtual==='conteudo') area='areaConteudos';
+  if(tipoAtual==='atividade') area='areaAtividades';
+  if(tipoAtual==='simulado') area='areaSimulados';
 
-function gerenciarMenus() {
-  alert("Gerenciamento de menus do site.");
+  const div = document.createElement('div');
+  div.innerHTML = `<h4>${t}</h4><p>${tx}</p><hr>`;
+  document.getElementById(area).appendChild(div);
+
+  fecharModal();
 }
 </script>
 
 </body>
 </html>
-
-
-
-
-
