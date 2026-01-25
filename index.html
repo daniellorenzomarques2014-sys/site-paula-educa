@@ -1,262 +1,208 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Paula Educa | Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</title>
-  <style>
-    :root {
-      --cor-primaria: #1e88e5;
-      --cor-secundaria: #f5f7fa;
-      --cor-destaque: #43a047;
-      --texto: #333;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Português em Foco</title>
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: var(--cor-secundaria);
-      color: var(--texto);
-      max-width: 100%;
-      overflow-x: hidden;
-    }
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    header {
-      background: var(--cor-primaria);
-      color: white;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
+body {
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+}
 
-    header img {
-      height: 70px;
-      max-width: 120px;
-      object-fit: contain;
-    }
+/* BOTÃO ADMIN */
+#btn-admin {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 1000;
+}
 
-    header img {
-      height: 60px;
-    }
+/* PAINEL ADMIN */
+#admin-panel {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100%;
+  background: #1e293b;
+  color: white;
+  padding: 20px;
+  transition: 0.3s;
+  overflow-y: auto;
+  z-index: 999;
+}
 
-    nav {
-      background: #1565c0;
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      padding: 12px;
-    }
+/* LOGO */
+#admin-panel img {
+  width: 100%;
+  max-width: 220px;
+  display: block;
+  margin: 0 auto 20px auto;
+}
 
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
+/* BOTÕES ADMIN */
+#admin-panel button {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #334155;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-    nav a:hover {
-      text-decoration: underline;
-    }
+#admin-panel button:hover {
+  background: #475569;
+}
 
-    main {
-      padding: 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
+/* CONTEÚDO PRINCIPAL */
+#main-content {
+  padding: 80px 20px 20px 20px;
+  max-width: 1200px;
+  margin: auto;
+}
 
-    section {
-      display: none;
-      animation: fade 0.4s ease-in-out;
-    }
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
 
-    section.active {
-      display: block;
-    }
+header img {
+  max-width: 280px;
+  width: 100%;
+}
 
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
-    }
+nav {
+  margin-top: 20px;
+}
 
-    footer {
-      background: #0d47a1;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      margin-top: 40px;
-    }
+nav a {
+  margin: 0 10px;
+  text-decoration: none;
+  color: #2563eb;
+  font-weight: bold;
+}
 
-    .admin {
-      position: fixed;
-      top: 0;
-      left: -320px;
-      width: 300px;
-      height: 100%;
-      background: #fff3cd;
-      border-right: 2px solid #ffeeba;
-      padding: 20px;
-      border-radius: 0;
-      transition: left 0.3s ease;
-      z-index: 999;
-    }
-
-    .admin.ativo {
-      left: 0;
-    }
-
-    #btnAdmin {
-      position: fixed;
-      left: 10px;
-      bottom: 10px;
-      background: #1e88e5;
-      color: white;
-      border: none;
-      padding: 10px 14px;
-      border-radius: 50px;
-      cursor: pointer;
-      z-index: 1000;
-    }
-
-
-      background: #fff3cd;
-      border: 1px solid #ffeeba;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-
-    textarea, input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-    }
-
-    button {
-      background: var(--cor-destaque);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+</style>
 </head>
+
 <body>
 
-<header>
-  <img id="logo" src="LOGO_FUNDO_BRANCO_-removebg-preview.png" alt="Logo da Escola" />
-  <h1 id="tituloSite">Paula Educa</h1>
-</header>
+<!-- BOTÃO ADMIN -->
+<button id="btn-admin" onclick="abrirAdmin()">Administrador</button>
 
-<nav>
-  <a href="#" onclick="mostrar('inicio')">Início</a>
-  <a href="#" onclick="mostrar('conteudos')">Conteúdos</a>
-  <a href="#" onclick="mostrar('atividades')">Atividades</a>
-  <a href="#" onclick="mostrar('simulados')">Simulados</a>
-  <a href="#" onclick="mostrar('resultados')">Resultados</a>
-</nav>
+<!-- PAINEL ADMINISTRADOR -->
+<div id="admin-panel">
+  <img src="logo.png" alt="Logotipo">
 
-<main>
+  <h3>Área do Administrador</h3>
 
-  <button id="btnAdmin" onclick="pedirSenha()">⚙️ Administração</button>
-
-<div class="admin" id="painelAdmin">
-  <strong>Área do Administrador</strong>
-  <p>Edite textos, título do site e logotipo (URL da imagem).</p>
-  <label>Título do site:</label>
-  <input id="novoTitulo" />
-  <label>URL do logotipo:</label>
-  <input id="novaLogo" />
-  <button onclick="salvarAdmin()">Salvar Alterações</button>
+  <button onclick="editarConteudo()">✏️ Editar Conteúdo</button>
+  <button onclick="enviarImagem()">🖼️ Enviar Imagens</button>
+  <button onclick="criarAtividade()">📘 Criar Atividade</button>
+  <button onclick="criarSimulado()">📝 Criar Simulado</button>
+  <button onclick="gerenciarMenus()">📂 Gerenciar Menus</button>
+  <button onclick="fecharAdmin()">❌ Fechar Painel</button>
 </div>
 
-  <section id="inicio" class="active">
-    <div class="card" contenteditable="true" id="inicioTexto">
-      <h2>Bem-vindos!</h2>
-      <p>Esta é a plataforma educativa da Escola Municipal Professora Paula Aliomar Ribeiro Beltrão.</p>
-    </div>
+<!-- CONTEÚDO DO SITE -->
+<div id="main-content">
+
+  <header>
+    <img src="logo.png" alt="Português em Foco">
+    <h1>PORTUGUÊS EM FOCO</h1>
+    <nav>
+      <a href="#">Início</a>
+      <a href="#">Conteúdos</a>
+      <a href="#">Simulados</a>
+      <a href="#">Resultados</a>
+      <a href="#">Contato</a>
+    </nav>
+  </header>
+
+  <section>
+    <h2>Bem-vindo!</h2>
+    <p>
+      Este ambiente foi criado para apoiar o ensino de Língua Portuguesa,
+      com atividades, simulados e conteúdos organizados por série.
+    </p>
   </section>
 
-  <section id="conteudos">
-    <div class="card" contenteditable="true">Adicione aqui os conteúdos por série e disciplina.</div>
+  <section>
+    <h2>Conteúdos</h2>
+    <p>Aqui você poderá acessar textos, exercícios e materiais de estudo.</p>
   </section>
 
-  <section id="atividades">
-    <div class="card" contenteditable="true">Atividades interativas, exercícios e desafios.</div>
+  <section>
+    <h2>Simulados</h2>
+    <p>Realize simulados com correção automática e acompanhe seu desempenho.</p>
   </section>
 
-  <section id="simulados">
-    <div class="card" contenteditable="true">Simulados online com correção automática.</div>
-  </section>
-
-  <section id="resultados">
-    <div class="card" contenteditable="true">Resultados, relatórios e desempenho dos alunos.</div>
-  </section>
-
-</main>
-
-<footer>
-  © 2026 – Escola Municipal Professora Paula Aliomar Ribeiro Beltrão
-</footer>
+</div>
 
 <script>
-  function mostrar(id) {
-    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+const SENHA_ADMIN = "profely123";
+
+function abrirAdmin() {
+  const senha = prompt("Digite a senha do administrador:");
+  if (senha === SENHA_ADMIN) {
+    document.getElementById("admin-panel").style.left = "0";
+  } else {
+    alert("Senha incorreta!");
   }
+}
 
-  const SENHA_ADMIN = "paula2026";
+function fecharAdmin() {
+  document.getElementById("admin-panel").style.left = "-280px";
+}
 
-  function pedirSenha() {
-    const senha = prompt("Digite a senha do administrador:");
-    if (senha === SENHA_ADMIN) {
-      document.getElementById('painelAdmin').classList.toggle('ativo');
-    } else if (senha !== null) {
-      alert("Senha incorreta!");
-    }
-  }
+/* FUNÇÕES BASE – PRONTAS PARA EVOLUIR */
+function editarConteudo() {
+  alert("Área de edição de textos e conteúdos.");
+}
 
-  function toggleAdmin() {
-    document.getElementById('painelAdmin').classList.toggle('ativo');
-  }
+function enviarImagem() {
+  alert("Aqui será o envio de imagens para atividades e questões.");
+}
 
-  function salvarAdmin()() {
-    const titulo = document.getElementById('novoTitulo').value;
-    const logo = document.getElementById('novaLogo').value;
+function criarAtividade() {
+  alert("Área de criação de atividades.");
+}
 
-    if (titulo) {
-      document.getElementById('tituloSite').innerText = titulo;
-      localStorage.setItem('tituloSite', titulo);
-    }
+function criarSimulado() {
+  alert("Área de criação de simulados.");
+}
 
-    if (logo) {
-      document.getElementById('logo').src = logo;
-      localStorage.setItem('logoSite', logo);
-    }
-
-    alert('Alterações salvas com sucesso!');
-  }
-
-  window.onload = () => {
-    const tituloSalvo = localStorage.getItem('tituloSite');
-    const logoSalvo = localStorage.getItem('logoSite');
-
-    if (tituloSalvo) document.getElementById('tituloSite').innerText = tituloSalvo;
-    if (logoSalvo) document.getElementById('logo').src = logoSalvo;
-  };
+function gerenciarMenus() {
+  alert("Gerenciamento de menus do site.");
+}
 </script>
 
 </body>
 </html>
+
+
 
 
 
