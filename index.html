@@ -82,6 +82,37 @@
     }
 
     .admin {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 300px;
+      height: 100%;
+      background: #fff3cd;
+      border-right: 2px solid #ffeeba;
+      padding: 20px;
+      border-radius: 0;
+      transition: left 0.3s ease;
+      z-index: 999;
+    }
+
+    .admin.ativo {
+      left: 0;
+    }
+
+    #btnAdmin {
+      position: fixed;
+      left: 10px;
+      bottom: 10px;
+      background: #1e88e5;
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 50px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+
       background: #fff3cd;
       border: 1px solid #ffeeba;
       padding: 15px;
@@ -128,15 +159,17 @@
 
 <main>
 
-  <div class="admin">
-    <strong>Área do Administrador</strong>
-    <p>Edite textos, título do site e logotipo (URL da imagem).</p>
-    <label>Título do site:</label>
-    <input id="novoTitulo" />
-    <label>URL do logotipo:</label>
-    <input id="novaLogo" />
-    <button onclick="salvarAdmin()">Salvar Alterações</button>
-  </div>
+  <button id="btnAdmin" onclick="pedirSenha()">⚙️ Administração</button>
+
+<div class="admin" id="painelAdmin">
+  <strong>Área do Administrador</strong>
+  <p>Edite textos, título do site e logotipo (URL da imagem).</p>
+  <label>Título do site:</label>
+  <input id="novoTitulo" />
+  <label>URL do logotipo:</label>
+  <input id="novaLogo" />
+  <button onclick="salvarAdmin()">Salvar Alterações</button>
+</div>
 
   <section id="inicio" class="active">
     <div class="card" contenteditable="true" id="inicioTexto">
@@ -173,7 +206,22 @@
     document.getElementById(id).classList.add('active');
   }
 
-  function salvarAdmin() {
+  const SENHA_ADMIN = "paula2026";
+
+  function pedirSenha() {
+    const senha = prompt("Digite a senha do administrador:");
+    if (senha === SENHA_ADMIN) {
+      document.getElementById('painelAdmin').classList.toggle('ativo');
+    } else if (senha !== null) {
+      alert("Senha incorreta!");
+    }
+  }
+
+  function toggleAdmin() {
+    document.getElementById('painelAdmin').classList.toggle('ativo');
+  }
+
+  function salvarAdmin()() {
     const titulo = document.getElementById('novoTitulo').value;
     const logo = document.getElementById('novaLogo').value;
 
@@ -201,3 +249,4 @@
 
 </body>
 </html>
+
