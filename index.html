@@ -6,178 +6,144 @@
 <title>Portal Educacional Paula Aliomar</title>
 
 <style>
-body{
-  margin:0;
-  font-family: Arial, Helvetica, sans-serif;
-  background:#eef2f7;
-}
-
-/* TOPO */
-header{
-  display:flex;
-  align-items:center;
-  gap:15px;
-  padding:15px 25px;
-  background:linear-gradient(90deg,#0d47a1,#1976d2);
-  color:white;
-  flex-wrap:wrap;
-}
-
-.logo{
-  height:85px;
-  width:auto;
-}
-
-header h1{
-  font-size:20px;
-  margin:0;
-}
-
-/* MENU */
-nav{
-  background:#1565c0;
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-}
-
-nav a{
-  color:white;
-  padding:14px 18px;
-  text-decoration:none;
-  font-weight:bold;
-  transition:0.3s;
-}
-
-nav a:hover{
-  background:#0d47a1;
-}
-
-/* CONTEÚDO */
-.container{
-  max-width:1100px;
-  margin:30px auto;
-  padding:20px;
-  background:white;
-  border-radius:8px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
-
-h2{
-  color:#0d47a1;
-}
-
-/* BOTÃO ADMIN */
-.admin-btn{
-  position:fixed;
-  left:0;
-  top:40%;
-  background:#0d47a1;
-  color:white;
-  padding:10px;
-  border-radius:0 8px 8px 0;
-  cursor:pointer;
-  font-size:14px;
-}
-
-/* PAINEL ADMIN */
-.admin-panel{
-  display:none;
-  position:fixed;
-  left:0;
-  top:0;
-  width:260px;
-  height:100%;
-  background:#ffffff;
-  box-shadow:2px 0 10px rgba(0,0,0,0.2);
-  padding:15px;
-  overflow:auto;
-}
-
-.admin-panel h3{
-  margin-top:0;
-  color:#0d47a1;
-}
-
-.admin-panel button{
-  width:100%;
-  margin:5px 0;
-  padding:8px;
-  border:none;
-  background:#1976d2;
-  color:white;
-  border-radius:5px;
-  cursor:pointer;
-}
-
-footer{
-  text-align:center;
-  padding:15px;
-  background:#0d47a1;
-  color:white;
-  margin-top:40px;
-}
-
-/* RESPONSIVO */
-@media(max-width:600px){
-  header{
-    justify-content:center;
-    text-align:center;
-  }
-  .logo{
-    height:70px;
-  }
-}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef2f7}
+header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1976d2);color:white;flex-wrap:wrap}
+.logo{height:85px}
+nav{background:#1565c0;display:flex;justify-content:center;flex-wrap:wrap}
+nav a{color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer}
+nav a:hover{background:#0d47a1}
+.container{max-width:1100px;margin:30px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+.hidden{display:none}
+.admin-btn{position:fixed;left:0;top:40%;background:#0d47a1;color:white;padding:10px;border-radius:0 8px 8px 0;cursor:pointer}
+.admin-panel{display:none;position:fixed;left:0;top:0;width:300px;height:100%;background:white;box-shadow:2px 0 10px rgba(0,0,0,0.2);padding:15px;overflow:auto}
+.admin-panel h3{margin-top:0;color:#0d47a1}
+.admin-panel input, .admin-panel textarea, select{width:100%;margin:5px 0;padding:6px}
+.admin-panel button{width:100%;margin:5px 0;padding:8px;border:none;background:#1976d2;color:white;border-radius:5px;cursor:pointer}
+.question{margin-bottom:15px;padding:10px;border:1px solid #ddd;border-radius:5px}
+footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
 </style>
 </head>
-
 <body>
 
 <header>
-  <img src="LOGO_FUNDO_BRANCO_-removebg-preview.png" class="logo">
-  <h1>Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</h1>
+<img src="LOGO_FUNDO_BRANCO_-removebg-preview.png" class="logo">
+<h1>Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</h1>
 </header>
 
 <nav>
-  <a href="#">Início</a>
-  <a href="#">Conteúdos</a>
-  <a href="#">Atividades</a>
-  <a href="#">Simulados</a>
-  <a href="#">Resultados</a>
+<a onclick="showSection('inicio')">Início</a>
+<a onclick="showSection('conteudos')">Conteúdos</a>
+<a onclick="showSection('atividades')">Atividades</a>
+<a onclick="showSection('simulados')">Simulados</a>
+<a onclick="showSection('resultados')">Resultados</a>
 </nav>
 
-<div class="container">
-  <h2>Bem-vindo ao Portal Educacional</h2>
-  <p>Este é o ambiente oficial de aprendizagem da escola. Aqui você encontrará conteúdos, atividades, simulados e resultados.</p>
+<div class="container" id="inicio">
+<h2>Bem-vindo ao Portal Educacional</h2>
+<p>Ambiente digital de aprendizagem da escola.</p>
 </div>
 
-<div class="admin-btn" onclick="abrirAdmin()">⚙️ Admin</div>
+<div class="container hidden" id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
+<div class="container hidden" id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></div>
+<div class="container hidden" id="simulados">
+<h2>Simulados</h2>
+<label>Série:</label>
+<select id="serieAluno">
+<option>6º Ano</option>
+<option>7º Ano</option>
+<option>8º Ano</option>
+<option>9º Ano</option>
+</select>
+<input type="text" id="nomeAluno" placeholder="Nome do aluno">
+<button onclick="iniciarSimulado()">Iniciar</button>
+<div id="areaSimulado"></div>
+</div>
+
+<div class="container hidden" id="resultados"><h2>Resultados</h2><div id="relatorios"></div></div>
+
+<div class="admin-btn" onclick="abrirAdmin()">⚙️</div>
 
 <div class="admin-panel" id="adminPanel">
-  <h3>Área do Professor</h3>
-  <button onclick="alert('Função de criar atividade em breve')">Criar Atividade</button>
-  <button onclick="alert('Função de enviar simulado em breve')">Criar Simulado</button>
-  <button onclick="alert('Função de ver resultados em breve')">Ver Resultados</button>
-  <button onclick="fecharAdmin()">Fechar</button>
+<h3>Área do Professor</h3>
+<input type="text" id="tituloQuestao" placeholder="Pergunta">
+<textarea id="textoQuestao" placeholder="Texto da questão"></textarea>
+<input type="file" id="imagemQuestao">
+<input type="text" id="altA" placeholder="Alternativa A">
+<input type="text" id="altB" placeholder="Alternativa B">
+<input type="text" id="altC" placeholder="Alternativa C">
+<input type="text" id="altD" placeholder="Alternativa D">
+<select id="correta">
+<option value="A">Correta: A</option>
+<option value="B">Correta: B</option>
+<option value="C">Correta: C</option>
+<option value="D">Correta: D</option>
+</select>
+<select id="serieQuestao">
+<option>6º Ano</option>
+<option>7º Ano</option>
+<option>8º Ano</option>
+<option>9º Ano</option>
+</select>
+<button onclick="salvarQuestao()">Salvar no Banco</button>
+<button onclick="fecharAdmin()">Fechar</button>
 </div>
 
-<footer>
-  Portal Educacional © 2026
-</footer>
+<footer>Portal Educacional © 2026</footer>
 
 <script>
-function abrirAdmin(){
-  let senha = prompt("Digite a senha do administrador:");
-  if(senha === "paula2026"){
-    document.getElementById("adminPanel").style.display = "block";
-  } else {
-    alert("Senha incorreta!");
-  }
+let bancoQuestoes = JSON.parse(localStorage.getItem('questoes')) || [];
+let resultados = JSON.parse(localStorage.getItem('resultados')) || [];
+
+function showSection(id){document.querySelectorAll('.container').forEach(c=>c.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
+
+function abrirAdmin(){let s=prompt('Senha do administrador');if(s==='paula2026'){adminPanel.style.display='block'}else{alert('Senha incorreta')}}
+function fecharAdmin(){adminPanel.style.display='none'}
+
+function salvarQuestao(){
+let reader=new FileReader();
+let file=document.getElementById('imagemQuestao').files[0];
+reader.onload=function(){
+bancoQuestoes.push({
+pergunta:tituloQuestao.value,
+texto:textoQuestao.value,
+imagem:reader.result,
+A:altA.value,B:altB.value,C:altC.value,D:altD.value,
+correta:correta.value,serie:serieQuestao.value
+});
+localStorage.setItem('questoes',JSON.stringify(bancoQuestoes));
+alert('Questão salva!');
+};
+if(file){reader.readAsDataURL(file)}else{reader.onload()}
 }
 
-function fecharAdmin(){
-  document.getElementById("adminPanel").style.display = "none";
+function iniciarSimulado(){
+let serie=serieAluno.value;
+let nome=nomeAluno.value;
+let questoes=bancoQuestoes.filter(q=>q.serie===serie);
+areaSimulado.innerHTML='';
+questoes.forEach((q,i)=>{
+areaSimulado.innerHTML+=`<div class='question'><p><b>${i+1}. ${q.pergunta}</b></p><p>${q.texto||''}</p>${q.imagem?`<img src='${q.imagem}' width='150'>`:''}
+<label><input type='radio' name='q${i}' value='A'> ${q.A}</label><br>
+<label><input type='radio' name='q${i}' value='B'> ${q.B}</label><br>
+<label><input type='radio' name='q${i}' value='C'> ${q.C}</label><br>
+<label><input type='radio' name='q${i}' value='D'> ${q.D}</label></div>`});
+areaSimulado.innerHTML+="<button onclick='corrigirSimulado()'>Finalizar</button>";
 }
+
+function corrigirSimulado(){
+let radios=document.querySelectorAll("input[type='radio']:checked");
+let acertos=0;
+radios.forEach((r,i)=>{if(r.value===bancoQuestoes[i].correta)acertos++});
+let erros=bancoQuestoes.length-acertos;
+resultados.push({aluno:nomeAluno.value,serie:serieAluno.value,acertos,erros});
+localStorage.setItem('resultados',JSON.stringify(resultados));
+alert(`Resultado: ${acertos} acertos e ${erros} erros`);
+showSection('resultados');
+mostrarRelatorios();
+}
+
+function mostrarRelatorios(){relatorios.innerHTML='';resultados.forEach(r=>{relatorios.innerHTML+=`<p>${r.aluno} - ${r.serie} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`})}
+mostrarRelatorios();
 </script>
 
 </body>
