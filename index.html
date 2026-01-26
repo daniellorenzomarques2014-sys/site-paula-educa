@@ -1,99 +1,131 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal Educacional - Escola Paula Aliomar</title>
+<title>Portal Educacional Paula Aliomar</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
 body{
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  background: linear-gradient(135deg,#e0f2fe,#f8fafc);
-  color:#0f172a;
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:#eef2f7;
 }
 
-/* ===== CABEÇALHO ===== */
+/* TOPO */
 header{
-  width:100%;
-  background:#ffffff;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:15px 25px;
-  box-shadow:0 2px 10px rgba(0,0,0,.1);
-  position:sticky;
-  top:0;
-  z-index:1000;
-}
-
-.logo-area{
   display:flex;
   align-items:center;
   gap:15px;
+  padding:15px 25px;
+  background:linear-gradient(90deg,#0d47a1,#1976d2);
+  color:white;
+  flex-wrap:wrap;
 }
 
-.logo-area img{
-  height:75px;
+.logo{
+  height:85px;
   width:auto;
-  object-fit:contain;
 }
 
-.logo-area h1{
-  font-size:18px;
-  color:#1e3a8a;
-  line-height:1.2;
+header h1{
+  font-size:20px;
+  margin:0;
+}
+
+/* MENU */
+nav{
+  background:#1565c0;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
 }
 
 nav a{
-  margin-left:18px;
+  color:white;
+  padding:14px 18px;
   text-decoration:none;
-  font-weight:600;
-  color:#1e293b;
+  font-weight:bold;
+  transition:0.3s;
 }
 
-/* ===== CONTEÚDO ===== */
-main{
-  max-width:1200px;
-  margin:auto;
-  padding:30px 20px;
+nav a:hover{
+  background:#0d47a1;
 }
 
-.card{
+/* CONTEÚDO */
+.container{
+  max-width:1100px;
+  margin:30px auto;
+  padding:20px;
+  background:white;
+  border-radius:8px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+h2{
+  color:#0d47a1;
+}
+
+/* BOTÃO ADMIN */
+.admin-btn{
+  position:fixed;
+  left:0;
+  top:40%;
+  background:#0d47a1;
+  color:white;
+  padding:10px;
+  border-radius:0 8px 8px 0;
+  cursor:pointer;
+  font-size:14px;
+}
+
+/* PAINEL ADMIN */
+.admin-panel{
+  display:none;
+  position:fixed;
+  left:0;
+  top:0;
+  width:260px;
+  height:100%;
   background:#ffffff;
-  padding:25px;
-  border-radius:14px;
-  margin-bottom:25px;
-  box-shadow:0 6px 18px rgba(0,0,0,.08);
+  box-shadow:2px 0 10px rgba(0,0,0,0.2);
+  padding:15px;
+  overflow:auto;
 }
 
-.card h2{
-  color:#1e3a8a;
-  margin-bottom:10px;
+.admin-panel h3{
+  margin-top:0;
+  color:#0d47a1;
 }
 
-/* ===== RESPONSIVO ===== */
-@media(max-width:768px){
+.admin-panel button{
+  width:100%;
+  margin:5px 0;
+  padding:8px;
+  border:none;
+  background:#1976d2;
+  color:white;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+footer{
+  text-align:center;
+  padding:15px;
+  background:#0d47a1;
+  color:white;
+  margin-top:40px;
+}
+
+/* RESPONSIVO */
+@media(max-width:600px){
   header{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:10px;
+    justify-content:center;
+    text-align:center;
   }
-
-  nav{
-    width:100%;
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-  }
-
-  nav a{
-    margin:0;
-  }
-
-  .logo-area h1{
-    font-size:15px;
+  .logo{
+    height:70px;
   }
 }
 </style>
@@ -102,42 +134,51 @@ main{
 <body>
 
 <header>
-  <div class="logo-area">
-    <!-- LOGOTIPO DA ESCOLA -->
-    <img src="LOGO_FUNDO_BRANCO_-removebg-preview.png" alt="Logotipo da Escola">
-    <h1>Escola Municipal Professora<br>Paula Aliomar Ribeiro Beltrão</h1>
-  </div>
-
-  <nav>
-    <a href="#">Início</a>
-    <a href="#">Conteúdos</a>
-    <a href="#">Atividades</a>
-    <a href="#">Simulados</a>
-    <a href="#">Resultados</a>
-  </nav>
+  <img src="LOGO_FUNDO_BRANCO_-removebg-preview.png" class="logo">
+  <h1>Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</h1>
 </header>
 
-<main>
-  <div class="card">
-    <h2>Bem-vindo ao Portal Educacional</h2>
-    <p>Este ambiente foi criado para organizar conteúdos, atividades e simulados da escola de forma simples e acessível.</p>
-  </div>
+<nav>
+  <a href="#">Início</a>
+  <a href="#">Conteúdos</a>
+  <a href="#">Atividades</a>
+  <a href="#">Simulados</a>
+  <a href="#">Resultados</a>
+</nav>
 
-  <div class="card">
-    <h2>Conteúdos</h2>
-    <p>Materiais de estudo serão publicados aqui.</p>
-  </div>
+<div class="container">
+  <h2>Bem-vindo ao Portal Educacional</h2>
+  <p>Este é o ambiente oficial de aprendizagem da escola. Aqui você encontrará conteúdos, atividades, simulados e resultados.</p>
+</div>
 
-  <div class="card">
-    <h2>Atividades</h2>
-    <p>As atividades enviadas pelos professores aparecerão nesta área.</p>
-  </div>
+<div class="admin-btn" onclick="abrirAdmin()">⚙️ Admin</div>
 
-  <div class="card">
-    <h2>Simulados</h2>
-    <p>Simulados com questões e correção automática ficarão disponíveis aqui.</p>
-  </div>
-</main>
+<div class="admin-panel" id="adminPanel">
+  <h3>Área do Professor</h3>
+  <button onclick="alert('Função de criar atividade em breve')">Criar Atividade</button>
+  <button onclick="alert('Função de enviar simulado em breve')">Criar Simulado</button>
+  <button onclick="alert('Função de ver resultados em breve')">Ver Resultados</button>
+  <button onclick="fecharAdmin()">Fechar</button>
+</div>
+
+<footer>
+  Portal Educacional © 2026
+</footer>
+
+<script>
+function abrirAdmin(){
+  let senha = prompt("Digite a senha do administrador:");
+  if(senha === "paula2026"){
+    document.getElementById("adminPanel").style.display = "block";
+  } else {
+    alert("Senha incorreta!");
+  }
+}
+
+function fecharAdmin(){
+  document.getElementById("adminPanel").style.display = "none";
+}
+</script>
 
 </body>
 </html>
