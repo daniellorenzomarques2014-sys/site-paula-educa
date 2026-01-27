@@ -3,203 +3,215 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal Educacional Paula Aliomar</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<title>Portal Educacional</title>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <style>
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef2f7}
-header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1976d2);color:white;flex-wrap:wrap}
-.logo{height:85px}
-nav{background:#1565c0;display:flex;justify-content:center;flex-wrap:wrap}
-nav a{color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer}
-nav a:hover{background:#0d47a1}
-.container{max-width:1100px;margin:30px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+body{font-family:Arial;margin:0;background:#f2f2f2}
+header{background:#2c3e50;color:white;padding:15px;text-align:center}
+header img{max-height:80px;display:block;margin:0 auto 10px}
+nav{display:flex;justify-content:center;flex-wrap:wrap;background:#34495e}
+nav button{background:none;border:none;color:white;padding:14px 18px;cursor:pointer}
+nav button:hover{background:#2c3e50}
+section{display:none;padding:20px}
+.active{display:block}
+.card{background:white;padding:15px;margin:10px 0;border-radius:8px;box-shadow:0 0 5px rgba(0,0,0,0.1)}
+input, select, textarea{width:100%;padding:8px;margin:5px 0}
+button.primary{background:#27ae60;color:white;border:none;padding:10px;margin-top:10px;cursor:pointer}
+button.danger{background:#c0392b;color:white;border:none;padding:10px;margin-top:10px;cursor:pointer}
 .hidden{display:none}
-.admin-btn{position:fixed;left:0;top:40%;background:#0d47a1;color:white;padding:10px;border-radius:0 8px 8px 0;cursor:pointer}
-.admin-panel{display:none;position:fixed;left:0;top:0;width:320px;height:100%;background:white;box-shadow:2px 0 10px rgba(0,0,0,0.2);padding:15px;overflow:auto}
-.admin-panel input,.admin-panel textarea,.admin-panel select{width:100%;margin:5px 0;padding:6px}
-.admin-panel button{width:100%;margin:5px 0;padding:8px;border:none;background:#1976d2;color:white;border-radius:5px;cursor:pointer}
-.question{margin-bottom:15px;padding:10px;border:1px solid #ddd;border-radius:5px}
-footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
-.login-box{max-width:400px;margin:60px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1);text-align:center}
+.alt-btn{display:block;margin:5px 0;padding:8px;background:#ecf0f1;border:none;width:100%;cursor:pointer}
+.correct{background:#2ecc71!important;color:white}
+.wrong{background:#e74c3c!important;color:white}
 </style>
 </head>
 <body>
 
-<div id="login" class="login-box">
+<header>
+<img src="LOGO_DA_ESCOLA.png" alt="Logotipo da Escola">
+<h1>Portal Educacional</h1>
+</header>
+
+<div id="login" class="card">
 <h2>Login</h2>
 <select id="tipoLogin">
 <option value="aluno">Aluno</option>
 <option value="professor">Professor</option>
 </select>
-<input type="text" id="usuario" placeholder="Nome">
-<input type="password" id="senha" placeholder="Senha do professor">
-<button onclick="entrar()">Entrar</button>
+<input type="text" id="nome" placeholder="Seu nome">
+<input type="password" id="senha" placeholder="Senha (professor)">
+<button class="primary" onclick="entrar()">Entrar</button>
 </div>
 
 <div id="portal" class="hidden">
-<header>
-<img src="LOGO_FUNDO_BRANCO_-removebg-preview.png" class="logo">
-<h1>Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</h1>
-</header>
-
 <nav>
-<a onclick="showSection('inicio')">Início</a>
-<a onclick="showSection('conteudos')">Conteúdos</a>
-<a onclick="showSection('atividades')">Atividades</a>
-<a onclick="showSection('simulados')">Simulados</a>
-<a onclick="showSection('resultados')">Resultados</a>
+<button onclick="mostrar('inicio')">Início</button>
+<button onclick="mostrar('conteudos')">Conteúdos</button>
+<button onclick="mostrar('atividades')">Atividades</button>
+<button onclick="mostrar('simulados')">Simulados</button>
+<button onclick="mostrar('resultados')">Resultados</button>
+<button onclick="sair()">Sair</button>
 </nav>
 
-<div class="container" id="inicio"><h2>Bem-vindo ao Portal Educacional</h2></div>
+<section id="inicio" class="active card">
+<h2>Bem-vindo ao Portal</h2>
+<p>Escolha uma das opções no menu acima.</p>
+</section>
 
-<div class="container hidden" id="conteudos"><h2>Conteúdos por Disciplina</h2></div>
-<div class="container hidden" id="atividades"><h2>Atividades</h2></div>
+<section id="conteudos" class="card">
+<h2>Cadastro de Conteúdos</h2>
+<div id="adminConteudos" class="hidden">
+<input type="text" id="tituloConteudo" placeholder="Título">
+<textarea id="textoConteudo" placeholder="Texto do conteúdo"></textarea>
+<button class="primary" onclick="salvarConteudo()">Salvar Conteúdo</button>
+</div>
+<div id="listaConteudos"></div>
+</section>
 
-<div class="container hidden" id="simulados">
+<section id="atividades" class="card">
+<h2>Atividades</h2>
+<p>Em breve você poderá cadastrar atividades aqui.</p>
+</section>
+
+<section id="simulados" class="card">
 <h2>Simulados</h2>
 
-<select id="serieAluno">
-<option>Infantil 1</option><option>Infantil 2</option>
-<option>1º Ano</option><option>2º Ano</option>
-<option>3º Ano</option><option>4º Ano</option><option>5º Ano</option>
+<div id="adminSimulados" class="hidden">
+<h3>Criar Questão</h3>
+<input type="text" id="pergunta" placeholder="Digite a pergunta">
+<input type="text" id="imgQuestao" placeholder="URL da imagem (opcional)">
+<input type="text" id="a" placeholder="Alternativa A">
+<input type="text" id="b" placeholder="Alternativa B">
+<input type="text" id="c" placeholder="Alternativa C">
+<input type="text" id="d" placeholder="Alternativa D">
+<select id="correta">
+<option value="0">A</option>
+<option value="1">B</option>
+<option value="2">C</option>
+<option value="3">D</option>
 </select>
-
-<select id="disciplinaAluno">
-<option>Português</option><option>Matemática</option>
-<option>Ciências</option><option>Artes</option>
-<option>Religião</option><option>Inglês</option>
-<option>Geografia</option><option>História</option>
-<option>Educação Física</option>
-</select>
-
-<input type="text" id="nomeAluno" placeholder="Nome do aluno">
-<button onclick="iniciarSimulado()">Iniciar</button>
-<div id="areaSimulado"></div>
+<button class="primary" onclick="salvarQuestao()">Salvar Questão</button>
 </div>
 
-<div class="container hidden" id="resultados">
-<h2>Resultados</h2>
-<div id="relatorios"></div>
-<button onclick="window.print()">🖨️ Gerar PDF</button>
-</div>
+<div id="prova"></div>
+<button id="btnCorrigir" class="primary hidden" onclick="corrigir()">Corrigir Simulado</button>
+<div id="resultadoFinal"></div>
+</section>
 
-<div class="admin-btn hidden" id="btnAdmin" onclick="abrirAdmin()">⚙️</div>
-
-<div class="admin-panel" id="adminPanel">
-<h3>Cadastro de Questões</h3>
-<input type="text" id="tituloQuestao" placeholder="Pergunta">
-<textarea id="textoQuestao" placeholder="Texto da questão"></textarea>
-<input type="text" id="imagemQuestao" placeholder="URL da imagem">
-<select id="disciplinaQuestao">
-<option>Português</option><option>Matemática</option><option>Ciências</option><option>Artes</option>
-<option>Religião</option><option>Inglês</option><option>Geografia</option><option>História</option><option>Educação Física</option>
-</select>
-<select id="serieQuestao">
-<option>Infantil 1</option><option>Infantil 2</option>
-<option>1º Ano</option><option>2º Ano</option>
-<option>3º Ano</option><option>4º Ano</option><option>5º Ano</option>
-</select>
-<input type="text" id="altA" placeholder="A">
-<input type="text" id="altB" placeholder="B">
-<input type="text" id="altC" placeholder="C">
-<input type="text" id="altD" placeholder="D">
-<select id="correta"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
-<button onclick="salvarQuestao()">Salvar</button>
-<button onclick="fecharAdmin()">Fechar</button>
-</div>
-
-<footer>Portal Educacional © 2026</footer>
+<section id="resultados" class="card">
+<h2>Resultados Salvos</h2>
+<div id="listaResultados"></div>
+</section>
 </div>
 
 <script>
-const supabase = window.supabase.createClient(
-"COLE_AQUI_SUA_URL",
-"COLE_AQUI_SUA_ANON_KEY"
-);
-
-let questoesAtuais = [];
+let tipo="aluno"
+let questoes=JSON.parse(localStorage.getItem("questoes")||"[]")
+let resultados=JSON.parse(localStorage.getItem("resultados")||"[]")
 
 function entrar(){
-if(tipoLogin.value==="professor" && senha.value!=="paula2026"){alert("Senha incorreta");return;}
-login.classList.add("hidden");
-portal.classList.remove("hidden");
-if(tipoLogin.value==="professor") btnAdmin.classList.remove("hidden");
+tipo=document.getElementById("tipoLogin").value
+if(tipo==="professor" && document.getElementById("senha").value!=="1234"){
+alert("Senha do professor incorreta")
+return
+}
+login.classList.add("hidden")
+portal.classList.remove("hidden")
+if(tipo==="professor"){
+adminConteudos.classList.remove("hidden")
+adminSimulados.classList.remove("hidden")
+}
+carregarQuestoes()
+listarResultados()
 }
 
-function showSection(id){
-document.querySelectorAll('.container').forEach(c=>c.classList.add('hidden'));
-document.getElementById(id).classList.remove('hidden');
-if(id==="resultados") carregarResultados();
+function sair(){location.reload()}
+
+function mostrar(sec){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
+document.getElementById(sec).classList.add("active")
 }
 
-function abrirAdmin(){adminPanel.style.display='block'}
-function fecharAdmin(){adminPanel.style.display='none'}
-
-async function salvarQuestao(){
-await supabase.from('questoes').insert([{
-pergunta:tituloQuestao.value,
-texto:textoQuestao.value,
-imagem:imagemQuestao.value,
-a:altA.value,b:altB.value,c:altC.value,d:altD.value,
-correta:correta.value,
-serie:serieQuestao.value,
-disciplina:disciplinaQuestao.value
-}]);
-alert("Questão salva!");
+function salvarConteudo(){
+let t=tituloConteudo.value
+let txt=textoConteudo.value
+let div=document.createElement("div")
+div.className="card"
+div.innerHTML=`<h3>${t}</h3><p>${txt}</p>`
+listaConteudos.appendChild(div)
+tituloConteudo.value=""
+textoConteudo.value=""
 }
 
-async function iniciarSimulado(){
-let { data } = await supabase.from('questoes')
-.select("*")
-.eq("serie", serieAluno.value)
-.eq("disciplina", disciplinaAluno.value);
-
-questoesAtuais = data;
-areaSimulado.innerHTML="";
-
-data.forEach((q,i)=>{
-areaSimulado.innerHTML+=`
-<div class='question'>
-<p><b>${i+1}. ${q.pergunta}</b></p>
-<p>${q.texto||""}</p>
-${q.imagem?`<img src="${q.imagem}" width="150">`:""}
-<label><input type='radio' name='q${i}' value='A'> ${q.a}</label><br>
-<label><input type='radio' name='q${i}' value='B'> ${q.b}</label><br>
-<label><input type='radio' name='q${i}' value='C'> ${q.c}</label><br>
-<label><input type='radio' name='q${i}' value='D'> ${q.d}</label>
-</div>`;
-});
-areaSimulado.innerHTML+="<button onclick='corrigirSimulado()'>Finalizar</button>";
+function salvarQuestao(){
+let q={
+p:pergunta.value,
+img:imgQuestao.value,
+alts:[a.value,b.value,c.value,d.value],
+c:correta.value
+}
+questoes.push(q)
+localStorage.setItem("questoes",JSON.stringify(questoes))
+alert("Questão salva!")
+pergunta.value=imgQuestao.value=a.value=b.value=c.value=d.value=""
 }
 
-async function corrigirSimulado(){
-let acertos=0;
-questoesAtuais.forEach((q,i)=>{
-let marcada=document.querySelector(`input[name='q${i}']:checked`);
-if(marcada && marcada.value===q.correta) acertos++;
-});
-let erros=questoesAtuais.length-acertos;
-
-await supabase.from('resultados').insert([{
-aluno:nomeAluno.value,
-serie:serieAluno.value,
-disciplina:disciplinaAluno.value,
-acertos,erros
-}]);
-
-alert(`Resultado: ${acertos} acertos e ${erros} erros`);
-showSection("resultados");
+function carregarQuestoes(){
+if(tipo==="professor") return
+prova.innerHTML=""
+questoes.forEach((q,i)=>{
+let div=document.createElement("div")
+div.className="card"
+let imgTag=q.img?`<img src="${q.img}" style="max-width:200px"><br>`:""
+div.innerHTML=`<p><b>${i+1}.</b> ${q.p}</p>${imgTag}`
+q.alts.forEach((alt,j)=>{
+let btn=document.createElement("button")
+btn.className="alt-btn"
+btn.innerText=alt
+btn.onclick=()=>selecionar(i,j,btn)
+div.appendChild(btn)
+})
+prova.appendChild(div)
+})
+btnCorrigir.classList.remove("hidden")
 }
 
-async function carregarResultados(){
-let { data } = await supabase.from('resultados').select("*").order('id',{ascending:false});
-relatorios.innerHTML="";
-data.forEach(r=>{
-relatorios.innerHTML+=`<p>${r.aluno} - ${r.serie} (${r.disciplina}) → ✅ ${r.acertos} | ❌ ${r.erros}</p>`
-});
+let respostas={}
+function selecionar(q,a,btn){
+respostas[q]=a
+btn.parentNode.querySelectorAll("button").forEach(b=>b.style.background="#ecf0f1")
+btn.style.background="#d0e6ff"
+}
+
+function corrigir(){
+let acertos=0
+document.querySelectorAll("#prova .card").forEach((card,i)=>{
+let correta=questoes[i].c
+let marcada=respostas[i]
+let botoes=card.querySelectorAll("button")
+botoes[correta].classList.add("correct")
+if(marcada!=correta && marcada!=null){
+botoes[marcada].classList.add("wrong")
+}else if(marcada==correta){
+acertos++
+}
+})
+let erros=questoes.length-acertos
+resultadoFinal.innerHTML=`<h3>Resultado: ${acertos} acertos e ${erros} erros</h3>`
+resultados.push({nome:nome.value,acertos,erros,data:new Date().toLocaleString()})
+localStorage.setItem("resultados",JSON.stringify(resultados))
+listarResultados()
+}
+
+function listarResultados(){
+listaResultados.innerHTML=""
+resultados.forEach(r=>{
+let div=document.createElement("div")
+div.className="card"
+div.innerHTML=`<b>${r.nome}</b> — ${r.acertos} acertos, ${r.erros} erros <br>${r.data}`
+listaResultados.appendChild(div)
+})
 }
 </script>
+
 </body>
 </html>
