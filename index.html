@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal Educacional Paula Aliomar</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef2f7}
 header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1976d2);color:white;flex-wrap:wrap}
@@ -15,16 +17,28 @@ nav a:hover{background:#0d47a1}
 .container{max-width:1100px;margin:30px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
 .hidden{display:none}
 .admin-btn{position:fixed;left:0;top:40%;background:#0d47a1;color:white;padding:10px;border-radius:0 8px 8px 0;cursor:pointer}
-.admin-panel{display:none;position:fixed;left:0;top:0;width:300px;height:100%;background:white;box-shadow:2px 0 10px rgba(0,0,0,0.2);padding:15px;overflow:auto}
-.admin-panel h3{margin-top:0;color:#0d47a1}
-.admin-panel input, .admin-panel textarea, select{width:100%;margin:5px 0;padding:6px}
+.admin-panel{display:none;position:fixed;left:0;top:0;width:320px;height:100%;background:white;box-shadow:2px 0 10px rgba(0,0,0,0.2);padding:15px;overflow:auto}
+.admin-panel input,.admin-panel textarea,.admin-panel select{width:100%;margin:5px 0;padding:6px}
 .admin-panel button{width:100%;margin:5px 0;padding:8px;border:none;background:#1976d2;color:white;border-radius:5px;cursor:pointer}
 .question{margin-bottom:15px;padding:10px;border:1px solid #ddd;border-radius:5px}
 footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
+.login-box{max-width:400px;margin:60px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1);text-align:center}
 </style>
 </head>
 <body>
 
+<div id="login" class="login-box">
+<h2>Login</h2>
+<select id="tipoLogin">
+<option value="aluno">Aluno</option>
+<option value="professor">Professor</option>
+</select>
+<input type="text" id="usuario" placeholder="Nome">
+<input type="password" id="senha" placeholder="Senha do professor">
+<button onclick="entrar()">Entrar</button>
+</div>
+
+<div id="portal" class="hidden">
 <header>
 <img src="LOGO_FUNDO_BRANCO_-removebg-preview.png" class="logo">
 <h1>Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</h1>
@@ -38,113 +52,154 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <a onclick="showSection('resultados')">Resultados</a>
 </nav>
 
-<div class="container" id="inicio">
-<h2>Bem-vindo ao Portal Educacional</h2>
-<p>Ambiente digital de aprendizagem da escola.</p>
-</div>
+<div class="container" id="inicio"><h2>Bem-vindo ao Portal Educacional</h2></div>
 
-<div class="container hidden" id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
-<div class="container hidden" id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></div>
+<div class="container hidden" id="conteudos"><h2>Conteúdos por Disciplina</h2></div>
+<div class="container hidden" id="atividades"><h2>Atividades</h2></div>
+
 <div class="container hidden" id="simulados">
 <h2>Simulados</h2>
-<label>Série:</label>
+
 <select id="serieAluno">
-<option>6º Ano</option>
-<option>7º Ano</option>
-<option>8º Ano</option>
-<option>9º Ano</option>
+<option>Infantil 1</option><option>Infantil 2</option>
+<option>1º Ano</option><option>2º Ano</option>
+<option>3º Ano</option><option>4º Ano</option><option>5º Ano</option>
 </select>
+
+<select id="disciplinaAluno">
+<option>Português</option><option>Matemática</option>
+<option>Ciências</option><option>Artes</option>
+<option>Religião</option><option>Inglês</option>
+<option>Geografia</option><option>História</option>
+<option>Educação Física</option>
+</select>
+
 <input type="text" id="nomeAluno" placeholder="Nome do aluno">
 <button onclick="iniciarSimulado()">Iniciar</button>
 <div id="areaSimulado"></div>
 </div>
 
-<div class="container hidden" id="resultados"><h2>Resultados</h2><div id="relatorios"></div></div>
+<div class="container hidden" id="resultados">
+<h2>Resultados</h2>
+<div id="relatorios"></div>
+<button onclick="window.print()">🖨️ Gerar PDF</button>
+</div>
 
-<div class="admin-btn" onclick="abrirAdmin()">⚙️</div>
+<div class="admin-btn hidden" id="btnAdmin" onclick="abrirAdmin()">⚙️</div>
 
 <div class="admin-panel" id="adminPanel">
-<h3>Área do Professor</h3>
+<h3>Cadastro de Questões</h3>
 <input type="text" id="tituloQuestao" placeholder="Pergunta">
 <textarea id="textoQuestao" placeholder="Texto da questão"></textarea>
-<input type="file" id="imagemQuestao">
-<input type="text" id="altA" placeholder="Alternativa A">
-<input type="text" id="altB" placeholder="Alternativa B">
-<input type="text" id="altC" placeholder="Alternativa C">
-<input type="text" id="altD" placeholder="Alternativa D">
-<select id="correta">
-<option value="A">Correta: A</option>
-<option value="B">Correta: B</option>
-<option value="C">Correta: C</option>
-<option value="D">Correta: D</option>
+<input type="text" id="imagemQuestao" placeholder="URL da imagem">
+<select id="disciplinaQuestao">
+<option>Português</option><option>Matemática</option><option>Ciências</option><option>Artes</option>
+<option>Religião</option><option>Inglês</option><option>Geografia</option><option>História</option><option>Educação Física</option>
 </select>
 <select id="serieQuestao">
-<option>6º Ano</option>
-<option>7º Ano</option>
-<option>8º Ano</option>
-<option>9º Ano</option>
+<option>Infantil 1</option><option>Infantil 2</option>
+<option>1º Ano</option><option>2º Ano</option>
+<option>3º Ano</option><option>4º Ano</option><option>5º Ano</option>
 </select>
-<button onclick="salvarQuestao()">Salvar no Banco</button>
+<input type="text" id="altA" placeholder="A">
+<input type="text" id="altB" placeholder="B">
+<input type="text" id="altC" placeholder="C">
+<input type="text" id="altD" placeholder="D">
+<select id="correta"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
+<button onclick="salvarQuestao()">Salvar</button>
 <button onclick="fecharAdmin()">Fechar</button>
 </div>
 
 <footer>Portal Educacional © 2026</footer>
+</div>
 
 <script>
-let bancoQuestoes = JSON.parse(localStorage.getItem('questoes')) || [];
-let resultados = JSON.parse(localStorage.getItem('resultados')) || [];
+const supabase = window.supabase.createClient(
+"COLE_AQUI_SUA_URL",
+"COLE_AQUI_SUA_ANON_KEY"
+);
 
-function showSection(id){document.querySelectorAll('.container').forEach(c=>c.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
+let questoesAtuais = [];
 
-function abrirAdmin(){let s=prompt('Senha do administrador');if(s==='paula2026'){adminPanel.style.display='block'}else{alert('Senha incorreta')}}
-function fecharAdmin(){adminPanel.style.display='none'}
-
-function salvarQuestao(){
-let reader=new FileReader();
-let file=document.getElementById('imagemQuestao').files[0];
-reader.onload=function(){
-bancoQuestoes.push({
-pergunta:tituloQuestao.value,
-texto:textoQuestao.value,
-imagem:reader.result,
-A:altA.value,B:altB.value,C:altC.value,D:altD.value,
-correta:correta.value,serie:serieQuestao.value
-});
-localStorage.setItem('questoes',JSON.stringify(bancoQuestoes));
-alert('Questão salva!');
-};
-if(file){reader.readAsDataURL(file)}else{reader.onload()}
+function entrar(){
+if(tipoLogin.value==="professor" && senha.value!=="paula2026"){alert("Senha incorreta");return;}
+login.classList.add("hidden");
+portal.classList.remove("hidden");
+if(tipoLogin.value==="professor") btnAdmin.classList.remove("hidden");
 }
 
-function iniciarSimulado(){
-let serie=serieAluno.value;
-let nome=nomeAluno.value;
-let questoes=bancoQuestoes.filter(q=>q.serie===serie);
-areaSimulado.innerHTML='';
-questoes.forEach((q,i)=>{
-areaSimulado.innerHTML+=`<div class='question'><p><b>${i+1}. ${q.pergunta}</b></p><p>${q.texto||''}</p>${q.imagem?`<img src='${q.imagem}' width='150'>`:''}
-<label><input type='radio' name='q${i}' value='A'> ${q.A}</label><br>
-<label><input type='radio' name='q${i}' value='B'> ${q.B}</label><br>
-<label><input type='radio' name='q${i}' value='C'> ${q.C}</label><br>
-<label><input type='radio' name='q${i}' value='D'> ${q.D}</label></div>`});
+function showSection(id){
+document.querySelectorAll('.container').forEach(c=>c.classList.add('hidden'));
+document.getElementById(id).classList.remove('hidden');
+if(id==="resultados") carregarResultados();
+}
+
+function abrirAdmin(){adminPanel.style.display='block'}
+function fecharAdmin(){adminPanel.style.display='none'}
+
+async function salvarQuestao(){
+await supabase.from('questoes').insert([{
+pergunta:tituloQuestao.value,
+texto:textoQuestao.value,
+imagem:imagemQuestao.value,
+a:altA.value,b:altB.value,c:altC.value,d:altD.value,
+correta:correta.value,
+serie:serieQuestao.value,
+disciplina:disciplinaQuestao.value
+}]);
+alert("Questão salva!");
+}
+
+async function iniciarSimulado(){
+let { data } = await supabase.from('questoes')
+.select("*")
+.eq("serie", serieAluno.value)
+.eq("disciplina", disciplinaAluno.value);
+
+questoesAtuais = data;
+areaSimulado.innerHTML="";
+
+data.forEach((q,i)=>{
+areaSimulado.innerHTML+=`
+<div class='question'>
+<p><b>${i+1}. ${q.pergunta}</b></p>
+<p>${q.texto||""}</p>
+${q.imagem?`<img src="${q.imagem}" width="150">`:""}
+<label><input type='radio' name='q${i}' value='A'> ${q.a}</label><br>
+<label><input type='radio' name='q${i}' value='B'> ${q.b}</label><br>
+<label><input type='radio' name='q${i}' value='C'> ${q.c}</label><br>
+<label><input type='radio' name='q${i}' value='D'> ${q.d}</label>
+</div>`;
+});
 areaSimulado.innerHTML+="<button onclick='corrigirSimulado()'>Finalizar</button>";
 }
 
-function corrigirSimulado(){
-let radios=document.querySelectorAll("input[type='radio']:checked");
+async function corrigirSimulado(){
 let acertos=0;
-radios.forEach((r,i)=>{if(r.value===bancoQuestoes[i].correta)acertos++});
-let erros=bancoQuestoes.length-acertos;
-resultados.push({aluno:nomeAluno.value,serie:serieAluno.value,acertos,erros});
-localStorage.setItem('resultados',JSON.stringify(resultados));
+questoesAtuais.forEach((q,i)=>{
+let marcada=document.querySelector(`input[name='q${i}']:checked`);
+if(marcada && marcada.value===q.correta) acertos++;
+});
+let erros=questoesAtuais.length-acertos;
+
+await supabase.from('resultados').insert([{
+aluno:nomeAluno.value,
+serie:serieAluno.value,
+disciplina:disciplinaAluno.value,
+acertos,erros
+}]);
+
 alert(`Resultado: ${acertos} acertos e ${erros} erros`);
-showSection('resultados');
-mostrarRelatorios();
+showSection("resultados");
 }
 
-function mostrarRelatorios(){relatorios.innerHTML='';resultados.forEach(r=>{relatorios.innerHTML+=`<p>${r.aluno} - ${r.serie} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`})}
-mostrarRelatorios();
+async function carregarResultados(){
+let { data } = await supabase.from('resultados').select("*").order('id',{ascending:false});
+relatorios.innerHTML="";
+data.forEach(r=>{
+relatorios.innerHTML+=`<p>${r.aluno} - ${r.serie} (${r.disciplina}) → ✅ ${r.acertos} | ❌ ${r.erros}</p>`
+});
+}
 </script>
-
 </body>
 </html>
