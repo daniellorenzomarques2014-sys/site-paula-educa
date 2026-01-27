@@ -4,165 +4,166 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal Educacional</title>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
 <style>
-body{font-family:Arial;margin:0;background:#f2f2f2}
-header{background:#2c3e50;color:white;padding:15px;text-align:center}
-header img{max-height:80px;display:block;margin:0 auto 10px}
-nav{display:flex;justify-content:center;flex-wrap:wrap;background:#34495e}
-nav button{background:none;border:none;color:white;padding:14px 18px;cursor:pointer}
-nav button:hover{background:#2c3e50}
-section{display:none;padding:20px}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef2f7}
+
+/* CABEÇALHO */
+header{
+background:linear-gradient(90deg,#0f2027,#203a43,#2c5364);
+color:white;
+display:flex;
+align-items:center;
+padding:10px 20px;
+box-shadow:0 2px 8px rgba(0,0,0,0.2)
+}
+header img{height:75px;margin-right:15px}
+header h1{margin:0;font-size:22px}
+
+/* MENU */
+nav{display:flex;flex-wrap:wrap;justify-content:center;background:#1c2833}
+nav button{
+background:none;border:none;color:white;
+padding:14px 18px;cursor:pointer;font-size:15px
+}
+nav button:hover{background:#2e4053}
+
+/* CONTEÚDO */
+section{display:none;padding:20px;max-width:1000px;margin:auto}
 .active{display:block}
-.card{background:white;padding:15px;margin:10px 0;border-radius:8px;box-shadow:0 0 5px rgba(0,0,0,0.1)}
-input, select, textarea{width:100%;padding:8px;margin:5px 0}
-button.primary{background:#27ae60;color:white;border:none;padding:10px;margin-top:10px;cursor:pointer}
-button.danger{background:#c0392b;color:white;border:none;padding:10px;margin-top:10px;cursor:pointer}
-.hidden{display:none}
-.alt-btn{display:block;margin:5px 0;padding:8px;background:#ecf0f1;border:none;width:100%;cursor:pointer}
+.card{
+background:white;padding:15px;margin:10px 0;
+border-radius:8px;box-shadow:0 0 6px rgba(0,0,0,0.1)
+}
+
+textarea{min-height:90px}
+input, select, textarea{
+width:100%;padding:8px;margin:6px 0;border-radius:4px;border:1px solid #ccc
+}
+
+button.primary{
+background:#27ae60;color:white;border:none;padding:10px;
+margin-top:10px;cursor:pointer;border-radius:4px
+}
+
+.alt-btn{
+display:block;margin:5px 0;padding:8px;background:#ecf0f1;
+border:none;width:100%;cursor:pointer;border-radius:4px;text-align:left
+}
+
 .correct{background:#2ecc71!important;color:white}
 .wrong{background:#e74c3c!important;color:white}
+.hidden{display:none}
+
+/* BOTÃO ADMIN */
+.admin-btn{
+position:fixed;left:0;top:40%;
+background:#2c5364;color:white;padding:10px 12px;
+border-radius:0 8px 8px 0;cursor:pointer;font-size:18px;
+box-shadow:2px 2px 6px rgba(0,0,0,0.3);z-index:1000
+}
+
+#adminPanel{
+position:fixed;left:20px;top:60px;width:320px;
+max-height:85vh;overflow:auto;z-index:999
+}
 </style>
 </head>
+
 <body>
 
 <header>
-<img src="LOGO_DA_ESCOLA.png" alt="Logotipo da Escola">
-<h1>Portal Educacional</h1>
+<img src="LOGO_DA_ESCOLA.png">
+<h1>Portal Educacional Escolar</h1>
 </header>
 
-<div id="login" class="card">
-<h2>Login</h2>
-<select id="tipoLogin">
-<option value="aluno">Aluno</option>
-<option value="professor">Professor</option>
-</select>
-<input type="text" id="nome" placeholder="Seu nome">
-<input type="password" id="senha" placeholder="Senha (professor)">
-<button class="primary" onclick="entrar()">Entrar</button>
-</div>
+<div class="admin-btn" onclick="abrirAdmin()">⚙️</div>
 
-<div id="portal" class="hidden">
 <nav>
 <button onclick="mostrar('inicio')">Início</button>
-<button onclick="mostrar('conteudos')">Conteúdos</button>
-<button onclick="mostrar('atividades')">Atividades</button>
-<button onclick="mostrar('simulados')">Simulados</button>
+<button onclick="mostrar('simulado')">Simulado</button>
 <button onclick="mostrar('resultados')">Resultados</button>
-<button onclick="sair()">Sair</button>
 </nav>
 
 <section id="inicio" class="active card">
-<h2>Bem-vindo ao Portal</h2>
-<p>Escolha uma das opções no menu acima.</p>
+<h2>Bem-vindo</h2>
+<p>Ambiente digital de aprendizagem da escola.</p>
 </section>
 
-<section id="conteudos" class="card">
-<h2>Cadastro de Conteúdos</h2>
-<div id="adminConteudos" class="hidden">
-<input type="text" id="tituloConteudo" placeholder="Título">
-<textarea id="textoConteudo" placeholder="Texto do conteúdo"></textarea>
-<button class="primary" onclick="salvarConteudo()">Salvar Conteúdo</button>
-</div>
-<div id="listaConteudos"></div>
-</section>
-
-<section id="atividades" class="card">
-<h2>Atividades</h2>
-<p>Em breve você poderá cadastrar atividades aqui.</p>
-</section>
-
-<section id="simulados" class="card">
-<h2>Simulados</h2>
-
-<div id="adminSimulados" class="hidden">
-<h3>Criar Questão</h3>
-<input type="text" id="pergunta" placeholder="Digite a pergunta">
-<input type="text" id="imgQuestao" placeholder="URL da imagem (opcional)">
-<input type="text" id="a" placeholder="Alternativa A">
-<input type="text" id="b" placeholder="Alternativa B">
-<input type="text" id="c" placeholder="Alternativa C">
-<input type="text" id="d" placeholder="Alternativa D">
-<select id="correta">
-<option value="0">A</option>
-<option value="1">B</option>
-<option value="2">C</option>
-<option value="3">D</option>
-</select>
-<button class="primary" onclick="salvarQuestao()">Salvar Questão</button>
-</div>
-
+<section id="simulado" class="card">
+<h2>Responder Simulado</h2>
+<input type="text" id="nomeAluno" placeholder="Nome do aluno">
 <div id="prova"></div>
-<button id="btnCorrigir" class="primary hidden" onclick="corrigir()">Corrigir Simulado</button>
+<button id="btnCorrigir" class="primary hidden" onclick="corrigir()">Corrigir</button>
 <div id="resultadoFinal"></div>
 </section>
 
 <section id="resultados" class="card">
-<h2>Resultados Salvos</h2>
+<h2>Resultados</h2>
 <div id="listaResultados"></div>
 </section>
+
+<!-- PAINEL ADMIN -->
+<div id="adminPanel" class="card hidden">
+<h3>Área do Professor</h3>
+
+<textarea id="pergunta" placeholder="Digite o enunciado da questão"></textarea>
+<input type="text" id="imgQuestao" placeholder="URL da imagem (opcional)">
+
+<input type="text" id="a" placeholder="Alternativa A">
+<input type="text" id="b" placeholder="Alternativa B">
+<input type="text" id="c" placeholder="Alternativa C">
+<input type="text" id="d" placeholder="Alternativa D">
+
+<select id="correta">
+<option value="0">Resposta correta: A</option>
+<option value="1">Resposta correta: B</option>
+<option value="2">Resposta correta: C</option>
+<option value="3">Resposta correta: D</option>
+</select>
+
+<button class="primary" onclick="salvarQuestao()">Salvar Questão</button>
+<button onclick="fecharAdmin()">Fechar</button>
 </div>
 
 <script>
-let tipo="aluno"
 let questoes=JSON.parse(localStorage.getItem("questoes")||"[]")
 let resultados=JSON.parse(localStorage.getItem("resultados")||"[]")
-
-function entrar(){
-tipo=document.getElementById("tipoLogin").value
-if(tipo==="professor" && document.getElementById("senha").value!=="1234"){
-alert("Senha do professor incorreta")
-return
-}
-login.classList.add("hidden")
-portal.classList.remove("hidden")
-if(tipo==="professor"){
-adminConteudos.classList.remove("hidden")
-adminSimulados.classList.remove("hidden")
-}
-carregarQuestoes()
-listarResultados()
-}
-
-function sair(){location.reload()}
 
 function mostrar(sec){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
 document.getElementById(sec).classList.add("active")
+if(sec==="simulado") carregarQuestoes()
+listarResultados()
 }
 
-function salvarConteudo(){
-let t=tituloConteudo.value
-let txt=textoConteudo.value
-let div=document.createElement("div")
-div.className="card"
-div.innerHTML=`<h3>${t}</h3><p>${txt}</p>`
-listaConteudos.appendChild(div)
-tituloConteudo.value=""
-textoConteudo.value=""
+function abrirAdmin(){
+let s=prompt("Senha do professor:")
+if(s==="1234"){adminPanel.classList.remove("hidden")}
+else alert("Senha incorreta")
 }
+function fecharAdmin(){adminPanel.classList.add("hidden")}
 
 function salvarQuestao(){
-let q={
-p:pergunta.value,
-img:imgQuestao.value,
-alts:[a.value,b.value,c.value,d.value],
-c:correta.value
-}
+let alts=[a.value.trim(),b.value.trim(),c.value.trim(),d.value.trim()]
+if(alts.some(x=>x==="")){alert("Preencha todas as alternativas");return}
+let set=new Set(alts)
+if(set.size<4){alert("Alternativas não podem ser iguais");return}
+
+let q={p:pergunta.value,img:imgQuestao.value,alts:alts,c:parseInt(correta.value)}
 questoes.push(q)
 localStorage.setItem("questoes",JSON.stringify(questoes))
 alert("Questão salva!")
+
 pergunta.value=imgQuestao.value=a.value=b.value=c.value=d.value=""
 }
 
 function carregarQuestoes(){
-if(tipo==="professor") return
 prova.innerHTML=""
 questoes.forEach((q,i)=>{
 let div=document.createElement("div")
 div.className="card"
-let imgTag=q.img?`<img src="${q.img}" style="max-width:200px"><br>`:""
-div.innerHTML=`<p><b>${i+1}.</b> ${q.p}</p>${imgTag}`
+div.innerHTML=`<p><b>${i+1}.</b> ${q.p}</p>${q.img?`<img src="${q.img}" style="max-width:200px"><br>`:""}`
 q.alts.forEach((alt,j)=>{
 let btn=document.createElement("button")
 btn.className="alt-btn"
@@ -189,15 +190,12 @@ let correta=questoes[i].c
 let marcada=respostas[i]
 let botoes=card.querySelectorAll("button")
 botoes[correta].classList.add("correct")
-if(marcada!=correta && marcada!=null){
-botoes[marcada].classList.add("wrong")
-}else if(marcada==correta){
-acertos++
-}
+if(marcada!=correta && marcada!=null){botoes[marcada].classList.add("wrong")}
+if(marcada==correta) acertos++
 })
 let erros=questoes.length-acertos
 resultadoFinal.innerHTML=`<h3>Resultado: ${acertos} acertos e ${erros} erros</h3>`
-resultados.push({nome:nome.value,acertos,erros,data:new Date().toLocaleString()})
+resultados.push({nome:nomeAluno.value,acertos,erros,data:new Date().toLocaleString()})
 localStorage.setItem("resultados",JSON.stringify(resultados))
 listarResultados()
 }
@@ -205,10 +203,7 @@ listarResultados()
 function listarResultados(){
 listaResultados.innerHTML=""
 resultados.forEach(r=>{
-let div=document.createElement("div")
-div.className="card"
-div.innerHTML=`<b>${r.nome}</b> — ${r.acertos} acertos, ${r.erros} erros <br>${r.data}`
-listaResultados.appendChild(div)
+listaResultados.innerHTML+=`<div class="card"><b>${r.nome}</b> — ${r.acertos} acertos, ${r.erros} erros<br>${r.data}</div>`
 })
 }
 </script>
