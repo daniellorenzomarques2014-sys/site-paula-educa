@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal Escolar</title>
+<title>Portal Educacional</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#eef3f7}
@@ -45,20 +45,21 @@ img.questao-img{max-width:100%;margin:10px 0}
     <h2>Bem-vindo ao Portal Escolar</h2>
 </section>
 
-<!-- ================= CONTEÚDOS (SÓ MATERIAL) ================= -->
+<!-- ================= CONTEÚDOS ================= -->
 <section id="conteudos">
-    <h2>Conteúdos por Série</h2>
-    <select id="serieConteudoFiltro" onchange="listarConteudos()"></select>
+    <h2>Conteúdos</h2>
+    Série:<select id="filtroSerieConteudo"></select>
+    Disciplina:<select id="filtroDisciplinaConteudo"></select>
     <div id="listaConteudos"></div>
 </section>
 
 <!-- ================= ATIVIDADES ================= -->
 <section id="atividades">
     <h2>Atividades</h2>
-    Nome do aluno:<input type="text" id="nomeAlunoAtiv">
+    Nome:<input type="text" id="nomeAlunoAtiv">
     Série:<select id="serieAtividade"></select>
-    Quantidade:
-    <select id="qtdAtividade"><option>10</option><option>20</option><option>50</option></select>
+    Disciplina:<select id="disciplinaAtividade"></select>
+    Quantidade:<select id="qtdAtividade"><option>10</option><option>20</option><option>50</option></select>
     <div id="areaAtividade"></div>
     <button class="salvar" onclick="corrigirAtividade()">Finalizar Atividade</button>
 </section>
@@ -66,10 +67,10 @@ img.questao-img{max-width:100%;margin:10px 0}
 <!-- ================= SIMULADOS ================= -->
 <section id="simulados">
     <h2>Simulados</h2>
-    Nome do aluno:<input type="text" id="nomeAlunoSim">
+    Nome:<input type="text" id="nomeAlunoSim">
     Série:<select id="serieSimulado"></select>
-    Quantidade:
-    <select id="qtdSimulado"><option>10</option><option>20</option><option>50</option></select>
+    Disciplina:<select id="disciplinaSimulado"></select>
+    Quantidade:<select id="qtdSimulado"><option>10</option><option>20</option><option>50</option></select>
     <div id="areaSimulado"></div>
     <button class="salvar" onclick="corrigirSimulado()">Finalizar Simulado</button>
 </section>
@@ -89,32 +90,30 @@ img.questao-img{max-width:100%;margin:10px 0}
     </div>
 </section>
 
-<!-- ================= PAINEL PROFESSOR ================= -->
+<!-- ================= ADMIN ================= -->
 <section id="admin">
     <h2>Painel do Professor</h2>
     <button onclick="mostrar('inicio')" style="background:red;color:white;padding:8px;border:none">Sair</button>
 
-    <h3>Cadastrar CONTEÚDO (NÃO é questão)</h3>
+    <h3>Cadastrar CONTEÚDO</h3>
     Série:<select id="serieConteudo"></select>
+    Disciplina:<select id="disciplinaConteudo"></select>
     Título:<input type="text" id="tituloConteudo">
-    Conteúdo (texto, imagens, gráficos – pode colar):<textarea id="textoConteudo"></textarea>
+    Conteúdo:<textarea id="textoConteudo"></textarea>
     <button class="salvar" onclick="salvarConteudo()">Salvar Conteúdo</button>
 
     <hr>
 
-    <h3>Cadastrar QUESTÃO (Atividade ou Simulado)</h3>
-    Tipo:
-    <select id="tipoQuestao">
-        <option value="atividade">Atividade</option>
-        <option value="simulado">Simulado</option>
-    </select>
+    <h3>Cadastrar QUESTÃO</h3>
+    Tipo:<select id="tipoQuestao"><option value="atividade">Atividade</option><option value="simulado">Simulado</option></select>
     Série:<select id="serieQuestao"></select>
-    Pergunta (pode colar texto com imagem):<textarea id="pergunta"></textarea>
-    URL da Imagem (opcional):<input type="text" id="imagem">
-    Alternativa A:<input type="text" id="a">
-    Alternativa B:<input type="text" id="b">
-    Alternativa C:<input type="text" id="c">
-    Alternativa D:<input type="text" id="d">
+    Disciplina:<select id="disciplinaQuestao"></select>
+    Pergunta:<textarea id="pergunta"></textarea>
+    URL da Imagem:<input type="text" id="imagem">
+    A:<input type="text" id="a">
+    B:<input type="text" id="b">
+    C:<input type="text" id="c">
+    D:<input type="text" id="d">
     Correta:<select id="correta"><option>A</option><option>B</option><option>C</option><option>D</option></select>
     <button class="salvar" onclick="salvarQuestao()">Salvar Questão</button>
 </section>
@@ -124,7 +123,9 @@ let senha="1234";
 let conteudos=JSON.parse(localStorage.getItem("conteudos"))||[];
 let questoes=JSON.parse(localStorage.getItem("questoes"))||[];
 let resultados=JSON.parse(localStorage.getItem("resultados"))||[];
+
 let series=["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
+let disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Religião","Inglês","Ciências","Artes","Educação Física"];
 
 function mostrar(id){
  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
@@ -135,23 +136,20 @@ function mostrar(id){
 
 function loginAdmin(){ if(senhaAdmin.value===senha){mostrar("admin")} else alert("Senha incorreta") }
 
-series.forEach(s=>{
- serieQuestao.innerHTML+=`<option>${s}</option>`;
- serieConteudo.innerHTML+=`<option>${s}</option>`;
- serieConteudoFiltro.innerHTML+=`<option>${s}</option>`;
- serieAtividade.innerHTML+=`<option>${s}</option>`;
- serieSimulado.innerHTML+=`<option>${s}</option>`;
-});
+function preencherSelect(select,lista){ lista.forEach(i=>select.innerHTML+=`<option>${i}</option>`) }
+
+[serieConteudo,serieQuestao,serieAtividade,serieSimulado,filtroSerieConteudo].forEach(s=>preencherSelect(s,series));
+[disciplinaConteudo,disciplinaQuestao,disciplinaAtividade,disciplinaSimulado,filtroDisciplinaConteudo].forEach(d=>preencherSelect(d,disciplinas));
 
 function salvarConteudo(){
- conteudos.push({serie:serieConteudo.value,titulo:tituloConteudo.value,texto:textoConteudo.value});
+ conteudos.push({serie:serieConteudo.value,disciplina:disciplinaConteudo.value,titulo:tituloConteudo.value,texto:textoConteudo.value});
  localStorage.setItem("conteudos",JSON.stringify(conteudos));
  alert("Conteúdo salvo!");
 }
 
 function listarConteudos(){
  listaConteudos.innerHTML="";
- conteudos.filter(c=>c.serie===serieConteudoFiltro.value)
+ conteudos.filter(c=>c.serie===filtroSerieConteudo.value && c.disciplina===filtroDisciplinaConteudo.value)
  .forEach(c=>listaConteudos.innerHTML+=`<div class='box'><h3>${c.titulo}</h3><p>${c.texto}</p></div>`);
 }
 
@@ -159,6 +157,7 @@ function salvarQuestao(){
  questoes.push({
   tipo:tipoQuestao.value,
   serie:serieQuestao.value,
+  disciplina:disciplinaQuestao.value,
   pergunta:pergunta.value,
   img:imagem.value,
   a:a.value,b:b.value,c:c.value,d:d.value,
@@ -168,9 +167,9 @@ function salvarQuestao(){
  alert("Questão salva!");
 }
 
-function gerarQuestoes(area,serie,qtd,tipo){
+function gerarQuestoes(area,serie,disciplina,qtd,tipo){
  area.innerHTML="";
- let lista=questoes.filter(q=>q.serie===serie && q.tipo===tipo).slice(0,qtd);
+ let lista=questoes.filter(q=>q.serie===serie && q.disciplina===disciplina && q.tipo===tipo).slice(0,qtd);
  lista.forEach((q,i)=>{
  area.innerHTML+=`
  <div class='box'>
@@ -184,10 +183,8 @@ function gerarQuestoes(area,serie,qtd,tipo){
  });
 }
 
-serieAtividade.onchange=()=>gerarQuestoes(areaAtividade,serieAtividade.value,qtdAtividade.value,"atividade");
-serieSimulado.onchange=()=>gerarQuestoes(areaSimulado,serieSimulado.value,qtdSimulado.value,"simulado");
-qtdAtividade.onchange=()=>gerarQuestoes(areaAtividade,serieAtividade.value,qtdAtividade.value,"atividade");
-qtdSimulado.onchange=()=>gerarQuestoes(areaSimulado,serieSimulado.value,qtdSimulado.value,"simulado");
+serieAtividade.onchange=disciplinaAtividade.onchange=qtdAtividade.onchange=()=>gerarQuestoes(areaAtividade,serieAtividade.value,disciplinaAtividade.value,qtdAtividade.value,"atividade");
+serieSimulado.onchange=disciplinaSimulado.onchange=qtdSimulado.onchange=()=>gerarQuestoes(areaSimulado,serieSimulado.value,disciplinaSimulado.value,qtdSimulado.value,"simulado");
 
 function corrigirAtividade(){corrigir(areaAtividade,nomeAlunoAtiv.value,serieAtividade.value,"Atividade","atividade")}
 function corrigirSimulado(){corrigir(areaSimulado,nomeAlunoSim.value,serieSimulado.value,"Simulado","simulado")}
