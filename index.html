@@ -6,108 +6,22 @@
 <title>Plataforma Escolar</title>
 
 <style>
-body{
-    margin:0;
-    font-family: Arial, Helvetica, sans-serif;
-    background:#f2f6f9;
-}
-
-/* CABEÇALHO */
-header{
-    background: linear-gradient(90deg,#0d47a1,#1565c0,#1976d2);
-    color:white;
-    padding:15px;
-    display:flex;
-    align-items:center;
-}
-
-header img{
-    height:60px;
-    margin-right:15px;
-}
-
-header h1{
-    margin:0;
-    font-size:22px;
-}
-
-/* MENU */
-nav{
-    background:#0b3c8a;
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    padding:5px;
-}
-
-nav button{
-    background:none;
-    border:none;
-    color:white;
-    padding:10px 15px;
-    cursor:pointer;
-    font-size:15px;
-}
-
-nav button:hover{
-    background:#1565c0;
-}
-
-.admin-btn{
-    margin-left:auto;
-    background:#ff9800;
-    color:white;
-    border-radius:5px;
-}
-
-/* SEÇÕES */
-section{
-    display:none;
-    padding:20px;
-}
-
-.active{
-    display:block;
-}
-
-h2{
-    text-align:center;
-    color:#0d47a1;
-}
-
-/* FORMULÁRIOS */
-input, select, textarea{
-    width:100%;
-    padding:8px;
-    margin:5px 0 10px;
-}
-
-textarea{
-    min-height:80px;
-}
-
-button.salvar{
-    background:#0d47a1;
-    color:white;
-    border:none;
-    padding:10px;
-    cursor:pointer;
-    width:100%;
-}
-
-.questao-box{
-    background:white;
-    padding:15px;
-    margin-bottom:15px;
-    border-radius:8px;
-    box-shadow:0 0 5px rgba(0,0,0,0.1);
-}
-
-.resultado{
-    font-size:18px;
-    font-weight:bold;
-    text-align:center;
-}
+body{margin:0;font-family:Arial;background:#f2f6f9;}
+header{background:linear-gradient(90deg,#0d47a1,#1565c0,#1976d2);color:white;padding:15px;display:flex;align-items:center;}
+header img{height:60px;margin-right:15px;}
+nav{background:#0b3c8a;display:flex;flex-wrap:wrap;align-items:center;padding:5px;}
+nav button{background:none;border:none;color:white;padding:10px 15px;cursor:pointer;font-size:15px;}
+nav button:hover{background:#1565c0;}
+.admin-btn{margin-left:auto;background:#ff9800;border-radius:5px;}
+section{display:none;padding:20px;}
+.active{display:block;}
+h2{text-align:center;color:#0d47a1;}
+input,select,textarea{width:100%;padding:8px;margin:5px 0 10px;}
+textarea{min-height:80px;}
+button.salvar{background:#0d47a1;color:white;border:none;padding:10px;cursor:pointer;width:100%;}
+.questao-box{background:white;padding:15px;margin-bottom:15px;border-radius:8px;box-shadow:0 0 5px rgba(0,0,0,0.1);}
+.resultado{font-size:18px;font-weight:bold;text-align:center;}
+.login-box{max-width:400px;margin:auto;background:white;padding:20px;border-radius:8px;box-shadow:0 0 5px rgba(0,0,0,0.2);}
 </style>
 </head>
 
@@ -124,34 +38,20 @@ button.salvar{
     <button onclick="mostrar('atividades')">Atividades</button>
     <button onclick="mostrar('simulados')">Simulados</button>
     <button onclick="mostrar('resultados')">Resultados</button>
-    <button class="admin-btn" onclick="mostrar('admin')">Administrador</button>
+    <button class="admin-btn" onclick="abrirLogin()">Administrador</button>
 </nav>
 
-<!-- INÍCIO -->
 <section id="inicio" class="active">
     <h2>Bem-vindo à Plataforma Escolar</h2>
-    <p style="text-align:center;">Use o menu acima para acessar conteúdos, atividades e simulados.</p>
 </section>
 
-<!-- CONTEÚDOS -->
-<section id="conteudos">
-    <h2>Conteúdos</h2>
-    <div id="listaConteudos"></div>
-</section>
+<section id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></section>
+<section id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></section>
 
-<!-- ATIVIDADES -->
-<section id="atividades">
-    <h2>Atividades</h2>
-    <div id="listaAtividades"></div>
-</section>
-
-<!-- SIMULADOS -->
 <section id="simulados">
     <h2>Simulados</h2>
-    Nome do Aluno:
-    <input type="text" id="nomeAluno">
-    Série:
-    <select id="serieAluno">
+    Nome do Aluno:<input type="text" id="nomeAluno">
+    Série:<select id="serieAluno">
         <option>1º Ano</option><option>2º Ano</option><option>3º Ano</option>
         <option>4º Ano</option><option>5º Ano</option>
         <option>6º Ano</option><option>7º Ano</option>
@@ -161,43 +61,40 @@ button.salvar{
     <button class="salvar" onclick="corrigir()">Finalizar e Corrigir</button>
 </section>
 
-<!-- RESULTADOS -->
-<section id="resultados">
-    <h2>Resultados</h2>
-    <div id="painelResultados"></div>
+<section id="resultados"><h2>Resultados</h2><div id="painelResultados"></div></section>
+
+<!-- LOGIN ADMIN -->
+<section id="loginAdmin">
+    <div class="login-box">
+        <h2>Login do Administrador</h2>
+        Senha:<input type="password" id="senhaAdmin">
+        <button class="salvar" onclick="verificarSenha()">Entrar</button>
+    </div>
 </section>
 
 <!-- ADMIN -->
 <section id="admin">
-    <h2>Área do Administrador (Professor)</h2>
+    <h2>Área do Professor</h2>
+    <button onclick="logoutAdmin()" style="background:red;color:white;padding:8px;border:none;">Sair do Administrador</button>
 
     <h3>Cadastrar Conteúdo</h3>
-    Título:
-    <input type="text" id="tituloConteudo">
-    Texto:
-    <textarea id="textoConteudo"></textarea>
+    Título:<input type="text" id="tituloConteudo">
+    Texto:<textarea id="textoConteudo"></textarea>
     <button class="salvar" onclick="salvarConteudo()">Salvar Conteúdo</button>
 
-    <h3>Cadastrar Questão para Simulado</h3>
-    Pergunta:
-    <textarea id="pergunta"></textarea>
-    Imagem (cole link se tiver):
-    <input type="text" id="imagem">
-    Alternativa A:<input type="text" id="a">
-    Alternativa B:<input type="text" id="b">
-    Alternativa C:<input type="text" id="c">
-    Alternativa D:<input type="text" id="d">
-    Resposta Correta:
-    <select id="correta">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
-    </select>
+    <h3>Cadastrar Questão</h3>
+    Pergunta:<textarea id="pergunta"></textarea>
+    Imagem (link opcional):<input type="text" id="imagem">
+    A:<input type="text" id="a">
+    B:<input type="text" id="b">
+    C:<input type="text" id="c">
+    D:<input type="text" id="d">
+    Correta:<select id="correta"><option>A</option><option>B</option><option>C</option><option>D</option></select>
     <button class="salvar" onclick="salvarQuestao()">Salvar Questão</button>
 </section>
 
 <script>
+let senhaCorreta = "1234";
 let questoes = JSON.parse(localStorage.getItem("questoes")) || [];
 let conteudos = JSON.parse(localStorage.getItem("conteudos")) || [];
 let resultados = JSON.parse(localStorage.getItem("resultados")) || [];
@@ -205,37 +102,36 @@ let resultados = JSON.parse(localStorage.getItem("resultados")) || [];
 function mostrar(id){
     document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
     document.getElementById(id).classList.add("active");
-    if(id==="simulados") carregarQuestoes();
     if(id==="conteudos") listarConteudos();
+    if(id==="simulados") carregarQuestoes();
     if(id==="resultados") listarResultados();
 }
 
+function abrirLogin(){ mostrar("loginAdmin"); }
+
+function verificarSenha(){
+    if(senhaAdmin.value === senhaCorreta){
+        mostrar("admin");
+    } else {
+        alert("Senha incorreta!");
+    }
+}
+
+function logoutAdmin(){ mostrar("inicio"); }
+
 function salvarConteudo(){
-    conteudos.push({
-        titulo: tituloConteudo.value,
-        texto: textoConteudo.value
-    });
+    conteudos.push({titulo:tituloConteudo.value,texto:textoConteudo.value});
     localStorage.setItem("conteudos",JSON.stringify(conteudos));
     alert("Conteúdo salvo!");
 }
 
 function listarConteudos(){
     listaConteudos.innerHTML="";
-    conteudos.forEach(c=>{
-        listaConteudos.innerHTML += `<div class='questao-box'><h3>${c.titulo}</h3><p>${c.texto}</p></div>`;
-    });
+    conteudos.forEach(c=>listaConteudos.innerHTML+=`<div class='questao-box'><h3>${c.titulo}</h3><p>${c.texto}</p></div>`);
 }
 
 function salvarQuestao(){
-    questoes.push({
-        pergunta: pergunta.value,
-        imagem: imagem.value,
-        a: a.value,
-        b: b.value,
-        c: c.value,
-        d: d.value,
-        correta: correta.value
-    });
+    questoes.push({pergunta:pergunta.value,imagem:imagem.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
     localStorage.setItem("questoes",JSON.stringify(questoes));
     alert("Questão salva!");
 }
@@ -246,7 +142,7 @@ function carregarQuestoes(){
         areaQuestoes.innerHTML+=`
         <div class='questao-box'>
             <p><b>${i+1}. ${q.pergunta}</b></p>
-            ${q.imagem ? `<img src="${q.imagem}" style="max-width:100%">` : ""}
+            ${q.imagem?`<img src="${q.imagem}" style="max-width:100%">`:``}
             <label><input type="radio" name="q${i}" value="A"> ${q.a}</label><br>
             <label><input type="radio" name="q${i}" value="B"> ${q.b}</label><br>
             <label><input type="radio" name="q${i}" value="C"> ${q.c}</label><br>
@@ -258,20 +154,17 @@ function carregarQuestoes(){
 function corrigir(){
     let acertos=0;
     questoes.forEach((q,i)=>{
-        let resp = document.querySelector(`input[name="q${i}"]:checked`);
+        let resp=document.querySelector(`input[name="q${i}"]:checked`);
         if(resp && resp.value===q.correta) acertos++;
     });
-    let nome = nomeAluno.value;
-    resultados.push({nome, acertos, total: questoes.length});
+    resultados.push({nome:nomeAluno.value,acertos,total:questoes.length});
     localStorage.setItem("resultados",JSON.stringify(resultados));
     alert("Você acertou "+acertos+" de "+questoes.length);
 }
 
 function listarResultados(){
     painelResultados.innerHTML="";
-    resultados.forEach(r=>{
-        painelResultados.innerHTML+=`<div class='questao-box'>Aluno: ${r.nome} — Acertos: ${r.acertos}/${r.total}</div>`;
-    });
+    resultados.forEach(r=>painelResultados.innerHTML+=`<div class='questao-box'>${r.nome} — ${r.acertos}/${r.total}</div>`);
 }
 </script>
 
