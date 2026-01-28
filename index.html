@@ -3,206 +3,293 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal Educacional</title>
+<title>Plataforma Escolar</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#eef3f7}
-header{background:linear-gradient(90deg,#0d47a1,#1565c0,#1976d2);color:white;padding:15px;display:flex;align-items:center}
-header img{height:70px;margin-right:15px}
-nav{background:#0b3c8a;display:flex;flex-wrap:wrap;align-items:center}
-nav button{background:none;border:none;color:white;padding:12px 15px;cursor:pointer;font-size:15px}
-nav button:hover{background:#1565c0}
-.admin-btn{margin-left:auto;background:#ff9800;border-radius:5px}
-section{display:none;padding:20px;max-width:1100px;margin:auto}
-.active{display:block}
-h2{text-align:center;color:#0d47a1}
-textarea,input,select{width:100%;padding:8px;margin:5px 0 10px}
-textarea{min-height:120px}
-button.salvar{background:#0d47a1;color:white;border:none;padding:10px;cursor:pointer;width:100%;border-radius:5px}
-.box{background:white;padding:15px;margin-bottom:15px;border-radius:8px;box-shadow:0 0 5px rgba(0,0,0,0.1)}
-.login-box{max-width:400px;margin:auto;background:white;padding:20px;border-radius:8px;box-shadow:0 0 5px rgba(0,0,0,0.2)}
-img.questao-img{max-width:100%;margin:10px 0}
+body{
+margin:0;
+font-family: Arial, sans-serif;
+background: linear-gradient(to bottom, #dff6ff, #ffffff);
+}
+
+/* CABEÇALHO */
+header{
+background: linear-gradient(90deg,#0d47a1,#1976d2,#42a5f5);
+color:white;
+padding:15px;
+display:flex;
+align-items:center;
+}
+
+header img{
+height:60px;
+margin-right:15px;
+}
+
+header h1{
+flex:1;
+text-align:center;
+margin:0;
+font-size:26px;
+}
+
+/* MENU */
+nav{
+background:#1565c0;
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+nav button{
+background:none;
+border:none;
+color:white;
+padding:14px 18px;
+cursor:pointer;
+font-size:16px;
+}
+
+nav button:hover{
+background:#0d47a1;
+}
+
+/* CONTEÚDO */
+.section{
+display:none;
+padding:20px;
+max-width:1000px;
+margin:auto;
+}
+
+.active{display:block;}
+
+.card{
+background:white;
+padding:15px;
+margin-bottom:15px;
+border-radius:8px;
+box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
+
+input, select, textarea{
+width:100%;
+padding:8px;
+margin:5px 0 10px 0;
+}
+
+button.action{
+background:#1976d2;
+color:white;
+border:none;
+padding:10px;
+border-radius:5px;
+cursor:pointer;
+}
+
+button.action:hover{background:#0d47a1}
+
+.question-box{
+border:1px solid #ccc;
+padding:10px;
+margin-bottom:10px;
+border-radius:6px;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-    <img src="LOGO_DA_ESCOLA.png">
-    <h1>Portal Educacional</h1>
+<img src="LOGO_DA_ESCOLA.png" onerror="this.style.display='none'">
+<h1>Bem-vindo à Plataforma Escolar</h1>
 </header>
 
 <nav>
-    <button onclick="mostrar('inicio')">Início</button>
-    <button onclick="mostrar('conteudos')">Conteúdos</button>
-    <button onclick="mostrar('atividades')">Atividades</button>
-    <button onclick="mostrar('simulados')">Simulados</button>
-    <button onclick="mostrar('resultados')">Resultados</button>
-    <button class="admin-btn" onclick="mostrar('loginAdmin')">Administrador</button>
+<button onclick="showSection('inicio')">Início</button>
+<button onclick="showSection('conteudos')">Conteúdos</button>
+<button onclick="showSection('atividades')">Atividades</button>
+<button onclick="showSection('simulados')">Simulados</button>
+<button onclick="showSection('resultados')">Resultados</button>
+<button onclick="showSection('admin')">Administrador</button>
 </nav>
 
-<section id="inicio" class="active">
-    <h2>Bem-vindo ao Portal Escolar</h2>
-</section>
+<!-- INÍCIO -->
+<div id="inicio" class="section active">
+<div class="card">
+<h2 style="text-align:center">Educação com tecnologia e inovação 🌎</h2>
+<p style="text-align:center">Use o menu acima para acessar conteúdos, atividades e simulados.</p>
+</div>
+</div>
 
-<!-- ================= CONTEÚDOS ================= -->
-<section id="conteudos">
-    <h2>Conteúdos</h2>
-    Série:<select id="filtroSerieConteudo"></select>
-    Disciplina:<select id="filtroDisciplinaConteudo"></select>
-    <div id="listaConteudos"></div>
-</section>
+<!-- CONTEÚDOS -->
+<div id="conteudos" class="section">
+<h2>Conteúdos por Série e Disciplina</h2>
+<div id="listaConteudos"></div>
+</div>
 
-<!-- ================= ATIVIDADES ================= -->
-<section id="atividades">
-    <h2>Atividades</h2>
-    Nome:<input type="text" id="nomeAlunoAtiv">
-    Série:<select id="serieAtividade"></select>
-    Disciplina:<select id="disciplinaAtividade"></select>
-    Quantidade:<select id="qtdAtividade"><option>10</option><option>20</option><option>50</option></select>
-    <div id="areaAtividade"></div>
-    <button class="salvar" onclick="corrigirAtividade()">Finalizar Atividade</button>
-</section>
+<!-- ATIVIDADES -->
+<div id="atividades" class="section">
+<h2>Atividades</h2>
+<div id="listaAtividades"></div>
+</div>
 
-<!-- ================= SIMULADOS ================= -->
-<section id="simulados">
-    <h2>Simulados</h2>
-    Nome:<input type="text" id="nomeAlunoSim">
-    Série:<select id="serieSimulado"></select>
-    Disciplina:<select id="disciplinaSimulado"></select>
-    Quantidade:<select id="qtdSimulado"><option>10</option><option>20</option><option>50</option></select>
-    <div id="areaSimulado"></div>
-    <button class="salvar" onclick="corrigirSimulado()">Finalizar Simulado</button>
-</section>
+<!-- SIMULADOS -->
+<div id="simulados" class="section">
+<h2>Simulados</h2>
+<div id="listaSimulados"></div>
+</div>
 
-<!-- ================= RESULTADOS ================= -->
-<section id="resultados">
-    <h2>Resultados</h2>
-    <div id="listaResultados"></div>
-</section>
+<!-- RESULTADOS -->
+<div id="resultados" class="section">
+<h2>Resultados dos Alunos</h2>
+<div id="listaResultados"></div>
+</div>
 
-<!-- ================= LOGIN ================= -->
-<section id="loginAdmin">
-    <div class="login-box">
-        <h2>Login Professor</h2>
-        Senha:<input type="password" id="senhaAdmin">
-        <button class="salvar" onclick="loginAdmin()">Entrar</button>
-    </div>
-</section>
+<!-- ADMIN -->
+<div id="admin" class="section">
+<h2>Área do Professor</h2>
 
-<!-- ================= ADMIN ================= -->
-<section id="admin">
-    <h2>Painel do Professor</h2>
-    <button onclick="mostrar('inicio')" style="background:red;color:white;padding:8px;border:none">Sair</button>
+<div id="loginAdmin">
+<input type="password" id="senhaAdmin" placeholder="Digite a senha">
+<button class="action" onclick="loginAdmin()">Entrar</button>
+</div>
 
-    <h3>Cadastrar CONTEÚDO</h3>
-    Série:<select id="serieConteudo"></select>
-    Disciplina:<select id="disciplinaConteudo"></select>
-    Título:<input type="text" id="tituloConteudo">
-    Conteúdo:<textarea id="textoConteudo"></textarea>
-    <button class="salvar" onclick="salvarConteudo()">Salvar Conteúdo</button>
+<div id="painelAdmin" style="display:none">
 
-    <hr>
+<h3>Cadastrar Conteúdo</h3>
+<select id="serieConteudo"></select>
+<select id="disciplinaConteudo"></select>
+<textarea id="textoConteudo" placeholder="Digite o conteúdo aqui..."></textarea>
+<button class="action" onclick="salvarConteudo()">Salvar Conteúdo</button>
 
-    <h3>Cadastrar QUESTÃO</h3>
-    Tipo:<select id="tipoQuestao"><option value="atividade">Atividade</option><option value="simulado">Simulado</option></select>
-    Série:<select id="serieQuestao"></select>
-    Disciplina:<select id="disciplinaQuestao"></select>
-    Pergunta:<textarea id="pergunta"></textarea>
-    URL da Imagem:<input type="text" id="imagem">
-    A:<input type="text" id="a">
-    B:<input type="text" id="b">
-    C:<input type="text" id="c">
-    D:<input type="text" id="d">
-    Correta:<select id="correta"><option>A</option><option>B</option><option>C</option><option>D</option></select>
-    <button class="salvar" onclick="salvarQuestao()">Salvar Questão</button>
-</section>
+<hr>
+
+<h3>Cadastrar Questão (Atividade ou Simulado)</h3>
+<select id="tipoQuestao">
+<option>Atividade</option>
+<option>Simulado</option>
+</select>
+
+<select id="serieQuestao"></select>
+<select id="disciplinaQuestao"></select>
+
+<textarea id="pergunta" placeholder="Texto da pergunta"></textarea>
+<input type="text" id="imgQuestao" placeholder="URL da imagem (opcional)">
+
+<input type="text" id="a" placeholder="Alternativa A">
+<input type="text" id="b" placeholder="Alternativa B">
+<input type="text" id="c" placeholder="Alternativa C">
+<input type="text" id="d" placeholder="Alternativa D">
+
+<select id="correta">
+<option value="A">A correta</option>
+<option value="B">B correta</option>
+<option value="C">C correta</option>
+<option value="D">D correta</option>
+</select>
+
+<button class="action" onclick="salvarQuestao()">Salvar Questão</button>
+
+</div>
+</div>
 
 <script>
-let senha="1234";
-let conteudos=JSON.parse(localStorage.getItem("conteudos"))||[];
-let questoes=JSON.parse(localStorage.getItem("questoes"))||[];
-let resultados=JSON.parse(localStorage.getItem("resultados"))||[];
+const series = ["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
+const disciplinas = ["Português","Matemática","Ciências","História","Geografia","Artes","Religião","Inglês","Educação Física"];
 
-let series=["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
-let disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Religião","Inglês","Ciências","Artes","Educação Física"];
-
-function mostrar(id){
- document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
- document.getElementById(id).classList.add("active");
- if(id==="conteudos") listarConteudos();
- if(id==="resultados") listarResultados();
+function preencherSelect(id, lista){
+let sel=document.getElementById(id);
+lista.forEach(v=>{
+let op=document.createElement("option");
+op.textContent=v;
+sel.appendChild(op);
+});
 }
 
-function loginAdmin(){ if(senhaAdmin.value===senha){mostrar("admin")} else alert("Senha incorreta") }
+["serieConteudo","serieQuestao"].forEach(id=>preencherSelect(id,series));
+["disciplinaConteudo","disciplinaQuestao"].forEach(id=>preencherSelect(id,disciplinas));
 
-function preencherSelect(select,lista){ lista.forEach(i=>select.innerHTML+=`<option>${i}</option>`) }
+function showSection(id){
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+carregarTudo();
+}
 
-[serieConteudo,serieQuestao,serieAtividade,serieSimulado,filtroSerieConteudo].forEach(s=>preencherSelect(s,series));
-[disciplinaConteudo,disciplinaQuestao,disciplinaAtividade,disciplinaSimulado,filtroDisciplinaConteudo].forEach(d=>preencherSelect(d,disciplinas));
+function loginAdmin(){
+if(document.getElementById("senhaAdmin").value==="1234"){
+document.getElementById("loginAdmin").style.display="none";
+document.getElementById("painelAdmin").style.display="block";
+}else alert("Senha incorreta");
+}
 
 function salvarConteudo(){
- conteudos.push({serie:serieConteudo.value,disciplina:disciplinaConteudo.value,titulo:tituloConteudo.value,texto:textoConteudo.value});
- localStorage.setItem("conteudos",JSON.stringify(conteudos));
- alert("Conteúdo salvo!");
-}
-
-function listarConteudos(){
- listaConteudos.innerHTML="";
- conteudos.filter(c=>c.serie===filtroSerieConteudo.value && c.disciplina===filtroDisciplinaConteudo.value)
- .forEach(c=>listaConteudos.innerHTML+=`<div class='box'><h3>${c.titulo}</h3><p>${c.texto}</p></div>`);
+let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]");
+conteudos.push({
+serie:serieConteudo.value,
+disciplina:disciplinaConteudo.value,
+texto:textoConteudo.value
+});
+localStorage.setItem("conteudos",JSON.stringify(conteudos));
+alert("Conteúdo salvo!");
 }
 
 function salvarQuestao(){
- questoes.push({
-  tipo:tipoQuestao.value,
-  serie:serieQuestao.value,
-  disciplina:disciplinaQuestao.value,
-  pergunta:pergunta.value,
-  img:imagem.value,
-  a:a.value,b:b.value,c:c.value,d:d.value,
-  correta:correta.value
- });
- localStorage.setItem("questoes",JSON.stringify(questoes));
- alert("Questão salva!");
+let banco=JSON.parse(localStorage.getItem("questoes")||"[]");
+banco.push({
+tipo:tipoQuestao.value,
+serie:serieQuestao.value,
+disciplina:disciplinaQuestao.value,
+pergunta:pergunta.value,
+img:imgQuestao.value,
+A:a.value,B:b.value,C:c.value,D:d.value,
+correta:correta.value
+});
+localStorage.setItem("questoes",JSON.stringify(banco));
+alert("Questão salva!");
 }
 
-function gerarQuestoes(area,serie,disciplina,qtd,tipo){
- area.innerHTML="";
- let lista=questoes.filter(q=>q.serie===serie && q.disciplina===disciplina && q.tipo===tipo).slice(0,qtd);
- lista.forEach((q,i)=>{
- area.innerHTML+=`
- <div class='box'>
- <p><b>${i+1}. ${q.pergunta}</b></p>
- ${q.img?`<img src="${q.img}" class="questao-img">`:""}
- <label><input type='radio' name='q${i}' value='A'> ${q.a}</label><br>
- <label><input type='radio' name='q${i}' value='B'> ${q.b}</label><br>
- <label><input type='radio' name='q${i}' value='C'> ${q.c}</label><br>
- <label><input type='radio' name='q${i}' value='D'> ${q.d}</label>
- </div>`;
- });
+function carregarTudo(){
+carregarConteudos();
+carregarQuestoes("Atividade","listaAtividades");
+carregarQuestoes("Simulado","listaSimulados");
 }
 
-serieAtividade.onchange=disciplinaAtividade.onchange=qtdAtividade.onchange=()=>gerarQuestoes(areaAtividade,serieAtividade.value,disciplinaAtividade.value,qtdAtividade.value,"atividade");
-serieSimulado.onchange=disciplinaSimulado.onchange=qtdSimulado.onchange=()=>gerarQuestoes(areaSimulado,serieSimulado.value,disciplinaSimulado.value,qtdSimulado.value,"simulado");
-
-function corrigirAtividade(){corrigir(areaAtividade,nomeAlunoAtiv.value,serieAtividade.value,"Atividade","atividade")}
-function corrigirSimulado(){corrigir(areaSimulado,nomeAlunoSim.value,serieSimulado.value,"Simulado","simulado")}
-
-function corrigir(area,nome,serie,tipoLabel,tipoBanco){
- let lista=questoes.filter(q=>q.serie===serie && q.tipo===tipoBanco);
- let radios=area.querySelectorAll("input[type=radio]:checked");
- let acertos=0;
- radios.forEach((r,i)=>{ if(lista[i] && r.value===lista[i].correta) acertos++; });
- resultados.push({nome,serie,tipo:tipoLabel,acertos});
- localStorage.setItem("resultados",JSON.stringify(resultados));
- alert("Resultado: "+acertos+" acertos");
+function carregarConteudos(){
+let lista=document.getElementById("listaConteudos");
+lista.innerHTML="";
+(JSON.parse(localStorage.getItem("conteudos")||"[]")).forEach(c=>{
+lista.innerHTML+=`<div class="card"><b>${c.serie} - ${c.disciplina}</b><p>${c.texto}</p></div>`;
+});
 }
 
-function listarResultados(){
- listaResultados.innerHTML="";
- resultados.forEach(r=>listaResultados.innerHTML+=`<div class='box'>${r.nome} - ${r.tipo} - ${r.serie} → ${r.acertos} acertos</div>`);
+function carregarQuestoes(tipo,div){
+let lista=document.getElementById(div);
+lista.innerHTML="";
+(JSON.parse(localStorage.getItem("questoes")||"[]"))
+.filter(q=>q.tipo===tipo)
+.forEach((q,i)=>{
+lista.innerHTML+=`
+<div class="card">
+<p><b>${q.serie} - ${q.disciplina}</b></p>
+<p>${q.pergunta}</p>
+${q.img?`<img src="${q.img}" style="max-width:200px">`:""}
+<label><input type="radio" name="q${tipo}${i}" value="A">${q.A}</label><br>
+<label><input type="radio" name="q${tipo}${i}" value="B">${q.B}</label><br>
+<label><input type="radio" name="q${tipo}${i}" value="C">${q.C}</label><br>
+<label><input type="radio" name="q${tipo}${i}" value="D">${q.D}</label><br>
+<button class="action" onclick="corrigir('${q.correta}',document.querySelector('input[name=q${tipo}${i}]:checked'))">Responder</button>
+</div>`;
+});
 }
+
+function corrigir(correta,resp){
+if(!resp){alert("Marque uma alternativa");return;}
+if(resp.value===correta) alert("✅ Correto!");
+else alert("❌ Errado!");
+}
+
+carregarTudo();
 </script>
 
 </body>
