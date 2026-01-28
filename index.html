@@ -17,7 +17,7 @@ section{display:none;padding:20px;max-width:1100px;margin:auto}
 .active{display:block}
 h2{text-align:center;color:#0d47a1}
 textarea,input,select{width:100%;padding:8px;margin:5px 0 10px}
-textarea{min-height:100px}
+textarea{min-height:120px}
 button.salvar{background:#0d47a1;color:white;border:none;padding:10px;cursor:pointer;width:100%;border-radius:5px}
 .box{background:white;padding:15px;margin-bottom:15px;border-radius:8px;box-shadow:0 0 5px rgba(0,0,0,0.1)}
 .login-box{max-width:400px;margin:auto;background:white;padding:20px;border-radius:8px;box-shadow:0 0 5px rgba(0,0,0,0.2)}
@@ -45,48 +45,42 @@ img.questao-img{max-width:100%;margin:10px 0}
     <h2>Bem-vindo ao Portal Escolar</h2>
 </section>
 
-<!-- CONTEÚDOS -->
+<!-- ================= CONTEÚDOS (SÓ MATERIAL) ================= -->
 <section id="conteudos">
     <h2>Conteúdos por Série</h2>
-    <select id="serieConteudoFiltro" onchange="listarConteudos()">
-        <option>6º Ano</option><option>7º Ano</option><option>8º Ano</option><option>9º Ano</option>
-    </select>
+    <select id="serieConteudoFiltro" onchange="listarConteudos()"></select>
     <div id="listaConteudos"></div>
 </section>
 
-<!-- ATIVIDADES -->
+<!-- ================= ATIVIDADES ================= -->
 <section id="atividades">
     <h2>Atividades</h2>
     Nome do aluno:<input type="text" id="nomeAlunoAtiv">
     Série:<select id="serieAtividade"></select>
-    Quantidade de questões:
-    <select id="qtdAtividade">
-        <option>10</option><option>20</option><option>50</option>
-    </select>
+    Quantidade:
+    <select id="qtdAtividade"><option>10</option><option>20</option><option>50</option></select>
     <div id="areaAtividade"></div>
     <button class="salvar" onclick="corrigirAtividade()">Finalizar Atividade</button>
 </section>
 
-<!-- SIMULADOS -->
+<!-- ================= SIMULADOS ================= -->
 <section id="simulados">
     <h2>Simulados</h2>
     Nome do aluno:<input type="text" id="nomeAlunoSim">
     Série:<select id="serieSimulado"></select>
-    Quantidade de questões:
-    <select id="qtdSimulado">
-        <option>10</option><option>20</option><option>50</option>
-    </select>
+    Quantidade:
+    <select id="qtdSimulado"><option>10</option><option>20</option><option>50</option></select>
     <div id="areaSimulado"></div>
     <button class="salvar" onclick="corrigirSimulado()">Finalizar Simulado</button>
 </section>
 
-<!-- RESULTADOS -->
+<!-- ================= RESULTADOS ================= -->
 <section id="resultados">
     <h2>Resultados</h2>
     <div id="listaResultados"></div>
 </section>
 
-<!-- LOGIN -->
+<!-- ================= LOGIN ================= -->
 <section id="loginAdmin">
     <div class="login-box">
         <h2>Login Professor</h2>
@@ -95,23 +89,32 @@ img.questao-img{max-width:100%;margin:10px 0}
     </div>
 </section>
 
-<!-- ADMIN -->
+<!-- ================= PAINEL PROFESSOR ================= -->
 <section id="admin">
     <h2>Painel do Professor</h2>
     <button onclick="mostrar('inicio')" style="background:red;color:white;padding:8px;border:none">Sair</button>
 
-    <h3>Cadastrar Conteúdo</h3>
+    <h3>Cadastrar CONTEÚDO (NÃO é questão)</h3>
     Série:<select id="serieConteudo"></select>
     Título:<input type="text" id="tituloConteudo">
-    Texto / Imagens / Gráficos (pode colar):<textarea id="textoConteudo"></textarea>
+    Conteúdo (texto, imagens, gráficos – pode colar):<textarea id="textoConteudo"></textarea>
     <button class="salvar" onclick="salvarConteudo()">Salvar Conteúdo</button>
 
-    <h3>Cadastrar Questão (Atividade/Simulado)</h3>
+    <hr>
+
+    <h3>Cadastrar QUESTÃO (Atividade ou Simulado)</h3>
+    Tipo:
+    <select id="tipoQuestao">
+        <option value="atividade">Atividade</option>
+        <option value="simulado">Simulado</option>
+    </select>
     Série:<select id="serieQuestao"></select>
     Pergunta (pode colar texto com imagem):<textarea id="pergunta"></textarea>
     URL da Imagem (opcional):<input type="text" id="imagem">
-    A:<input type="text" id="a"> B:<input type="text" id="b">
-    C:<input type="text" id="c"> D:<input type="text" id="d">
+    Alternativa A:<input type="text" id="a">
+    Alternativa B:<input type="text" id="b">
+    Alternativa C:<input type="text" id="c">
+    Alternativa D:<input type="text" id="d">
     Correta:<select id="correta"><option>A</option><option>B</option><option>C</option><option>D</option></select>
     <button class="salvar" onclick="salvarQuestao()">Salvar Questão</button>
 </section>
@@ -121,7 +124,7 @@ let senha="1234";
 let conteudos=JSON.parse(localStorage.getItem("conteudos"))||[];
 let questoes=JSON.parse(localStorage.getItem("questoes"))||[];
 let resultados=JSON.parse(localStorage.getItem("resultados"))||[];
-let series=["6º Ano","7º Ano","8º Ano","9º Ano"];
+let series=["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
 
 function mostrar(id){
  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
@@ -135,6 +138,7 @@ function loginAdmin(){ if(senhaAdmin.value===senha){mostrar("admin")} else alert
 series.forEach(s=>{
  serieQuestao.innerHTML+=`<option>${s}</option>`;
  serieConteudo.innerHTML+=`<option>${s}</option>`;
+ serieConteudoFiltro.innerHTML+=`<option>${s}</option>`;
  serieAtividade.innerHTML+=`<option>${s}</option>`;
  serieSimulado.innerHTML+=`<option>${s}</option>`;
 });
@@ -152,14 +156,21 @@ function listarConteudos(){
 }
 
 function salvarQuestao(){
- questoes.push({serie:serieQuestao.value,pergunta:pergunta.value,img:imagem.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
+ questoes.push({
+  tipo:tipoQuestao.value,
+  serie:serieQuestao.value,
+  pergunta:pergunta.value,
+  img:imagem.value,
+  a:a.value,b:b.value,c:c.value,d:d.value,
+  correta:correta.value
+ });
  localStorage.setItem("questoes",JSON.stringify(questoes));
  alert("Questão salva!");
 }
 
-function gerarQuestoes(area,serie,qtd){
+function gerarQuestoes(area,serie,qtd,tipo){
  area.innerHTML="";
- let lista=questoes.filter(q=>q.serie===serie).slice(0,qtd);
+ let lista=questoes.filter(q=>q.serie===serie && q.tipo===tipo).slice(0,qtd);
  lista.forEach((q,i)=>{
  area.innerHTML+=`
  <div class='box'>
@@ -173,19 +184,20 @@ function gerarQuestoes(area,serie,qtd){
  });
 }
 
-serieAtividade.onchange=()=>gerarQuestoes(areaAtividade,serieAtividade.value,qtdAtividade.value);
-serieSimulado.onchange=()=>gerarQuestoes(areaSimulado,serieSimulado.value,qtdSimulado.value);
-qtdAtividade.onchange=()=>gerarQuestoes(areaAtividade,serieAtividade.value,qtdAtividade.value);
-qtdSimulado.onchange=()=>gerarQuestoes(areaSimulado,serieSimulado.value,qtdSimulado.value);
+serieAtividade.onchange=()=>gerarQuestoes(areaAtividade,serieAtividade.value,qtdAtividade.value,"atividade");
+serieSimulado.onchange=()=>gerarQuestoes(areaSimulado,serieSimulado.value,qtdSimulado.value,"simulado");
+qtdAtividade.onchange=()=>gerarQuestoes(areaAtividade,serieAtividade.value,qtdAtividade.value,"atividade");
+qtdSimulado.onchange=()=>gerarQuestoes(areaSimulado,serieSimulado.value,qtdSimulado.value,"simulado");
 
-function corrigirAtividade(){corrigir(areaAtividade,nomeAlunoAtiv.value,serieAtividade.value,"Atividade")}
-function corrigirSimulado(){corrigir(areaSimulado,nomeAlunoSim.value,serieSimulado.value,"Simulado")}
+function corrigirAtividade(){corrigir(areaAtividade,nomeAlunoAtiv.value,serieAtividade.value,"Atividade","atividade")}
+function corrigirSimulado(){corrigir(areaSimulado,nomeAlunoSim.value,serieSimulado.value,"Simulado","simulado")}
 
-function corrigir(area,nome,serie,tipo){
- let acertos=0;
+function corrigir(area,nome,serie,tipoLabel,tipoBanco){
+ let lista=questoes.filter(q=>q.serie===serie && q.tipo===tipoBanco);
  let radios=area.querySelectorAll("input[type=radio]:checked");
- radios.forEach((r,i)=>{ if(r.value===questoes.filter(q=>q.serie===serie)[i].correta) acertos++; });
- resultados.push({nome,serie,tipo,acertos});
+ let acertos=0;
+ radios.forEach((r,i)=>{ if(lista[i] && r.value===lista[i].correta) acertos++; });
+ resultados.push({nome,serie,tipo:tipoLabel,acertos});
  localStorage.setItem("resultados",JSON.stringify(resultados));
  alert("Resultado: "+acertos+" acertos");
 }
