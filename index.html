@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal Educacional Paula Aliomar</title>
 
+<!-- Biblioteca para gerar PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef2f7}
 header{display:flex;align-items:center;gap:15px;padding:15px 25px;
@@ -18,6 +21,7 @@ nav a:hover{background:#08306b}
 
 .container{max-width:1100px;margin:30px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
 .hidden{display:none}
+.center{text-align:center}
 
 input, select, textarea{width:100%;padding:8px;margin:6px 0;border-radius:4px;border:1px solid #ccc}
 button{padding:8px 12px;border:none;border-radius:4px;background:#1976d2;color:white;cursor:pointer;margin-top:5px}
@@ -26,11 +30,14 @@ button:hover{opacity:0.9}
 .question{border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:6px}
 .question img{max-width:200px;display:block;margin-top:8px}
 
-.admin-panel{display:none;position:fixed;top:0;right:0;width:340px;height:100%;background:white;box-shadow:-2px 0 10px rgba(0,0,0,0.3);padding:15px;overflow:auto;z-index:999}
+.admin-panel{display:none;position:fixed;top:0;right:0;width:360px;height:100%;background:white;box-shadow:-2px 0 10px rgba(0,0,0,0.3);padding:15px;overflow:auto;z-index:999}
 .admin-panel h3{margin-top:0;color:#0d47a1}
 
+.small-btn{background:#555;margin-top:3px;font-size:12px;padding:4px 6px}
+.delete-btn{background:#c62828}
+.edit-btn{background:#2e7d32}
+
 footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
-.center{text-align:center}
 </style>
 </head>
 <body>
@@ -55,9 +62,10 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 </div>
 
 <div class="container hidden" id="conteudos">
-<h2>Conteúdos por Série e Disciplina</h2>
+<h2>Conteúdos</h2>
 <select id="filtroSerieConteudo"></select>
 <select id="filtroDiscConteudo"></select>
+<button onclick="listarConteudos()">Filtrar</button>
 <div id="listaConteudos"></div>
 </div>
 
@@ -65,7 +73,7 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <h2>Atividades</h2>
 <select id="serieAtividade"></select>
 <select id="discAtividade"></select>
-<button onclick="carregarQuestoes('atividade')">Carregar Atividades</button>
+<button onclick="carregarQuestoes('atividade')">Carregar</button>
 <div id="areaAtividade"></div>
 </div>
 
@@ -79,50 +87,46 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <option value="20">20 questões</option>
 <option value="50">50 questões</option>
 </select>
-<button onclick="carregarQuestoes('simulado')">Iniciar Simulado</button>
+<button onclick="carregarQuestoes('simulado')">Iniciar</button>
 <div id="areaSimulado"></div>
 </div>
 
 <div class="container hidden" id="resultados">
 <h2>Resultados</h2>
+<button onclick="gerarPDF()">🖨 Gerar PDF</button>
 <div id="relatorios"></div>
 </div>
 
-<!-- PAINEL ADMIN -->
+<!-- ADMIN -->
 <div class="admin-panel" id="adminPanel">
 <h3>Painel do Professor</h3>
 
 <h4>Cadastrar Conteúdo</h4>
 <select id="serieConteudo"></select>
 <select id="discConteudo"></select>
-<textarea id="textoConteudo" rows="5" placeholder="Digite o conteúdo..."></textarea>
+<textarea id="textoConteudo" rows="4"></textarea>
 <input type="file" id="imgConteudo">
 <button onclick="salvarConteudo()">Salvar Conteúdo</button>
 
 <hr>
 
-<h4>Cadastrar Questão (Atividade/Simulado)</h4>
-<select id="tipoQuestao">
-<option value="atividade">Atividade</option>
-<option value="simulado">Simulado</option>
-</select>
+<h4>Cadastrar Questão</h4>
+<select id="tipoQuestao"><option value="atividade">Atividade</option><option value="simulado">Simulado</option></select>
 <select id="serieQuestao"></select>
 <select id="discQuestao"></select>
-<textarea id="pergunta" rows="4" placeholder="Texto da pergunta"></textarea>
+<textarea id="pergunta" rows="3"></textarea>
 <input type="file" id="imgQuestao">
 <input id="altA" placeholder="Alternativa A">
 <input id="altB" placeholder="Alternativa B">
 <input id="altC" placeholder="Alternativa C">
 <input id="altD" placeholder="Alternativa D">
-<select id="correta">
-<option value="A">Correta A</option>
-<option value="B">Correta B</option>
-<option value="C">Correta C</option>
-<option value="D">Correta D</option>
-</select>
+<select id="correta"><option>A</option><option>B</option><option>C</option><option>D</option></select>
 <button onclick="salvarQuestao()">Salvar Questão</button>
 
 <hr>
+<h4>Questões Cadastradas</h4>
+<div id="listaQuestoesAdmin"></div>
+
 <button onclick="fecharAdmin()">Fechar</button>
 </div>
 
@@ -142,29 +146,55 @@ function preencherSelect(id,lista){let s=document.getElementById(id);lista.forEa
 
 function showSection(id){document.querySelectorAll('.container').forEach(c=>c.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
 
-function abrirAdmin(){if(prompt("Senha do administrador:")=="paula2026"){adminPanel.style.display="block"}}
+function abrirAdmin(){if(prompt("Senha do administrador:")=="paula2026"){adminPanel.style.display="block";listarQuestoesAdmin()}}
 function fecharAdmin(){adminPanel.style.display="none"}
 
 function salvarConteudo(){
 let reader=new FileReader();
-let file=imgConteudo.files[0];
 reader.onload=function(){
 conteudos.push({serie:serieConteudo.value,disc:discConteudo.value,texto:textoConteudo.value,img:reader.result});
 localStorage.setItem("conteudos",JSON.stringify(conteudos));
 alert("Conteúdo salvo!");
 }
-file?reader.readAsDataURL(file):reader.onload();
+imgConteudo.files[0]?reader.readAsDataURL(imgConteudo.files[0]):reader.onload();
 }
 
 function salvarQuestao(){
 let reader=new FileReader();
-let file=imgQuestao.files[0];
 reader.onload=function(){
 questoes.push({tipo:tipoQuestao.value,serie:serieQuestao.value,disc:discQuestao.value,pergunta:pergunta.value,img:reader.result,A:altA.value,B:altB.value,C:altC.value,D:altD.value,correta:correta.value});
 localStorage.setItem("questoes",JSON.stringify(questoes));
+listarQuestoesAdmin();
 alert("Questão salva!");
 }
-file?reader.readAsDataURL(file):reader.onload();
+imgQuestao.files[0]?reader.readAsDataURL(imgQuestao.files[0]):reader.onload();
+}
+
+function listarQuestoesAdmin(){
+listaQuestoesAdmin.innerHTML="";
+questoes.forEach((q,i)=>{
+listaQuestoesAdmin.innerHTML+=`<div class='question'><b>${q.pergunta}</b>
+<br><button class='small-btn edit-btn' onclick='editarQuestao(${i})'>Editar</button>
+<button class='small-btn delete-btn' onclick='excluirQuestao(${i})'>Excluir</button></div>`;
+});
+}
+
+function excluirQuestao(i){
+if(confirm("Excluir esta questão?")){
+questoes.splice(i,1);
+localStorage.setItem("questoes",JSON.stringify(questoes));
+listarQuestoesAdmin();
+}
+}
+
+function editarQuestao(i){
+let q=questoes[i];
+pergunta.value=q.pergunta;
+altA.value=q.A; altB.value=q.B; altC.value=q.C; altD.value=q.D;
+correta.value=q.correta;
+questoes.splice(i,1);
+localStorage.setItem("questoes",JSON.stringify(questoes));
+listarQuestoesAdmin();
 }
 
 function carregarQuestoes(tipo){
@@ -195,7 +225,15 @@ showSection("resultados");
 
 function mostrarResultados(){relatorios.innerHTML="";resultados.forEach(r=>relatorios.innerHTML+=`<p>${r.nome} - ✅ ${r.acertos} acertos</p>`)}
 mostrarResultados();
-</script>
 
+function gerarPDF(){
+const { jsPDF } = window.jspdf;
+let doc=new jsPDF();
+doc.text("Relatório de Resultados",20,20);
+let y=30;
+resultados.forEach(r=>{doc.text(`${r.nome} - ${r.acertos} acertos`,20,y);y+=10;});
+doc.save("resultados.pdf");
+}
+</script>
 </body>
 </html>
