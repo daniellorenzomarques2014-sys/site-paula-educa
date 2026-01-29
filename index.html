@@ -8,11 +8,11 @@
 <style>
 body{margin:0;font-family:Arial;background:#f4f6f9}
 header{
-  background:linear-gradient(90deg,#0d47a1,#1976d2);
+  background:linear-gradient(90deg,#0d47a1,#1565c0);
   color:white;padding:10px 20px;display:flex;align-items:center
 }
 header img{height:55px;margin-right:15px}
-nav{background:#1565c0;display:flex;gap:15px;padding:10px 20px;flex-wrap:wrap}
+nav{background:#1976d2;display:flex;gap:15px;padding:10px 20px;flex-wrap:wrap}
 nav button{
   background:none;border:none;color:white;font-weight:bold;
   cursor:pointer;font-size:15px
@@ -20,26 +20,26 @@ nav button{
 nav button:hover{text-decoration:underline}
 section{display:none;padding:20px}
 .active{display:block}
-h2{color:#0d47a1}
+h2{color:#0d47a1;text-align:center}
 
-/* QUESTÕES */
+/* QUESTÕES ESTILO PROVA */
 .questao{
   background:white;
   padding:15px;
   margin-bottom:15px;
   border-radius:8px;
 }
+
 .alt{
-  display:flex;
-  align-items:center;
-  gap:6px;            /* espaço pequeno entre bolinha e texto */
-  margin:4px 0;
+  margin:2px 0;
   font-size:15px;
-  cursor:pointer;
+  text-align:left;
 }
+
 .alt input[type="radio"]{
-  margin:0;           /* remove espaço extra */
-  transform:scale(1.15);
+  margin-right:4px;   /* espaço MINIMO entre bolinha e texto */
+  vertical-align:middle;
+  transform:scale(1.1);
 }
 
 /* ADMIN */
@@ -68,7 +68,7 @@ button.salvar{background:#2e7d32;color:white;border:none;padding:8px 12px;margin
 </nav>
 
 <section id="inicio" class="active">
-<h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2>
+<h2>Bem-vindo ao Portal Educacional</h2>
 <p style="text-align:center">Ambiente de estudos com conteúdos, atividades e simulados.</p>
 </section>
 
@@ -182,10 +182,10 @@ questoes.forEach((q,i)=>{
 let html=`<div class='questao'>
 <p><b>${i+1}. ${q.pergunta}</b></p>
 
-<label class='alt'><input type='radio' name='q${q.tipo}${i}' value='A'>A) ${q.A}</label>
-<label class='alt'><input type='radio' name='q${q.tipo}${i}' value='B'>B) ${q.B}</label>
-<label class='alt'><input type='radio' name='q${q.tipo}${i}' value='C'>C) ${q.C}</label>
-<label class='alt'><input type='radio' name='q${q.tipo}${i}' value='D'>D) ${q.D}</label>
+<div class='alt'><label><input type='radio' name='q${q.tipo}${i}' value='A'>A) ${q.A}</label></div>
+<div class='alt'><label><input type='radio' name='q${q.tipo}${i}' value='B'>B) ${q.B}</label></div>
+<div class='alt'><label><input type='radio' name='q${q.tipo}${i}' value='C'>C) ${q.C}</label></div>
+<div class='alt'><label><input type='radio' name='q${q.tipo}${i}' value='D'>D) ${q.D}</label></div>
 
 </div>`
 if(q.tipo==="atividade") atv.innerHTML+=html
