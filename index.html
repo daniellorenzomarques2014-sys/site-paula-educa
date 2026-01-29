@@ -2,194 +2,199 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Plataforma Escolar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Educacional</title>
+
 <style>
-body{font-family:Arial;margin:0;background:#f4f6f9}
-header{background:#2c3e50;color:white;padding:15px;text-align:center}
-nav{display:flex;gap:10px;justify-content:center;background:#34495e;padding:10px}
-nav button{padding:8px 15px;border:none;border-radius:5px;cursor:pointer}
-section{display:none;padding:20px}
-.card{background:white;padding:15px;border-radius:8px;margin-bottom:15px}
-input,select,textarea{width:100%;padding:8px;margin:5px 0}
-button{cursor:pointer}
-.alt{display:flex;align-items:center;margin:4px 0}
-.alt input{margin-right:8px}
-img,video{max-width:100%;margin-top:10px;border-radius:8px}
+body {margin:0;font-family:Arial;background:#f4f6f9;}
+header {
+    background: linear-gradient(90deg,#0d47a1,#1976d2);
+    color:white;
+    padding:15px;
+    display:flex;
+    align-items:center;
+}
+header img {height:60px;margin-right:15px;}
+header h1 {flex:1;text-align:center;font-size:26px;margin:0;}
+nav {background:#1565c0;display:flex;justify-content:center;gap:20px;padding:10px;}
+nav button {background:none;border:none;color:white;font-weight:bold;cursor:pointer;font-size:16px;}
+nav button:hover {text-decoration:underline;}
+.section {display:none;padding:20px;}
+.active {display:block;}
+.card {background:white;padding:15px;margin:10px 0;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+input, select, textarea {width:100%;padding:8px;margin:5px 0 10px;}
+button.primary {background:#1976d2;color:white;border:none;padding:10px;border-radius:5px;cursor:pointer;}
+button.danger {background:#c62828;color:white;border:none;padding:6px 10px;border-radius:5px;cursor:pointer;}
+.alt {margin:5px 0;display:flex;align-items:center;gap:8px;}
+.alt input {width:auto;}
+footer {text-align:center;padding:15px;background:#e3f2fd;margin-top:30px;}
 </style>
 </head>
+
 <body>
 
-<header><h2>📚 Plataforma Escolar</h2></header>
+<header>
+<img src="LOGO_DA_ESCOLA.png">
+<h1>Portal Educacional</h1>
+</header>
 
 <nav>
-<button onclick="abrir('aluno')">Aluno</button>
-<button onclick="abrir('adminLogin')">Administrador</button>
+<button onclick="show('inicio')">Início</button>
+<button onclick="show('conteudos')">Conteúdos</button>
+<button onclick="show('atividades')">Atividades</button>
+<button onclick="show('simulados')">Simulados</button>
+<button onclick="show('resultados')">Resultados</button>
+<button onclick="show('admin')">Administrador</button>
 </nav>
 
-<!-- LOGIN ADMIN -->
-<section id="adminLogin">
-<div class="card">
-<h3>Login Administrador</h3>
-<input type="password" id="senhaAdmin" placeholder="Digite a senha">
-<button onclick="loginAdmin()">Entrar</button>
-</div>
-</section>
-
-<!-- ÁREA ADMIN -->
-<section id="admin">
-<h3>Painel do Administrador</h3>
-
-<div class="card">
-<h4>Cadastrar Conteúdo</h4>
-<select id="serieCont"></select>
-<input id="tituloCont" placeholder="Título">
-<textarea id="textoCont" placeholder="Descrição"></textarea>
-<input type="file" id="arquivoCont">
-<button onclick="salvarConteudo()">Salvar Conteúdo</button>
+<div id="inicio" class="section active">
+<div class="card"><h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2></div>
 </div>
 
-<div class="card">
-<h4>Cadastrar Atividade / Simulado</h4>
-<select id="serieQuest"></select>
-<select id="tipoQuest">
-<option value="atividade">Atividade</option>
-<option value="simulado">Simulado</option>
-</select>
-<input id="pergunta" placeholder="Pergunta">
-<input id="alt1" placeholder="Alternativa A">
-<input id="alt2" placeholder="Alternativa B">
-<input id="alt3" placeholder="Alternativa C">
-<input id="alt4" placeholder="Alternativa D">
-<select id="correta">
-<option value="0">A correta</option>
-<option value="1">B correta</option>
-<option value="2">C correta</option>
-<option value="3">D correta</option>
-</select>
-<button onclick="salvarQuestao()">Salvar Questão</button>
-</div>
-
-<div class="card">
-<h4>Conteúdos Cadastrados</h4>
+<div id="conteudos" class="section">
+<h2>Conteúdos Disponíveis</h2>
 <div id="listaConteudos"></div>
 </div>
 
-<div class="card">
-<h4>Questões Cadastradas</h4>
-<div id="listaQuestoes"></div>
-</div>
-</section>
-
-<!-- ÁREA ALUNO -->
-<section id="aluno">
-<h3>Área do Aluno</h3>
-
-<div class="card">
-<select id="serieAluno"></select>
-<button onclick="verConteudos()">Ver Conteúdos</button>
-<div id="conteudosAluno"></div>
+<div id="atividades" class="section">
+<h2>Atividades</h2>
+<div id="listaAtividades"></div>
 </div>
 
+<div id="simulados" class="section">
+<h2>Simulados</h2>
+<div id="listaSimulados"></div>
+</div>
+
+<div id="resultados" class="section">
+<h2>Resultados</h2>
+<div id="relatorio"></div>
+<button class="primary" onclick="window.print()">🖨 Gerar PDF</button>
+</div>
+
+<div id="admin" class="section">
+<h2>Área do Administrador</h2>
+
+<input type="password" id="senhaAdmin" placeholder="Senha do administrador">
+<button class="primary" onclick="loginAdmin()">Entrar</button>
+
+<div id="painelAdmin" style="display:none">
+
 <div class="card">
-<h4>Atividades e Simulados</h4>
-<select id="tipoAluno">
-<option value="atividade">Atividades</option>
-<option value="simulado">Simulados</option>
+<h3>Cadastrar Conteúdo</h3>
+<select id="serieConteudo"></select>
+<select id="discConteudo"></select>
+<textarea id="textoConteudo" placeholder="Texto do conteúdo"></textarea>
+<input type="file" id="arquivoConteudo">
+<button class="primary" onclick="salvarConteudo()">Salvar Conteúdo</button>
+</div>
+
+<div class="card">
+<h3>Cadastrar Questão (Atividade/Simulado)</h3>
+<select id="tipoQuestao">
+<option value="atividade">Atividade</option>
+<option value="simulado">Simulado</option>
 </select>
-<select id="qtdQuestoes">
-<option>10</option>
-<option>20</option>
-<option>50</option>
-</select>
-<button onclick="iniciarQuestoes()">Iniciar</button>
-<form id="formQuestoes"></form>
-<button onclick="corrigir()">Finalizar</button>
-<div id="resultado"></div>
+<select id="serieQuestao"></select>
+<select id="discQuestao"></select>
+<textarea id="pergunta"></textarea>
+
+<div class="alt"><input type="radio" name="correta" value="0"> A <input id="a0"></div>
+<div class="alt"><input type="radio" name="correta" value="1"> B <input id="a1"></div>
+<div class="alt"><input type="radio" name="correta" value="2"> C <input id="a2"></div>
+<div class="alt"><input type="radio" name="correta" value="3"> D <input id="a3"></div>
+
+<button class="primary" onclick="salvarQuestao()">Salvar Questão</button>
 </div>
-</section>
+
+</div>
+</div>
+
+<footer>Produzido para uso educacional</footer>
 
 <script>
-const senha="admin123";
-const series=[
-"Educação Infantil - 1º Período",
-"Educação Infantil - 2º Período",
-"1º Ano","2º Ano","3º Ano","4º Ano","5º Ano",
-"6º Ano","7º Ano","8º Ano","9º Ano"
-];
+const series = ["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
+const disciplinas = ["Língua Portuguesa","Matemática","História","Geografia","Ciências","Artes","Religião","Inglês","Educação Física"];
 
-const selSeries=[serieCont,serieQuest,serieAluno];
-selSeries.forEach(sel=>series.forEach(s=>sel.innerHTML+=`<option>${s}</option>`));
+function preencherSelects(){
+series.forEach(s=>{
+serieConteudo.innerHTML+=`<option>${s}</option>`;
+serieQuestao.innerHTML+=`<option>${s}</option>`;
+});
+disciplinas.forEach(d=>{
+discConteudo.innerHTML+=`<option>${d}</option>`;
+discQuestao.innerHTML+=`<option>${d}</option>`;
+});
+}
+preencherSelects();
 
-let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]");
-let questoes=JSON.parse(localStorage.getItem("questoes")||"[]");
+function show(id){
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+if(id==="conteudos") carregarConteudos();
+if(id==="atividades") carregarQuestoes("atividade");
+if(id==="simulados") carregarQuestoes("simulado");
+}
 
-function abrir(id){document.querySelectorAll("section").forEach(s=>s.style.display="none");document.getElementById(id).style.display="block";if(id==="admin")listarAdmin();}
-
-function loginAdmin(){if(senhaAdmin.value===senha){abrir("admin")}else alert("Senha incorreta");}
+function loginAdmin(){
+if(document.getElementById('senhaAdmin').value==="admin123"){
+painelAdmin.style.display="block";
+alert("Login realizado");
+}else alert("Senha incorreta");
+}
 
 function salvarConteudo(){
-const file=arquivoCont.files[0];
-const reader=new FileReader();
-reader.onload=()=>{
-conteudos.push({serie:serieCont.value,titulo:tituloCont.value,texto:textoCont.value,arquivo:reader.result,tipo:file?file.type:""});
+let conteudos = JSON.parse(localStorage.getItem("conteudos")||"[]");
+let file = arquivoConteudo.files[0];
+let reader = new FileReader();
+reader.onload = function(){
+conteudos.push({serie:serieConteudo.value,disc:discConteudo.value,texto:textoConteudo.value,arquivo:reader.result,nome:file.name});
 localStorage.setItem("conteudos",JSON.stringify(conteudos));
-listarAdmin();
-};
-if(file)reader.readAsDataURL(file);else reader.onload();
+alert("Conteúdo salvo!");
+}
+if(file) reader.readAsDataURL(file);
+}
+
+function carregarConteudos(){
+let lista = JSON.parse(localStorage.getItem("conteudos")||"[]");
+listaConteudos.innerHTML="";
+lista.forEach(c=>{
+listaConteudos.innerHTML+=`<div class="card"><h3>${c.disc} - ${c.serie}</h3><p>${c.texto}</p><a href="${c.arquivo}" target="_blank">📂 Abrir ${c.nome}</a></div>`;
+});
 }
 
 function salvarQuestao(){
-questoes.push({serie:serieQuest.value,tipo:tipoQuest.value,pergunta:pergunta.value,alts:[alt1.value,alt2.value,alt3.value,alt4.value],correta:correta.value});
-localStorage.setItem("questoes",JSON.stringify(questoes));
-listarAdmin();
+let qs = JSON.parse(localStorage.getItem("questoes")||"[]");
+qs.push({
+tipo:tipoQuestao.value,
+serie:serieQuestao.value,
+disc:discQuestao.value,
+pergunta:pergunta.value,
+alts:[a0.value,a1.value,a2.value,a3.value],
+correta:document.querySelector('input[name="correta"]:checked').value
+});
+localStorage.setItem("questoes",JSON.stringify(qs));
+alert("Questão salva!");
 }
 
-function listarAdmin(){
-listaConteudos.innerHTML="";
-conteudos.forEach((c,i)=>{
-listaConteudos.innerHTML+=`<div class="card"><b>${c.titulo}</b>
-<button onclick="conteudos.splice(${i},1);localStorage.setItem('conteudos',JSON.stringify(conteudos));listarAdmin()">Excluir</button></div>`;
-});
-listaQuestoes.innerHTML="";
-questoes.forEach((q,i)=>{
-listaQuestoes.innerHTML+=`<div class="card">${q.pergunta}
-<button onclick="questoes.splice(${i},1);localStorage.setItem('questoes',JSON.stringify(questoes));listarAdmin()">Excluir</button></div>`;
-});
-}
-
-function verConteudos(){
-conteudosAluno.innerHTML="";
-conteudos.filter(c=>c.serie===serieAluno.value).forEach(c=>{
-let midia="";
-if(c.tipo?.includes("pdf")) midia=`<a href="${c.arquivo}" target="_blank">📄 Abrir PDF</a>`;
-else if(c.tipo?.includes("image")) midia=`<img src="${c.arquivo}">`;
-else if(c.tipo?.includes("video")) midia=`<video controls src="${c.arquivo}"></video>`;
-conteudosAluno.innerHTML+=`<div class="card"><h4>${c.titulo}</h4><p>${c.texto}</p>${midia}</div>`;
+function carregarQuestoes(tipo){
+let qs = JSON.parse(localStorage.getItem("questoes")||"[]").filter(q=>q.tipo===tipo);
+let div = tipo==="atividade"?listaAtividades:listaSimulados;
+div.innerHTML="";
+qs.forEach((q,i)=>{
+div.innerHTML+=`<div class="card"><p><b>${q.pergunta}</b></p>
+${q.alts.map((a,j)=>`<div class="alt"><input type="radio" name="q${i}" value="${j}"> ${a}</div>`).join('')}
+<button onclick="corrigir(${i},${q.correta})">Responder</button></div>`;
 });
 }
 
-let prova=[];
-function iniciarQuestoes(){
-formQuestoes.innerHTML="";
-prova=questoes.filter(q=>q.serie===serieAluno.value&&q.tipo===tipoAluno.value).slice(0,qtdQuestoes.value);
-prova.forEach((q,i)=>{
-formQuestoes.innerHTML+=`<div class="card"><p><b>${i+1}.</b> ${q.pergunta}</p>
-${q.alts.map((a,j)=>`<label class="alt"><input type="radio" name="q${i}" value="${j}"> ${String.fromCharCode(65+j)}) ${a}</label>`).join("")}
-</div>`;
-});
+function corrigir(i,c){
+let marcada=document.querySelector(`input[name="q${i}"]:checked`);
+if(!marcada) return alert("Marque uma alternativa");
+if(marcada.value==c){alert("Resposta correta!");}
+else alert("Resposta incorreta!");
 }
-
-function corrigir(){
-let acertos=0;
-prova.forEach((q,i)=>{
-const resp=document.querySelector(`input[name=q${i}]:checked`);
-if(resp&&resp.value==q.correta)acertos++;
-});
-resultado.innerHTML=`<h3>Resultado: ${acertos} acertos de ${prova.length}</h3>
-<button onclick="window.print()">🖨 Gerar PDF</button>`;
-}
-
-abrir("aluno");
 </script>
+
 </body>
 </html>
