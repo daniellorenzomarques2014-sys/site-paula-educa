@@ -1,224 +1,32 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal Educacional</title>
-
-<style>
-body{margin:0;font-family:Arial;background:#eef2f7}
-header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#42a5f5);color:white}
-.logo{height:80px}
-nav{background:#1565c0;display:flex;justify-content:center;flex-wrap:wrap}
-nav a{color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer}
-nav a:hover{background:#0d47a1}
-.container{max-width:1100px;margin:25px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
-.hidden{display:none}
-.admin-btn{position:fixed;right:0;top:120px;background:#0d47a1;color:white;padding:10px;border-radius:8px 0 0 8px;cursor:pointer;font-weight:bold}
-.admin-panel{display:none;position:fixed;right:0;top:0;width:420px;height:100%;background:white;box-shadow:-2px 0 10px rgba(0,0,0,0.2);padding:15px;overflow:auto;z-index:999}
-.admin-panel input,.admin-panel textarea,.admin-panel select{width:100%;margin:5px 0;padding:6px}
-.admin-panel button{width:100%;margin:5px 0;padding:8px;border:none;background:#1976d2;color:white;border-radius:5px;cursor:pointer}
-.question,.conteudo{margin-bottom:15px;padding:10px;border:1px solid #ddd;border-radius:6px}
-.option{display:flex;align-items:center;margin:6px 0}
-.option input{margin-right:8px;transform:scale(1.2)}
-.edit-btn{background:#ff9800;margin-top:5px}
-.del-btn{background:#e53935;margin-top:5px}
-embed,video,img{max-width:100%;margin-top:10px;border-radius:6px}
-footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
-</style>
-</head>
-<body>
-
-<header>
-<img src="LOGO_DA_ESCOLA.png" class="logo">
-<h1>Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</h1>
-</header>
-
-<nav>
-<a onclick="showSection('inicio')">Início</a>
-<a onclick="showSection('conteudos')">Conteúdos</a>
-<a onclick="showSection('atividades')">Atividades</a>
-<a onclick="showSection('simulados')">Simulados</a>
-<a onclick="showSection('resultados')">Resultados</a>
-</nav>
-
-<div class="container" id="inicio"><h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2></div>
-
-<!-- CONTEÚDOS -->
-<div class="container hidden" id="conteudos">
-<h2>Conteúdos</h2>
-<select id="serieCont"></select>
-<select id="disciplinaCont"></select>
-<button onclick="carregarConteudos()">Carregar</button>
-<div id="listaConteudos"></div>
-</div>
-
-<!-- ATIVIDADES -->
-<div class="container hidden" id="atividades">
-<h2>Atividades</h2>
-<select id="serieAtv"></select>
-<select id="disciplinaAtv"></select>
-<button onclick="carregarQuestoes('Atividade')">Carregar</button>
-<div id="listaAtividades"></div>
-</div>
-
-<!-- SIMULADOS -->
-<div class="container hidden" id="simulados">
-<h2>Simulados</h2>
-<select id="serieSim"></select>
-<select id="disciplinaSim"></select>
-<input type="text" id="nomeAluno" placeholder="Nome do aluno">
-<button onclick="carregarQuestoes('Simulado')">Iniciar</button>
-<div id="areaSimulado"></div>
-</div>
-
-<div class="container hidden" id="resultados"><h2>Resultados</h2><div id="relatorios"></div></div>
-
-<div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
-
-<!-- ADMIN -->
-<div class="admin-panel" id="adminPanel">
-
-<h3>📚 Cadastrar Conteúdo</h3>
-<input type="hidden" id="editConteudoId">
-<input type="text" id="tituloConteudo" placeholder="Título">
-<textarea id="textoConteudo" placeholder="Texto do conteúdo"></textarea>
-<input type="file" id="arquivoConteudo" accept=".pdf,image/*,video/mp4">
-<select id="serieConteudo"></select>
-<select id="disciplinaConteudo"></select>
-<button onclick="salvarConteudo()">Salvar Conteúdo</button>
-
-<hr>
-
-<h3>📝 Cadastrar Questão</h3>
-<input type="hidden" id="editQuestaoId">
-<input type="text" id="pergunta" placeholder="Pergunta">
-<textarea id="textoQuestao" placeholder="Texto complementar"></textarea>
-<input type="text" id="altA" placeholder="Alternativa A">
-<input type="text" id="altB" placeholder="Alternativa B">
-<input type="text" id="altC" placeholder="Alternativa C">
-<input type="text" id="altD" placeholder="Alternativa D">
-<label>Resposta correta:</label>
-<select id="correta"><option>A</option><option>B</option><option>C</option><option>D</option></select>
-<select id="serieQuestao"></select>
-<select id="disciplinaQuestao"></select>
-<select id="tipoQuestao"><option>Atividade</option><option>Simulado</option></select>
-<button onclick="salvarQuestao()">Salvar Questão</button>
-
-<hr>
-<button onclick="fecharAdmin()">Fechar</button>
-</div>
-
-<footer>Portal Educacional © 2026</footer>
-
-<script>
-const series=["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
-const disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Ciências","Inglês","Artes","Religião","Educação Física"];
-function preencher(id,lista){let s=document.getElementById(id);s.innerHTML="";lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`);}
-["serieAtv","serieSim","serieQuestao","serieCont","serieConteudo"].forEach(id=>preencher(id,series));
-["disciplinaAtv","disciplinaSim","disciplinaQuestao","disciplinaCont","disciplinaConteudo"].forEach(id=>preencher(id,disciplinas));
-
-let bancoConteudos=JSON.parse(localStorage.getItem("conteudos"))||[];
-let bancoQuestoes=JSON.parse(localStorage.getItem("questoes"))||[];
-
-function showSection(id){document.querySelectorAll('.container').forEach(c=>c.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
-function abrirAdmin(){if(prompt("Senha do administrador")==="professor123"){adminPanel.style.display="block"}}
-function fecharAdmin(){adminPanel.style.display="none"}
-
-function salvarConteudo(){
-let id=editConteudoId.value;
-let file=arquivoConteudo.files[0];
-let reader=new FileReader();
-reader.onload=function(){
-let obj={titulo:tituloConteudo.value,texto:textoConteudo.value,arquivo:reader.result||"",tipo:file?file.type:"",serie:serieConteudo.value,disciplina:disciplinaConteudo.value};
-id===""?bancoConteudos.push(obj):bancoConteudos[id]=obj;
-localStorage.setItem("conteudos",JSON.stringify(bancoConteudos));
-alert("Conteúdo salvo!");
-editConteudoId.value="";
-};
-file?reader.readAsDataURL(file):reader.onload();
-}
-
 function carregarConteudos(){
 listaConteudos.innerHTML="";
+
 bancoConteudos.forEach((c,i)=>{
 if(c.serie===serieCont.value && c.disciplina===disciplinaCont.value){
-listaConteudos.innerHTML+=`<div class='conteudo'>
+
+let arquivoHTML = "";
+
+if(c.tipo.includes("pdf")){
+arquivoHTML = `<a href="${c.arquivo}" target="_blank">
+<button style="background:#e53935;color:white;border:none;padding:8px;border-radius:5px;cursor:pointer">
+📄 Abrir Apostila (PDF)
+</button></a>`;
+}
+else if(c.tipo.includes("image")){
+arquivoHTML = `<img src="${c.arquivo}">`;
+}
+else if(c.tipo.includes("video")){
+arquivoHTML = `<video controls src="${c.arquivo}"></video>`;
+}
+
+listaConteudos.innerHTML += `
+<div class='conteudo'>
 <h3>${c.titulo}</h3>
 <p>${c.texto}</p>
+${arquivoHTML}
 <button class='edit-btn' onclick='editarConteudo(${i})'>Editar</button>
 <button class='del-btn' onclick='excluirConteudo(${i})'>Excluir</button>
 </div>`;
-}});
 }
-
-function editarConteudo(i){
-let c=bancoConteudos[i];
-editConteudoId.value=i;
-tituloConteudo.value=c.titulo;
-textoConteudo.value=c.texto;
-serieConteudo.value=c.serie;
-disciplinaConteudo.value=c.disciplina;
-abrirAdmin();
+});
 }
-
-function excluirConteudo(i){
-if(confirm("Excluir conteúdo?")){
-bancoConteudos.splice(i,1);
-localStorage.setItem("conteudos",JSON.stringify(bancoConteudos));
-carregarConteudos();
-}
-}
-
-/* QUESTÕES */
-function salvarQuestao(){
-let id=editQuestaoId.value;
-let obj={pergunta:pergunta.value,texto:textoQuestao.value,A:altA.value,B:altB.value,C:altC.value,D:altD.value,correta:correta.value,serie:serieQuestao.value,disciplina:disciplinaQuestao.value,tipo:tipoQuestao.value};
-id===""?bancoQuestoes.push(obj):bancoQuestoes[id]=obj;
-localStorage.setItem("questoes",JSON.stringify(bancoQuestoes));
-alert("Questão salva!");
-editQuestaoId.value="";
-}
-
-function carregarQuestoes(tipo){
-let lista=(tipo==="Atividade")?listaAtividades:areaSimulado;
-lista.innerHTML="";
-bancoQuestoes.forEach((q,i)=>{
-if(q.serie===document.getElementById(tipo==="Atividade"?"serieAtv":"serieSim").value &&
-q.disciplina===document.getElementById(tipo==="Atividade"?"disciplinaAtv":"disciplinaSim").value &&
-q.tipo===tipo){
-lista.innerHTML+=`<div class='question'>
-<p><b>${q.pergunta}</b></p>
-<div class='option'><input type='radio'> A) ${q.A}</div>
-<div class='option'><input type='radio'> B) ${q.B}</div>
-<div class='option'><input type='radio'> C) ${q.C}</div>
-<div class='option'><input type='radio'> D) ${q.D}</div>
-<button class='edit-btn' onclick='editarQuestao(${i})'>Editar</button>
-<button class='del-btn' onclick='excluirQuestao(${i})'>Excluir</button>
-</div>`;
-}});
-}
-
-function editarQuestao(i){
-let q=bancoQuestoes[i];
-editQuestaoId.value=i;
-pergunta.value=q.pergunta;
-textoQuestao.value=q.texto;
-altA.value=q.A; altB.value=q.B; altC.value=q.C; altD.value=q.D;
-correta.value=q.correta;
-serieQuestao.value=q.serie;
-disciplinaQuestao.value=q.disciplina;
-tipoQuestao.value=q.tipo;
-abrirAdmin();
-}
-
-function excluirQuestao(i){
-if(confirm("Excluir questão?")){
-bancoQuestoes.splice(i,1);
-localStorage.setItem("questoes",JSON.stringify(bancoQuestoes));
-alert("Excluída!");
-}
-}
-</script>
-</body>
-</html>
