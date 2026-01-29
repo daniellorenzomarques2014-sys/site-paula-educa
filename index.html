@@ -24,7 +24,6 @@ nav button:hover {text-decoration:underline;}
 .card {background:white;padding:15px;margin:10px 0;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
 input, select, textarea {width:100%;padding:8px;margin:5px 0 10px;}
 button.primary {background:#1976d2;color:white;border:none;padding:10px;border-radius:5px;cursor:pointer;}
-button.danger {background:#c62828;color:white;border:none;padding:6px 10px;border-radius:5px;cursor:pointer;}
 .alt {margin:5px 0;display:flex;align-items:center;gap:8px;}
 .alt input {width:auto;}
 footer {text-align:center;padding:15px;background:#e3f2fd;margin-top:30px;}
@@ -85,12 +84,12 @@ footer {text-align:center;padding:15px;background:#e3f2fd;margin-top:30px;}
 <select id="serieConteudo"></select>
 <select id="discConteudo"></select>
 <textarea id="textoConteudo" placeholder="Texto do conteúdo"></textarea>
-<input type="file" id="arquivoConteudo">
+<input type="file" id="arquivoConteudo" accept=".pdf,.png,.jpg,.mp4">
 <button class="primary" onclick="salvarConteudo()">Salvar Conteúdo</button>
 </div>
 
 <div class="card">
-<h3>Cadastrar Questão (Atividade/Simulado)</h3>
+<h3>Cadastrar Questão</h3>
 <select id="tipoQuestao">
 <option value="atividade">Atividade</option>
 <option value="simulado">Simulado</option>
@@ -110,13 +109,12 @@ footer {text-align:center;padding:15px;background:#e3f2fd;margin-top:30px;}
 </div>
 </div>
 
-<footer>Produzido para uso educacional</footer>
+<footer>Ambiente Educacional</footer>
 
 <script>
 const series = ["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
 const disciplinas = ["Língua Portuguesa","Matemática","História","Geografia","Ciências","Artes","Religião","Inglês","Educação Física"];
 
-function preencherSelects(){
 series.forEach(s=>{
 serieConteudo.innerHTML+=`<option>${s}</option>`;
 serieQuestao.innerHTML+=`<option>${s}</option>`;
@@ -125,8 +123,6 @@ disciplinas.forEach(d=>{
 discConteudo.innerHTML+=`<option>${d}</option>`;
 discQuestao.innerHTML+=`<option>${d}</option>`;
 });
-}
-preencherSelects();
 
 function show(id){
 document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -137,29 +133,44 @@ if(id==="simulados") carregarQuestoes("simulado");
 }
 
 function loginAdmin(){
-if(document.getElementById('senhaAdmin').value==="admin123"){
-painelAdmin.style.display="block";
-alert("Login realizado");
-}else alert("Senha incorreta");
+if(senhaAdmin.value==="admin123"){painelAdmin.style.display="block";alert("Login realizado");}
+else alert("Senha incorreta");
 }
 
 function salvarConteudo(){
 let conteudos = JSON.parse(localStorage.getItem("conteudos")||"[]");
 let file = arquivoConteudo.files[0];
+
+if(file){
 let reader = new FileReader();
 reader.onload = function(){
-conteudos.push({serie:serieConteudo.value,disc:discConteudo.value,texto:textoConteudo.value,arquivo:reader.result,nome:file.name});
+conteudos.push({
+serie:serieConteudo.value,
+disc:discConteudo.value,
+texto:textoConteudo.value,
+arquivo:reader.result,
+nome:file.name
+});
 localStorage.setItem("conteudos",JSON.stringify(conteudos));
 alert("Conteúdo salvo!");
 }
-if(file) reader.readAsDataURL(file);
+reader.readAsDataURL(file);
+}else{
+conteudos.push({serie:serieConteudo.value,disc:discConteudo.value,texto:textoConteudo.value});
+localStorage.setItem("conteudos",JSON.stringify(conteudos));
+alert("Conteúdo salvo sem arquivo!");
+}
 }
 
 function carregarConteudos(){
 let lista = JSON.parse(localStorage.getItem("conteudos")||"[]");
 listaConteudos.innerHTML="";
 lista.forEach(c=>{
-listaConteudos.innerHTML+=`<div class="card"><h3>${c.disc} - ${c.serie}</h3><p>${c.texto}</p><a href="${c.arquivo}" target="_blank">📂 Abrir ${c.nome}</a></div>`;
+listaConteudos.innerHTML+=`<div class="card">
+<h3>${c.disc} - ${c.serie}</h3>
+<p>${c.texto||""}</p>
+${c.arquivo ? `<a href="${c.arquivo}" target="_blank">📂 Abrir ${c.nome}</a>` : ""}
+</div>`;
 });
 }
 
@@ -189,7 +200,7 @@ ${q.alts.map((a,j)=>`<div class="alt"><input type="radio" name="q${i}" value="${
 }
 
 function corrigir(i,c){
-let marcada=document.querySelector(`input[name="q${i}"]:checked`);
+let marcada=document.querySelector(\`input[name="q\${i}"]:checked\`);
 if(!marcada) return alert("Marque uma alternativa");
 if(marcada.value==c){alert("Resposta correta!");}
 else alert("Resposta incorreta!");
