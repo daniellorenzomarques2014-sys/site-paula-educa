@@ -15,7 +15,7 @@ nav a:hover{background:#0d47a1}
 .container{max-width:1100px;margin:25px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
 .hidden{display:none}
 .admin-btn{position:fixed;right:0;top:120px;background:#0d47a1;color:white;padding:10px;border-radius:8px 0 0 8px;cursor:pointer;font-weight:bold}
-.admin-panel{display:none;position:fixed;right:0;top:0;width:400px;height:100%;background:white;box-shadow:-2px 0 10px rgba(0,0,0,0.2);padding:15px;overflow:auto;z-index:999}
+.admin-panel{display:none;position:fixed;right:0;top:0;width:420px;height:100%;background:white;box-shadow:-2px 0 10px rgba(0,0,0,0.2);padding:15px;overflow:auto;z-index:999}
 .admin-panel input,.admin-panel textarea,.admin-panel select{width:100%;margin:5px 0;padding:6px}
 .admin-panel button{width:100%;margin:5px 0;padding:8px;border:none;background:#1976d2;color:white;border-radius:5px;cursor:pointer}
 .question,.conteudo{margin-bottom:15px;padding:10px;border:1px solid #ddd;border-radius:6px}
@@ -76,7 +76,7 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 
 <div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
 
-<!-- PAINEL ADMIN -->
+<!-- ADMIN -->
 <div class="admin-panel" id="adminPanel">
 
 <h3>📚 Cadastrar Conteúdo</h3>
@@ -94,7 +94,6 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <input type="hidden" id="editQuestaoId">
 <input type="text" id="pergunta" placeholder="Pergunta">
 <textarea id="textoQuestao" placeholder="Texto complementar"></textarea>
-<input type="file" id="arquivoQuestao" accept=".pdf,image/*,video/mp4">
 <input type="text" id="altA" placeholder="Alternativa A">
 <input type="text" id="altB" placeholder="Alternativa B">
 <input type="text" id="altC" placeholder="Alternativa C">
@@ -126,15 +125,6 @@ function showSection(id){document.querySelectorAll('.container').forEach(c=>c.cl
 function abrirAdmin(){if(prompt("Senha do administrador")==="professor123"){adminPanel.style.display="block"}}
 function fecharAdmin(){adminPanel.style.display="none"}
 
-function visualizarArquivo(arq,tipo){
-if(!arq)return"";
-if(tipo.includes("pdf"))return`<embed src="${arq}" type="application/pdf" width="100%" height="400px">`;
-if(tipo.includes("image"))return`<img src="${arq}">`;
-if(tipo.includes("video"))return`<video controls src="${arq}"></video>`;
-return"";
-}
-
-/* CONTEÚDOS */
 function salvarConteudo(){
 let id=editConteudoId.value;
 let file=arquivoConteudo.files[0];
@@ -144,6 +134,7 @@ let obj={titulo:tituloConteudo.value,texto:textoConteudo.value,arquivo:reader.re
 id===""?bancoConteudos.push(obj):bancoConteudos[id]=obj;
 localStorage.setItem("conteudos",JSON.stringify(bancoConteudos));
 alert("Conteúdo salvo!");
+editConteudoId.value="";
 };
 file?reader.readAsDataURL(file):reader.onload();
 }
@@ -152,8 +143,31 @@ function carregarConteudos(){
 listaConteudos.innerHTML="";
 bancoConteudos.forEach((c,i)=>{
 if(c.serie===serieCont.value && c.disciplina===disciplinaCont.value){
-listaConteudos.innerHTML+=`<div class='conteudo'><h3>${c.titulo}</h3><p>${c.texto}</p>${visualizarArquivo(c.arquivo,c.tipo)}</div>`;
+listaConteudos.innerHTML+=`<div class='conteudo'>
+<h3>${c.titulo}</h3>
+<p>${c.texto}</p>
+<button class='edit-btn' onclick='editarConteudo(${i})'>Editar</button>
+<button class='del-btn' onclick='excluirConteudo(${i})'>Excluir</button>
+</div>`;
 }});
+}
+
+function editarConteudo(i){
+let c=bancoConteudos[i];
+editConteudoId.value=i;
+tituloConteudo.value=c.titulo;
+textoConteudo.value=c.texto;
+serieConteudo.value=c.serie;
+disciplinaConteudo.value=c.disciplina;
+abrirAdmin();
+}
+
+function excluirConteudo(i){
+if(confirm("Excluir conteúdo?")){
+bancoConteudos.splice(i,1);
+localStorage.setItem("conteudos",JSON.stringify(bancoConteudos));
+carregarConteudos();
+}
 }
 
 /* QUESTÕES */
@@ -163,6 +177,7 @@ let obj={pergunta:pergunta.value,texto:textoQuestao.value,A:altA.value,B:altB.va
 id===""?bancoQuestoes.push(obj):bancoQuestoes[id]=obj;
 localStorage.setItem("questoes",JSON.stringify(bancoQuestoes));
 alert("Questão salva!");
+editQuestaoId.value="";
 }
 
 function carregarQuestoes(tipo){
@@ -172,13 +187,37 @@ bancoQuestoes.forEach((q,i)=>{
 if(q.serie===document.getElementById(tipo==="Atividade"?"serieAtv":"serieSim").value &&
 q.disciplina===document.getElementById(tipo==="Atividade"?"disciplinaAtv":"disciplinaSim").value &&
 q.tipo===tipo){
-lista.innerHTML+=`<div class='question'><p><b>${q.pergunta}</b></p><p>${q.texto||""}</p>
-<div class='option'><input type='radio' name='q${i}'> A) ${q.A}</div>
-<div class='option'><input type='radio' name='q${i}'> B) ${q.B}</div>
-<div class='option'><input type='radio' name='q${i}'> C) ${q.C}</div>
-<div class='option'><input type='radio' name='q${i}'> D) ${q.D}</div>
+lista.innerHTML+=`<div class='question'>
+<p><b>${q.pergunta}</b></p>
+<div class='option'><input type='radio'> A) ${q.A}</div>
+<div class='option'><input type='radio'> B) ${q.B}</div>
+<div class='option'><input type='radio'> C) ${q.C}</div>
+<div class='option'><input type='radio'> D) ${q.D}</div>
+<button class='edit-btn' onclick='editarQuestao(${i})'>Editar</button>
+<button class='del-btn' onclick='excluirQuestao(${i})'>Excluir</button>
 </div>`;
 }});
+}
+
+function editarQuestao(i){
+let q=bancoQuestoes[i];
+editQuestaoId.value=i;
+pergunta.value=q.pergunta;
+textoQuestao.value=q.texto;
+altA.value=q.A; altB.value=q.B; altC.value=q.C; altD.value=q.D;
+correta.value=q.correta;
+serieQuestao.value=q.serie;
+disciplinaQuestao.value=q.disciplina;
+tipoQuestao.value=q.tipo;
+abrirAdmin();
+}
+
+function excluirQuestao(i){
+if(confirm("Excluir questão?")){
+bancoQuestoes.splice(i,1);
+localStorage.setItem("questoes",JSON.stringify(bancoQuestoes));
+alert("Excluída!");
+}
 }
 </script>
 </body>
