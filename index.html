@@ -13,36 +13,36 @@ header{
 }
 header img{height:55px;margin-right:15px}
 nav{background:#1976d2;display:flex;gap:15px;padding:10px 20px;flex-wrap:wrap}
-nav button{
-  background:none;border:none;color:white;font-weight:bold;
-  cursor:pointer;font-size:15px
-}
+nav button{background:none;border:none;color:white;font-weight:bold;cursor:pointer;font-size:15px}
 nav button:hover{text-decoration:underline}
 section{display:none;padding:20px}
 .active{display:block}
 h2{color:#0d47a1;text-align:center}
 
-/* QUESTÕES ESTILO PROVA */
 .questao{
   background:white;
   padding:15px;
   margin-bottom:15px;
   border-radius:8px;
-}
-
-.alt{
-  margin:2px 0;
-  font-size:15px;
   text-align:left;
 }
 
-.alt input[type="radio"]{
-  margin-right:4px;   /* espaço MINIMO entre bolinha e texto */
-  vertical-align:middle;
-  transform:scale(1.1);
+/* ALTERNATIVAS ESTILO PROVA — TUDO COLADO */
+.alt{
+  display:block;
+  margin:2px 0;
+  line-height:1.2;
 }
 
-/* ADMIN */
+.alt label{
+  cursor:pointer;
+}
+
+.alt input[type="radio"]{
+  margin:0 2px 0 0;  /* quase zero espaço */
+  vertical-align:middle;
+  transform:scale(1.05);
+}
 .admin-panel{background:#fff3cd;padding:15px;border-radius:8px;margin-top:15px}
 input, select, textarea{width:100%;padding:8px;margin:5px 0}
 button.salvar{background:#2e7d32;color:white;border:none;padding:8px 12px;margin-top:5px;cursor:pointer}
