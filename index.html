@@ -1,190 +1,97 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Portal Educacional</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+📘 APOSTILA DE LÍNGUA PORTUGUESA – 9º ANO
+📚 Morfossintaxe – Sujeito + Verbo de Ligação + Predicativo
+🎯 Habilidade (EF09LP05)
 
-<style>
-body{margin:0;font-family:Arial;background:#f4f6f9}
-header{
-  background:linear-gradient(90deg,#0d47a1,#1976d2);
-  color:white;padding:10px 20px;display:flex;align-items:center
-}
-header img{height:55px;margin-right:15px}
-nav{background:#1565c0;display:flex;gap:15px;padding:10px 20px}
-nav button{
-  background:none;border:none;color:white;font-weight:bold;
-  cursor:pointer;font-size:15px
-}
-nav button:hover{text-decoration:underline}
-section{display:none;padding:20px}
-.active{display:block}
-h2{color:#0d47a1}
+Identificar e produzir orações com a estrutura:
 
-/* QUESTÕES */
-.questao{background:white;padding:15px;margin-bottom:15px;border-radius:8px}
-.alt{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  margin:2px 0;
-  font-size:15px;
-  cursor:pointer;
-}
-.alt input[type="radio"]{margin:0;transform:scale(1.1)}
+SUJEITO + VERBO DE LIGAÇÃO + PREDICATIVO DO SUJEITO
 
-/* ADMIN */
-.admin-panel{background:#fff3cd;padding:15px;border-radius:8px;margin-top:15px}
-input, select, textarea{width:100%;padding:8px;margin:5px 0}
-button.salvar{background:#2e7d32;color:white;border:none;padding:8px 12px;margin-top:5px;cursor:pointer}
-button.excluir{background:#c62828;color:white;border:none;padding:5px 8px;margin-top:5px;cursor:pointer}
-</style>
-</head>
+Essa estrutura é muito usada em descrições, pois atribui características, estados ou qualidades ao sujeito.
 
-<body>
+🧠 1. O QUE É VERBO DE LIGAÇÃO?
 
-<header>
-<img src="LOGO_DA_ESCOLA.png">
-<h1>Portal Educacional</h1>
-</header>
+O verbo de ligação não indica ação.
+Ele serve para ligar o sujeito a uma característica.
 
-<nav>
-<button onclick="mostrar('inicio')">Início</button>
-<button onclick="mostrar('conteudos')">Conteúdos</button>
-<button onclick="mostrar('atividades')">Atividades</button>
-<button onclick="mostrar('simulados')">Simulados</button>
-<button onclick="mostrar('ade')">ADE</button>
-<button onclick="mostrar('saeb')">SAEB</button>
-<button onclick="mostrar('resultados')">Resultados</button>
-<button onclick="loginAdmin()">Administrador</button>
-</nav>
+Verbos de ligação mais comuns:
+Verbo	Exemplo
+ser	Ela é simpática.
+estar	Ele está cansado.
+parecer	O dia parece longo.
+continuar	Ela continua feliz.
+tornar-se	Ele tornou-se famoso.
+permanecer	A sala permaneceu silenciosa.
+🧩 2. O QUE É PREDICATIVO DO SUJEITO?
 
-<section id="inicio" class="active">
-<h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2>
-<p style="text-align:center">Ambiente de estudos com conteúdos, atividades e simulados.</p>
-</section>
+É a palavra (ou expressão) que atribui uma qualidade, estado ou característica ao sujeito.
 
-<section id="conteudos">
-<h2>Conteúdos</h2>
-<div id="listaConteudos"></div>
-</section>
+Estrutura:
 
-<section id="atividades">
-<h2>Atividades</h2>
-<div id="listaAtividades"></div>
-</section>
+Sujeito + Verbo de Ligação + Predicativo
 
-<section id="simulados">
-<h2>Simulados</h2>
-<div id="listaSimulados"></div>
-</section>
+Sujeito	Verbo de ligação	Predicativo	O que indica
+A menina	é	estudiosa	qualidade
+O céu	está	nublado	estado
+O filme	parece	interessante	opinião/característica
+Ele	ficou	nervoso	mudança de estado
+🔍 3. IDENTIFICADOR DE PREDICATIVOS
 
-<section id="ade"><h2>Avaliações ADE</h2></section>
-<section id="saeb"><h2>Avaliações SAEB</h2></section>
-<section id="resultados"><h2>Resultados</h2><div id="listaResultados"></div></section>
+Veja o texto:
 
-<section id="admin" style="display:none">
-<h2>Painel do Administrador</h2>
+"A casa era antiga e silenciosa. Os corredores estavam escuros."
 
-<div class="admin-panel">
-<h3>Cadastrar Conteúdo</h3>
-<input id="tituloConteudo" placeholder="Título">
-<input id="arquivoConteudo" type="file">
-<button class="salvar" onclick="salvarConteudo()">Salvar Conteúdo</button>
-</div>
+Vamos analisar:
 
-<div class="admin-panel">
-<h3>Cadastrar Questão (Atividade/Simulado)</h3>
-<select id="tipoQuestao">
-<option value="atividade">Atividade</option>
-<option value="simulado">Simulado</option>
-</select>
-<textarea id="pergunta" placeholder="Digite a pergunta"></textarea>
-<input id="altA" placeholder="Alternativa A">
-<input id="altB" placeholder="Alternativa B">
-<input id="altC" placeholder="Alternativa C">
-<input id="altD" placeholder="Alternativa D">
-<select id="correta">
-<option value="A">Resposta Correta: A</option>
-<option value="B">Resposta Correta: B</option>
-<option value="C">Resposta Correta: C</option>
-<option value="D">Resposta Correta: D</option>
-</select>
-<button class="salvar" onclick="salvarQuestao()">Salvar Questão</button>
-</div>
+era antiga e silenciosa → verbo de ligação: era | predicativo: antiga e silenciosa
 
-</section>
+estavam escuros → verbo de ligação: estavam | predicativo: escuros
 
-<script>
-function mostrar(sec){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
-document.getElementById(sec).classList.add("active")
-}
+📌 Perceba que não há ação. O foco é descrever.
 
-function loginAdmin(){
-let s=prompt("Senha do administrador:")
-if(s==="admin123"){document.getElementById("admin").style.display="block";mostrar("admin")}
-else alert("Senha incorreta")
-}
+🖊 4. OFICINA DE RETRATOS TEXTUAIS
 
-/* CONTEÚDOS */
-function salvarConteudo(){
-let titulo=document.getElementById("tituloConteudo").value
-let file=document.getElementById("arquivoConteudo").files[0]
-let reader=new FileReader()
-reader.onload=function(){
-let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]")
-conteudos.push({titulo,arquivo:reader.result,nome:file.name})
-localStorage.setItem("conteudos",JSON.stringify(conteudos))
-carregarConteudos()
-}
-reader.readAsDataURL(file)
-}
+Descrições de pessoas usam muito essa estrutura:
 
-function carregarConteudos(){
-let lista=document.getElementById("listaConteudos")
-lista.innerHTML=""
-let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]")
-conteudos.forEach(c=>{
-lista.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" target="_blank">📂 Abrir ${c.nome}</a></p>`
-})
-}
-carregarConteudos()
+Exemplo:
 
-/* QUESTÕES */
-function salvarQuestao(){
-let q={
-tipo:tipoQuestao.value,
-pergunta:pergunta.value,
-A:altA.value,B:altB.value,C:altC.value,D:altD.value,
-correta:correta.value
-}
-let questoes=JSON.parse(localStorage.getItem("questoes")||"[]")
-questoes.push(q)
-localStorage.setItem("questoes",JSON.stringify(questoes))
-carregarQuestoes()
-}
+"Joana é inteligente, curiosa e dedicada. Ela está sempre atenta e parece animada com novos desafios."
 
-function carregarQuestoes(){
-let atv=document.getElementById("listaAtividades")
-let sim=document.getElementById("listaSimulados")
-atv.innerHTML=""; sim.innerHTML=""
-let questoes=JSON.parse(localStorage.getItem("questoes")||"[]")
+Aqui temos:
 
-questoes.forEach((q,i)=>{
-let html=`<div class='questao'><p><b>${i+1}. ${q.pergunta}</b></p>
-<label class='alt'><input type='radio' name='q${q.tipo}${i}'> A) ${q.A}</label>
-<label class='alt'><input type='radio' name='q${q.tipo}${i}'> B) ${q.B}</label>
-<label class='alt'><input type='radio' name='q${q.tipo}${i}'> C) ${q.C}</label>
-<label class='alt'><input type='radio' name='q${q.tipo}${i}'> D) ${q.D}</label>
-</div>`
-if(q.tipo==="atividade") atv.innerHTML+=html
-else sim.innerHTML+=html
-})
-}
-carregarQuestoes()
-</script>
+Sujeito	Verbo de ligação	Predicativo
+Joana	é	inteligente, curiosa e dedicada
+Ela	está	atenta
+Ela	parece	animada
 
-</body>
-</html>
+➡ A descrição é construída por características, não por ações.
+
+⚖ 5. ANÁLISE COMPARATIVA SINTÁTICA
+
+Vamos comparar dois tipos de orações:
+
+Tipo	Exemplo	Função
+Verbo de ação	O menino correu no parque.	mostra ação
+Verbo de ligação	O menino está cansado.	mostra estado
+
+📌 No verbo de ação → algo acontece
+📌 No verbo de ligação → algo é, está, parece
+
+Comparando no texto:
+
+"O atleta correu a maratona. Ele estava exausto."
+
+correu → verbo de ação (movimento)
+
+estava exausto → verbo de ligação + predicativo (estado)
+
+Os dois tipos ajudam na progressão do texto:
+✔ Ação movimenta a narrativa
+✔ Ligação descreve personagens e situações
+
+✨ RESUMINDO
+
+✔ Verbo de ligação não indica ação
+✔ Liga o sujeito a uma característica ou estado
+✔ O predicativo do sujeito é quem traz essa característica
+✔ Muito usado em descrições
+✔ Diferente de verbos de ação, que indicam acontecimentos
