@@ -18,7 +18,7 @@ nav a:hover{background:#0d47a1}
 .admin-panel{display:none;position:fixed;right:0;top:0;width:360px;height:100%;background:white;box-shadow:-2px 0 10px rgba(0,0,0,0.2);padding:15px;overflow:auto;z-index:999}
 .admin-panel input,.admin-panel textarea,.admin-panel select{width:100%;margin:5px 0;padding:6px}
 .admin-panel button{width:100%;margin:5px 0;padding:8px;border:none;background:#1976d2;color:white;border-radius:5px;cursor:pointer}
-.question{margin-bottom:20px;padding:15px;border:1px solid #ddd;border-radius:6px}
+.question,.conteudo{margin-bottom:20px;padding:15px;border:1px solid #ddd;border-radius:6px}
 .option{display:flex;align-items:center;margin:6px 0}
 .option input{margin-right:8px;transform:scale(1.2)}
 footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
@@ -43,11 +43,16 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2>
 </div>
 
+<!-- CONTEÚDOS -->
 <div class="container hidden" id="conteudos">
 <h2>Conteúdos</h2>
-<p>Área exclusiva para materiais de estudo (textos, imagens, gráficos, vídeos).</p>
+<select id="serieCont"></select>
+<select id="disciplinaCont"></select>
+<button onclick="carregarConteudos()">Carregar Conteúdos</button>
+<div id="listaConteudos"></div>
 </div>
 
+<!-- ATIVIDADES -->
 <div class="container hidden" id="atividades">
 <h2>Atividades</h2>
 <select id="serieAtv"></select>
@@ -61,6 +66,7 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <div id="listaAtividades"></div>
 </div>
 
+<!-- SIMULADOS -->
 <div class="container hidden" id="simulados">
 <h2>Simulados</h2>
 <select id="serieSim"></select>
@@ -75,6 +81,7 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <div id="areaSimulado"></div>
 </div>
 
+<!-- RESULTADOS -->
 <div class="container hidden" id="resultados">
 <h2>Resultados</h2>
 <div id="relatorios"></div>
@@ -82,8 +89,19 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 
 <div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
 
+<!-- PAINEL ADMIN -->
 <div class="admin-panel" id="adminPanel">
-<h3>Cadastrar Questão</h3>
+<h3>CRIAR CONTEÚDO</h3>
+<input type="text" id="tituloConteudo" placeholder="Título do conteúdo">
+<textarea id="textoConteudo" placeholder="Texto / explicação"></textarea>
+<input type="file" id="imagemConteudo">
+<select id="serieConteudo"></select>
+<select id="disciplinaConteudo"></select>
+<button onclick="salvarConteudo()">Salvar Conteúdo</button>
+
+<hr>
+
+<h3>CRIAR QUESTÃO</h3>
 <input type="text" id="pergunta" placeholder="Pergunta">
 <textarea id="textoQuestao" placeholder="Texto complementar"></textarea>
 <input type="file" id="imagemQuestao">
@@ -103,7 +121,8 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <option>Atividade</option>
 <option>Simulado</option>
 </select>
-<button onclick="salvarQuestao()">Salvar</button>
+<button onclick="salvarQuestao()">Salvar Questão</button>
+
 <button onclick="fecharAdmin()">Fechar</button>
 </div>
 
@@ -113,16 +132,34 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 const series=["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
 const disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Ciências","Inglês","Artes","Religião","Educação Física"];
 
-function preencherSelect(id,lista){let s=document.getElementById(id);lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`)}
-preencherSelect("serieAtv",series);preencherSelect("serieSim",series);preencherSelect("serieQuestao",series);
-preencherSelect("disciplinaAtv",disciplinas);preencherSelect("disciplinaSim",disciplinas);preencherSelect("disciplinaQuestao",disciplinas);
+function preencher(id,lista){let s=document.getElementById(id);lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`)}
+["serieAtv","serieSim","serieQuestao","serieCont","serieConteudo"].forEach(id=>preencher(id,series))
+["disciplinaAtv","disciplinaSim","disciplinaQuestao","disciplinaCont","disciplinaConteudo"].forEach(id=>preencher(id,disciplinas))
 
 let bancoQuestoes=JSON.parse(localStorage.getItem('questoes'))||[];
+let bancoConteudos=JSON.parse(localStorage.getItem('conteudos'))||[];
 let resultados=JSON.parse(localStorage.getItem('resultados'))||[];
 
 function showSection(id){document.querySelectorAll('.container').forEach(c=>c.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
 function abrirAdmin(){if(prompt("Senha do administrador")==="professor123"){adminPanel.style.display="block"}else alert("Senha incorreta")}
 function fecharAdmin(){adminPanel.style.display="none"}
+
+function salvarConteudo(){
+let reader=new FileReader();let file=imagemConteudo.files[0];
+reader.onload=function(){
+bancoConteudos.push({titulo:tituloConteudo.value,texto:textoConteudo.value,imagem:reader.result,serie:serieConteudo.value,disciplina:disciplinaConteudo.value});
+localStorage.setItem("conteudos",JSON.stringify(bancoConteudos));alert("Conteúdo salvo!");
+};
+if(file){reader.readAsDataURL(file)}else{reader.onload()}
+}
+
+function carregarConteudos(){
+listaConteudos.innerHTML="";
+bancoConteudos.filter(c=>c.serie===serieCont.value && c.disciplina===disciplinaCont.value)
+.forEach(c=>{
+listaConteudos.innerHTML+=`<div class='conteudo'><h3>${c.titulo}</h3><p>${c.texto}</p>${c.imagem?`<img src='${c.imagem}' width='200'>`:''}</div>`
+})
+}
 
 function salvarQuestao(){
 let reader=new FileReader();let file=imagemQuestao.files[0];
