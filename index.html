@@ -6,7 +6,7 @@
 <title>Portal Educacional</title>
 
 <style>
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef2f7}
+body{margin:0;font-family:Arial;background:#eef2f7}
 header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1976d2);color:white;flex-wrap:wrap}
 .logo{height:80px}
 nav{background:#1565c0;display:flex;justify-content:center;flex-wrap:wrap}
@@ -39,9 +39,7 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <a onclick="showSection('resultados')">Resultados</a>
 </nav>
 
-<div class="container" id="inicio">
-<h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2>
-</div>
+<div class="container" id="inicio"><h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2></div>
 
 <!-- CONTEÚDOS -->
 <div class="container hidden" id="conteudos">
@@ -62,7 +60,7 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <option value="20">20 Questões</option>
 <option value="50">50 Questões</option>
 </select>
-<button onclick="carregarAtividades()">Carregar</button>
+<button onclick="carregarAtividades()">Carregar Atividades</button>
 <div id="listaAtividades"></div>
 </div>
 
@@ -77,7 +75,7 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <option value="50">50 Questões</option>
 </select>
 <input type="text" id="nomeAluno" placeholder="Nome do aluno">
-<button onclick="carregarSimulado()">Iniciar</button>
+<button onclick="carregarSimulado()">Iniciar Simulado</button>
 <div id="areaSimulado"></div>
 </div>
 
@@ -89,11 +87,11 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 
 <div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
 
-<!-- PAINEL ADMIN -->
+<!-- ADMIN -->
 <div class="admin-panel" id="adminPanel">
 <h3>CRIAR CONTEÚDO</h3>
-<input type="text" id="tituloConteudo" placeholder="Título do conteúdo">
-<textarea id="textoConteudo" placeholder="Texto / explicação"></textarea>
+<input type="text" id="tituloConteudo" placeholder="Título">
+<textarea id="textoConteudo" placeholder="Texto"></textarea>
 <input type="file" id="imagemConteudo">
 <select id="serieConteudo"></select>
 <select id="disciplinaConteudo"></select>
@@ -122,7 +120,6 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <option>Simulado</option>
 </select>
 <button onclick="salvarQuestao()">Salvar Questão</button>
-
 <button onclick="fecharAdmin()">Fechar</button>
 </div>
 
@@ -132,9 +129,14 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 const series=["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
 const disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Ciências","Inglês","Artes","Religião","Educação Física"];
 
-function preencher(id,lista){let s=document.getElementById(id);lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`)}
-["serieAtv","serieSim","serieQuestao","serieCont","serieConteudo"].forEach(id=>preencher(id,series))
-["disciplinaAtv","disciplinaSim","disciplinaQuestao","disciplinaCont","disciplinaConteudo"].forEach(id=>preencher(id,disciplinas))
+function preencherSelect(id,lista){
+let s=document.getElementById(id);
+s.innerHTML="";
+lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`);
+}
+
+["serieAtv","serieSim","serieQuestao","serieCont","serieConteudo"].forEach(id=>preencherSelect(id,series));
+["disciplinaAtv","disciplinaSim","disciplinaQuestao","disciplinaCont","disciplinaConteudo"].forEach(id=>preencherSelect(id,disciplinas));
 
 let bancoQuestoes=JSON.parse(localStorage.getItem('questoes'))||[];
 let bancoConteudos=JSON.parse(localStorage.getItem('conteudos'))||[];
@@ -150,59 +152,74 @@ reader.onload=function(){
 bancoConteudos.push({titulo:tituloConteudo.value,texto:textoConteudo.value,imagem:reader.result,serie:serieConteudo.value,disciplina:disciplinaConteudo.value});
 localStorage.setItem("conteudos",JSON.stringify(bancoConteudos));alert("Conteúdo salvo!");
 };
-if(file){reader.readAsDataURL(file)}else{reader.onload()}
+file?reader.readAsDataURL(file):reader.onload();
 }
 
 function carregarConteudos(){
 listaConteudos.innerHTML="";
-bancoConteudos.filter(c=>c.serie===serieCont.value && c.disciplina===disciplinaCont.value)
+bancoConteudos
+.filter(c=>c.serie===serieCont.value && c.disciplina===disciplinaCont.value)
 .forEach(c=>{
 listaConteudos.innerHTML+=`<div class='conteudo'><h3>${c.titulo}</h3><p>${c.texto}</p>${c.imagem?`<img src='${c.imagem}' width='200'>`:''}</div>`
-})
+});
 }
 
 function salvarQuestao(){
 let reader=new FileReader();let file=imagemQuestao.files[0];
 reader.onload=function(){
 bancoQuestoes.push({pergunta:pergunta.value,texto:textoQuestao.value,imagem:reader.result,A:altA.value,B:altB.value,C:altC.value,D:altD.value,correta:correta.value,serie:serieQuestao.value,disciplina:disciplinaQuestao.value,tipo:tipoQuestao.value});
-localStorage.setItem("questoes",JSON.stringify(bancoQuestoes));alert("Questão salva!")
+localStorage.setItem("questoes",JSON.stringify(bancoQuestoes));alert("Questão salva!");
 };
-if(file){reader.readAsDataURL(file)}else{reader.onload()}
+file?reader.readAsDataURL(file):reader.onload();
 }
 
-function montar(lista,destino,qtd){
-destino.innerHTML='';
-lista.slice(0,qtd).forEach((q,i)=>{
-destino.innerHTML+=`<div class='question'><p><b>${i+1}. ${q.pergunta}</b></p><p>${q.texto||""}</p>${q.imagem?`<img src='${q.imagem}' width='150'>`:''}
+function montarQuestoes(lista,destino,qtd){
+destino.innerHTML="";
+let selecionadas=lista.slice(0,qtd);
+selecionadas.forEach((q,i)=>{
+destino.innerHTML+=`
+<div class='question'>
+<p><b>${i+1}. ${q.pergunta}</b></p>
+<p>${q.texto||""}</p>
+${q.imagem?`<img src='${q.imagem}' width='150'>`:''}
 <label class="option"><input type="radio" name="q${i}" value="A"> A) ${q.A}</label>
 <label class="option"><input type="radio" name="q${i}" value="B"> B) ${q.B}</label>
 <label class="option"><input type="radio" name="q${i}" value="C"> C) ${q.C}</label>
-<label class="option"><input type="radio" name="q${i}" value="D"> D) ${q.D}</label></div>`
+<label class="option"><input type="radio" name="q${i}" value="D"> D) ${q.D}</label>
+</div>`;
 });
-destino.innerHTML+=`<button onclick="corrigir('${destino.id}')">Finalizar</button>`
+destino.innerHTML+=`<button onclick="corrigir('${destino.id}')">Finalizar</button>`;
+destino.dataset.questoes = JSON.stringify(selecionadas);
 }
 
 function carregarAtividades(){
 let lista=bancoQuestoes.filter(q=>q.tipo==="Atividade"&&q.serie===serieAtv.value&&q.disciplina===disciplinaAtv.value);
-montar(lista,listaAtividades,qtdAtv.value)
+montarQuestoes(lista,listaAtividades,qtdAtv.value);
 }
 
 function carregarSimulado(){
 let lista=bancoQuestoes.filter(q=>q.tipo==="Simulado"&&q.serie===serieSim.value&&q.disciplina===disciplinaSim.value);
-montar(lista,areaSimulado,qtdSim.value)
+montarQuestoes(lista,areaSimulado,qtdSim.value);
 }
 
 function corrigir(area){
-let div=document.getElementById(area);let marcadas=div.querySelectorAll("input[type=radio]:checked");let acertos=0;
-marcadas.forEach((r,i)=>{if(r.value===bancoQuestoes[i].correta)acertos++});
-let erros=div.querySelectorAll(".question").length-acertos;
+let div=document.getElementById(area);
+let questoes=JSON.parse(div.dataset.questoes||"[]");
+let marcadas=div.querySelectorAll("input[type=radio]:checked");
+let acertos=0;
+marcadas.forEach((r,i)=>{if(questoes[i] && r.value===questoes[i].correta) acertos++;});
+let erros=questoes.length-acertos;
 resultados.push({aluno:nomeAluno.value||"Aluno",acertos,erros});
 localStorage.setItem("resultados",JSON.stringify(resultados));
 alert(`Resultado: ${acertos} acertos e ${erros} erros`);
-mostrarRelatorios();showSection("resultados")
+mostrarRelatorios();
+showSection("resultados");
 }
 
-function mostrarRelatorios(){relatorios.innerHTML='';resultados.forEach(r=>relatorios.innerHTML+=`<p>${r.aluno} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`)}
+function mostrarRelatorios(){
+relatorios.innerHTML="";
+resultados.forEach(r=>relatorios.innerHTML+=`<p>${r.aluno} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`);
+}
 mostrarRelatorios();
 </script>
 
