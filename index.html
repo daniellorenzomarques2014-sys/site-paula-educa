@@ -6,189 +6,211 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{margin:0;font-family:Arial;background:#f1f5f9}
+body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    background:#f4f6f9;
+}
+
+/* ===== TOPO ===== */
 header{
-  background:linear-gradient(90deg,#0d47a1,#1565c0);
-  color:white;padding:10px 20px;display:flex;align-items:center
+    background: linear-gradient(90deg,#0d47a1,#1976d2);
+    color:white;
+    padding:15px;
+    display:flex;
+    align-items:center;
+    gap:15px;
 }
-header img{height:60px;margin-right:15px}
-nav{background:#1976d2;display:flex;gap:15px;padding:10px 20px;flex-wrap:wrap}
-nav button{background:none;border:none;color:white;font-weight:bold;cursor:pointer;font-size:15px}
-nav button:hover{text-decoration:underline}
-section{display:none;padding:20px}
-.active{display:block}
-h2{color:#0d47a1;text-align:center}
+header img{
+    height:60px;
+}
+header h1{
+    margin:0;
+    font-size:22px;
+}
 
+/* ===== MENU ===== */
+nav{
+    background:#1565c0;
+    display:flex;
+    flex-wrap:wrap;
+}
+nav button{
+    flex:1;
+    padding:12px;
+    border:none;
+    background:none;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+nav button:hover{
+    background:#0d47a1;
+}
+
+/* ===== CONTEÚDO ===== */
+section{
+    display:none;
+    padding:20px;
+}
+section.active{
+    display:block;
+}
+
+/* ===== QUESTÕES ===== */
 .questao{
-  background:white;
-  padding:15px;
-  margin-bottom:15px;
-  border-radius:8px;
+    background:white;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:8px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
-/* ===== ALTERNATIVAS ESTILO PROVA ===== */
-.alt{
-  display:inline-flex;
-  align-items:center;
-  gap:4px;
-  margin:2px 0;
-  cursor:pointer;
+.alternativa{
+    display:flex;
+    align-items:center;
+    gap:6px;              /* espaço pequeno entre bolinha e texto */
+    margin:4px 0;
+    font-size:15px;
 }
-.alt input[type="radio"]{
-  margin:0;
+
+.alternativa input{
+    margin:0;             /* remove espaço automático */
 }
-.admin-panel{background:#fff3cd;padding:15px;border-radius:8px;margin-top:15px}
-input, select, textarea{width:100%;padding:8px;margin:5px 0}
-button.salvar{background:#2e7d32;color:white;border:none;padding:8px 12px;margin-top:5px;cursor:pointer}
-a.material{display:block;margin:5px 0;color:#0d47a1;font-weight:bold}
+
+/* ===== BOTÕES ===== */
+button.acao{
+    background:#1976d2;
+    color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:5px;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+button.acao:hover{
+    background:#0d47a1;
+}
 </style>
-</head>
 
+<script>
+function abrirGuia(id){
+    document.querySelectorAll("section").forEach(sec=>sec.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+</script>
+
+</head>
 <body>
 
 <header>
-<img src="LOGO_DA_ESCOLA.png">
-<h1>Portal Educacional</h1>
+    <img src="logo.png" alt="Logo da Escola">
+    <h1>Portal Educacional</h1>
 </header>
 
 <nav>
-<button onclick="mostrar('inicio')">Início</button>
-<button onclick="mostrar('conteudos')">Conteúdos</button>
-<button onclick="mostrar('atividades')">Atividades</button>
-<button onclick="mostrar('simulados')">Simulados</button>
-<button onclick="mostrar('ade')">ADE</button>
-<button onclick="mostrar('saeb')">SAEB</button>
-<button onclick="mostrar('resultados')">Resultados</button>
-<button onclick="loginAdmin()">Administrador</button>
+    <button onclick="abrirGuia('inicio')">Início</button>
+    <button onclick="abrirGuia('conteudos')">Conteúdos</button>
+    <button onclick="abrirGuia('atividades')">Atividades</button>
+    <button onclick="abrirGuia('simulados')">Simulados</button>
+    <button onclick="abrirGuia('ade')">ADE</button>
+    <button onclick="abrirGuia('saeb')">SAEB</button>
+    <button onclick="abrirGuia('resultados')">Resultados</button>
 </nav>
 
+<!-- INÍCIO -->
 <section id="inicio" class="active">
-<h2>Bem-vindo ao Portal Educacional</h2>
-<p style="text-align:center">Ambiente digital de aprendizagem.</p>
+    <h2>Bem-vindo ao Portal Educacional</h2>
+    <p>Escolha uma das guias acima para estudar.</p>
 </section>
 
+<!-- CONTEÚDOS -->
 <section id="conteudos">
-<h2>Conteúdos</h2>
-<div id="listaConteudos"></div>
+    <h2>Conteúdos Disponíveis</h2>
+    <p>Língua Portuguesa - 7º Ano</p>
+    <a href="apostila.pdf" target="_blank">📘 Abrir Apostila em PDF</a>
 </section>
 
+<!-- ATIVIDADES -->
 <section id="atividades">
-<h2>Atividades</h2>
-<div id="listaAtividades"></div>
+    <h2>Atividades</h2>
+
+    <div class="questao">
+        <p><b>1.</b> A palavra <b>infeliz</b> foi formada com o acréscimo de:</p>
+
+        <label class="alternativa">
+            <input type="radio" name="q1">
+            A) sufixo de intensidade
+        </label>
+
+        <label class="alternativa">
+            <input type="radio" name="q1">
+            B) prefixo de negação
+        </label>
+
+        <label class="alternativa">
+            <input type="radio" name="q1">
+            C) sufixo de lugar
+        </label>
+
+        <label class="alternativa">
+            <input type="radio" name="q1">
+            D) prefixo de repetição
+        </label>
+    </div>
+
+    <button class="acao">Finalizar Atividade</button>
 </section>
 
+<!-- SIMULADOS -->
 <section id="simulados">
-<h2>Simulados</h2>
-<div id="listaSimulados"></div>
+    <h2>Simulados</h2>
+
+    <div class="questao">
+        <p><b>1.</b> A palavra <b>refazer</b> indica ideia de:</p>
+
+        <label class="alternativa">
+            <input type="radio" name="q2">
+            A) negação
+        </label>
+
+        <label class="alternativa">
+            <input type="radio" name="q2">
+            B) repetição
+        </label>
+
+        <label class="alternativa">
+            <input type="radio" name="q2">
+            C) intensidade
+        </label>
+
+        <label class="alternativa">
+            <input type="radio" name="q2">
+            D) lugar
+        </label>
+    </div>
+
+    <button class="acao">Finalizar Simulado</button>
 </section>
 
-<section id="ade"><h2>Avaliações ADE</h2></section>
-<section id="saeb"><h2>Avaliações SAEB</h2></section>
-<section id="resultados"><h2>Resultados</h2></section>
-
-<section id="admin" style="display:none">
-<h2>Painel do Administrador</h2>
-
-<div class="admin-panel">
-<h3>Cadastrar Conteúdo</h3>
-<input id="tituloConteudo" placeholder="Título do conteúdo">
-<input id="arquivoConteudo" type="file">
-<button class="salvar" onclick="salvarConteudo()">Salvar Conteúdo</button>
-</div>
-
-<div class="admin-panel">
-<h3>Cadastrar Questão</h3>
-<select id="tipoQuestao">
-<option value="atividade">Atividade</option>
-<option value="simulado">Simulado</option>
-</select>
-<textarea id="pergunta" placeholder="Digite a pergunta"></textarea>
-<input id="altA" placeholder="Alternativa A">
-<input id="altB" placeholder="Alternativa B">
-<input id="altC" placeholder="Alternativa C">
-<input id="altD" placeholder="Alternativa D">
-<select id="correta">
-<option value="A">Resposta Correta: A</option>
-<option value="B">Resposta Correta: B</option>
-<option value="C">Resposta Correta: C</option>
-<option value="D">Resposta Correta: D</option>
-</select>
-<button class="salvar" onclick="salvarQuestao()">Salvar Questão</button>
-</div>
+<!-- ADE -->
+<section id="ade">
+    <h2>Avaliação Diagnóstica (ADE)</h2>
+    <p>Em breve atividades diagnósticas estarão disponíveis aqui.</p>
 </section>
 
-<script>
-function mostrar(sec){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
-document.getElementById(sec).classList.add("active")
-}
+<!-- SAEB -->
+<section id="saeb">
+    <h2>Simulados SAEB</h2>
+    <p>Questões modelo SAEB aparecerão aqui.</p>
+</section>
 
-function loginAdmin(){
-let s=prompt("Senha do administrador:")
-if(s==="admin123"){document.getElementById("admin").style.display="block";mostrar("admin")}
-else alert("Senha incorreta")
-}
-
-/* CONTEÚDOS */
-function salvarConteudo(){
-let titulo=tituloConteudo.value
-let file=arquivoConteudo.files[0]
-let reader=new FileReader()
-reader.onload=function(){
-let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]")
-conteudos.push({titulo,arquivo:reader.result,nome:file.name})
-localStorage.setItem("conteudos",JSON.stringify(conteudos))
-carregarConteudos()
-}
-reader.readAsDataURL(file)
-}
-
-function carregarConteudos(){
-let lista=document.getElementById("listaConteudos")
-lista.innerHTML=""
-let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]")
-conteudos.forEach(c=>{
-lista.innerHTML+=`<a class="material" href="${c.arquivo}" target="_blank">📂 ${c.titulo} — Abrir ${c.nome}</a>`
-})
-}
-carregarConteudos()
-
-/* QUESTÕES */
-function salvarQuestao(){
-let q={
-tipo:tipoQuestao.value,
-pergunta:pergunta.value,
-A:altA.value,B:altB.value,C:altC.value,D:altD.value,
-correta:correta.value
-}
-let questoes=JSON.parse(localStorage.getItem("questoes")||"[]")
-questoes.push(q)
-localStorage.setItem("questoes",JSON.stringify(questoes))
-carregarQuestoes()
-}
-
-function carregarQuestoes(){
-let atv=document.getElementById("listaAtividades")
-let sim=document.getElementById("listaSimulados")
-atv.innerHTML=""; sim.innerHTML=""
-let questoes=JSON.parse(localStorage.getItem("questoes")||"[]")
-
-questoes.forEach((q,i)=>{
-let html=`<div class='questao'>
-<p><b>${i+1}. ${q.pergunta}</b></p>
-
-<label class='alt'><input type='radio' name='q${q.tipo}${i}'>A) ${q.A}</label><br>
-<label class='alt'><input type='radio' name='q${q.tipo}${i}'>B) ${q.B}</label><br>
-<label class='alt'><input type='radio' name='q${q.tipo}${i}'>C) ${q.C}</label><br>
-<label class='alt'><input type='radio' name='q${q.tipo}${i}'>D) ${q.D}</label>
-
-</div>`
-if(q.tipo==="atividade") atv.innerHTML+=html
-else sim.innerHTML+=html
-})
-}
-carregarQuestoes()
-</script>
+<!-- RESULTADOS -->
+<section id="resultados">
+    <h2>Resultados</h2>
+    <p>Os resultados das atividades e simulados aparecerão aqui.</p>
+</section>
 
 </body>
 </html>
