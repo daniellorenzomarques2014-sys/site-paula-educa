@@ -22,6 +22,7 @@ nav a:hover{background:#0d47a1}
 .option{display:flex;align-items:center;margin:6px 0}
 .option input{margin-right:8px;transform:scale(1.2)}
 footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
+embed,video,img{max-width:100%;margin-top:10px;border-radius:6px}
 </style>
 </head>
 <body>
@@ -55,12 +56,8 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <h2>Atividades</h2>
 <select id="serieAtv"></select>
 <select id="disciplinaAtv"></select>
-<select id="qtdAtv">
-<option value="10">10 Questões</option>
-<option value="20">20 Questões</option>
-<option value="50">50 Questões</option>
-</select>
-<button onclick="carregarAtividades()">Carregar Atividades</button>
+<select id="qtdAtv"><option>10</option><option>20</option><option>50</option></select>
+<button onclick="carregarAtividades()">Carregar</button>
 <div id="listaAtividades"></div>
 </div>
 
@@ -69,13 +66,9 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <h2>Simulados</h2>
 <select id="serieSim"></select>
 <select id="disciplinaSim"></select>
-<select id="qtdSim">
-<option value="10">10 Questões</option>
-<option value="20">20 Questões</option>
-<option value="50">50 Questões</option>
-</select>
+<select id="qtdSim"><option>10</option><option>20</option><option>50</option></select>
 <input type="text" id="nomeAluno" placeholder="Nome do aluno">
-<button onclick="carregarSimulado()">Iniciar Simulado</button>
+<button onclick="carregarSimulado()">Iniciar</button>
 <div id="areaSimulado"></div>
 </div>
 
@@ -87,12 +80,11 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 
 <div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
 
-<!-- ADMIN -->
 <div class="admin-panel" id="adminPanel">
 <h3>CRIAR CONTEÚDO</h3>
 <input type="text" id="tituloConteudo" placeholder="Título">
 <textarea id="textoConteudo" placeholder="Texto"></textarea>
-<input type="file" id="imagemConteudo">
+<input type="file" id="arquivoConteudo" accept=".pdf,image/*,video/mp4">
 <select id="serieConteudo"></select>
 <select id="disciplinaConteudo"></select>
 <button onclick="salvarConteudo()">Salvar Conteúdo</button>
@@ -102,23 +94,15 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <h3>CRIAR QUESTÃO</h3>
 <input type="text" id="pergunta" placeholder="Pergunta">
 <textarea id="textoQuestao" placeholder="Texto complementar"></textarea>
-<input type="file" id="imagemQuestao">
+<input type="file" id="arquivoQuestao" accept=".pdf,image/*,video/mp4">
 <input type="text" id="altA" placeholder="Alternativa A">
 <input type="text" id="altB" placeholder="Alternativa B">
 <input type="text" id="altC" placeholder="Alternativa C">
 <input type="text" id="altD" placeholder="Alternativa D">
-<select id="correta">
-<option value="A">Correta: A</option>
-<option value="B">Correta: B</option>
-<option value="C">Correta: C</option>
-<option value="D">Correta: D</option>
-</select>
+<select id="correta"><option>A</option><option>B</option><option>C</option><option>D</option></select>
 <select id="serieQuestao"></select>
 <select id="disciplinaQuestao"></select>
-<select id="tipoQuestao">
-<option>Atividade</option>
-<option>Simulado</option>
-</select>
+<select id="tipoQuestao"><option>Atividade</option><option>Simulado</option></select>
 <button onclick="salvarQuestao()">Salvar Questão</button>
 <button onclick="fecharAdmin()">Fechar</button>
 </div>
@@ -129,99 +113,51 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 const series=["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
 const disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Ciências","Inglês","Artes","Religião","Educação Física"];
 
-function preencherSelect(id,lista){
-let s=document.getElementById(id);
-s.innerHTML="";
-lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`);
-}
-
-["serieAtv","serieSim","serieQuestao","serieCont","serieConteudo"].forEach(id=>preencherSelect(id,series));
-["disciplinaAtv","disciplinaSim","disciplinaQuestao","disciplinaCont","disciplinaConteudo"].forEach(id=>preencherSelect(id,disciplinas));
+function preencher(id,lista){let s=document.getElementById(id);s.innerHTML="";lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`);}
+["serieAtv","serieSim","serieQuestao","serieCont","serieConteudo"].forEach(id=>preencher(id,series));
+["disciplinaAtv","disciplinaSim","disciplinaQuestao","disciplinaCont","disciplinaConteudo"].forEach(id=>preencher(id,disciplinas));
 
 let bancoQuestoes=JSON.parse(localStorage.getItem('questoes'))||[];
 let bancoConteudos=JSON.parse(localStorage.getItem('conteudos'))||[];
 let resultados=JSON.parse(localStorage.getItem('resultados'))||[];
 
 function showSection(id){document.querySelectorAll('.container').forEach(c=>c.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
-function abrirAdmin(){if(prompt("Senha do administrador")==="professor123"){adminPanel.style.display="block"}else alert("Senha incorreta")}
+function abrirAdmin(){if(prompt("Senha do administrador")==="professor123"){adminPanel.style.display="block"}}
 function fecharAdmin(){adminPanel.style.display="none"}
 
 function salvarConteudo(){
-let reader=new FileReader();let file=imagemConteudo.files[0];
+let file=arquivoConteudo.files[0];
+let reader=new FileReader();
 reader.onload=function(){
-bancoConteudos.push({titulo:tituloConteudo.value,texto:textoConteudo.value,imagem:reader.result,serie:serieConteudo.value,disciplina:disciplinaConteudo.value});
+bancoConteudos.push({titulo:tituloConteudo.value,texto:textoConteudo.value,arquivo:reader.result,tipo:file?file.type:"",serie:serieConteudo.value,disciplina:disciplinaConteudo.value});
 localStorage.setItem("conteudos",JSON.stringify(bancoConteudos));alert("Conteúdo salvo!");
 };
 file?reader.readAsDataURL(file):reader.onload();
 }
 
+function exibirMidia(arq,tipo){
+if(!arq) return "";
+if(tipo.includes("pdf")) return `<embed src="${arq}" type="application/pdf" width="100%" height="400px">`;
+if(tipo.includes("image")) return `<img src="${arq}">`;
+if(tipo.includes("video")) return `<video src="${arq}" controls></video>`;
+return "";
+}
+
 function carregarConteudos(){
 listaConteudos.innerHTML="";
-bancoConteudos
-.filter(c=>c.serie===serieCont.value && c.disciplina===disciplinaCont.value)
-.forEach(c=>{
-listaConteudos.innerHTML+=`<div class='conteudo'><h3>${c.titulo}</h3><p>${c.texto}</p>${c.imagem?`<img src='${c.imagem}' width='200'>`:''}</div>`
-});
+bancoConteudos.filter(c=>c.serie===serieCont.value && c.disciplina===disciplinaCont.value)
+.forEach(c=>listaConteudos.innerHTML+=`<div class='conteudo'><h3>${c.titulo}</h3><p>${c.texto}</p>${exibirMidia(c.arquivo,c.tipo)}</div>`);
 }
 
 function salvarQuestao(){
-let reader=new FileReader();let file=imagemQuestao.files[0];
+let file=arquivoQuestao.files[0];
+let reader=new FileReader();
 reader.onload=function(){
-bancoQuestoes.push({pergunta:pergunta.value,texto:textoQuestao.value,imagem:reader.result,A:altA.value,B:altB.value,C:altC.value,D:altD.value,correta:correta.value,serie:serieQuestao.value,disciplina:disciplinaQuestao.value,tipo:tipoQuestao.value});
+bancoQuestoes.push({pergunta:pergunta.value,texto:textoQuestao.value,arquivo:reader.result,tipoArq:file?file.type:"",A:altA.value,B:altB.value,C:altC.value,D:altD.value,correta:correta.value,serie:serieQuestao.value,disciplina:disciplinaQuestao.value,tipo:tipoQuestao.value});
 localStorage.setItem("questoes",JSON.stringify(bancoQuestoes));alert("Questão salva!");
 };
 file?reader.readAsDataURL(file):reader.onload();
 }
-
-function montarQuestoes(lista,destino,qtd){
-destino.innerHTML="";
-let selecionadas=lista.slice(0,qtd);
-selecionadas.forEach((q,i)=>{
-destino.innerHTML+=`
-<div class='question'>
-<p><b>${i+1}. ${q.pergunta}</b></p>
-<p>${q.texto||""}</p>
-${q.imagem?`<img src='${q.imagem}' width='150'>`:''}
-<label class="option"><input type="radio" name="q${i}" value="A"> A) ${q.A}</label>
-<label class="option"><input type="radio" name="q${i}" value="B"> B) ${q.B}</label>
-<label class="option"><input type="radio" name="q${i}" value="C"> C) ${q.C}</label>
-<label class="option"><input type="radio" name="q${i}" value="D"> D) ${q.D}</label>
-</div>`;
-});
-destino.innerHTML+=`<button onclick="corrigir('${destino.id}')">Finalizar</button>`;
-destino.dataset.questoes = JSON.stringify(selecionadas);
-}
-
-function carregarAtividades(){
-let lista=bancoQuestoes.filter(q=>q.tipo==="Atividade"&&q.serie===serieAtv.value&&q.disciplina===disciplinaAtv.value);
-montarQuestoes(lista,listaAtividades,qtdAtv.value);
-}
-
-function carregarSimulado(){
-let lista=bancoQuestoes.filter(q=>q.tipo==="Simulado"&&q.serie===serieSim.value&&q.disciplina===disciplinaSim.value);
-montarQuestoes(lista,areaSimulado,qtdSim.value);
-}
-
-function corrigir(area){
-let div=document.getElementById(area);
-let questoes=JSON.parse(div.dataset.questoes||"[]");
-let marcadas=div.querySelectorAll("input[type=radio]:checked");
-let acertos=0;
-marcadas.forEach((r,i)=>{if(questoes[i] && r.value===questoes[i].correta) acertos++;});
-let erros=questoes.length-acertos;
-resultados.push({aluno:nomeAluno.value||"Aluno",acertos,erros});
-localStorage.setItem("resultados",JSON.stringify(resultados));
-alert(`Resultado: ${acertos} acertos e ${erros} erros`);
-mostrarRelatorios();
-showSection("resultados");
-}
-
-function mostrarRelatorios(){
-relatorios.innerHTML="";
-resultados.forEach(r=>relatorios.innerHTML+=`<p>${r.aluno} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`);
-}
-mostrarRelatorios();
 </script>
-
 </body>
 </html>
