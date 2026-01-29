@@ -1,32 +1,195 @@
-function carregarConteudos(){
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Plataforma Escolar</title>
+<style>
+body{font-family:Arial;margin:0;background:#f4f6f9}
+header{background:#2c3e50;color:white;padding:15px;text-align:center}
+nav{display:flex;gap:10px;justify-content:center;background:#34495e;padding:10px}
+nav button{padding:8px 15px;border:none;border-radius:5px;cursor:pointer}
+section{display:none;padding:20px}
+.card{background:white;padding:15px;border-radius:8px;margin-bottom:15px}
+input,select,textarea{width:100%;padding:8px;margin:5px 0}
+button{cursor:pointer}
+.alt{display:flex;align-items:center;margin:4px 0}
+.alt input{margin-right:8px}
+img,video{max-width:100%;margin-top:10px;border-radius:8px}
+</style>
+</head>
+<body>
+
+<header><h2>📚 Plataforma Escolar</h2></header>
+
+<nav>
+<button onclick="abrir('aluno')">Aluno</button>
+<button onclick="abrir('adminLogin')">Administrador</button>
+</nav>
+
+<!-- LOGIN ADMIN -->
+<section id="adminLogin">
+<div class="card">
+<h3>Login Administrador</h3>
+<input type="password" id="senhaAdmin" placeholder="Digite a senha">
+<button onclick="loginAdmin()">Entrar</button>
+</div>
+</section>
+
+<!-- ÁREA ADMIN -->
+<section id="admin">
+<h3>Painel do Administrador</h3>
+
+<div class="card">
+<h4>Cadastrar Conteúdo</h4>
+<select id="serieCont"></select>
+<input id="tituloCont" placeholder="Título">
+<textarea id="textoCont" placeholder="Descrição"></textarea>
+<input type="file" id="arquivoCont">
+<button onclick="salvarConteudo()">Salvar Conteúdo</button>
+</div>
+
+<div class="card">
+<h4>Cadastrar Atividade / Simulado</h4>
+<select id="serieQuest"></select>
+<select id="tipoQuest">
+<option value="atividade">Atividade</option>
+<option value="simulado">Simulado</option>
+</select>
+<input id="pergunta" placeholder="Pergunta">
+<input id="alt1" placeholder="Alternativa A">
+<input id="alt2" placeholder="Alternativa B">
+<input id="alt3" placeholder="Alternativa C">
+<input id="alt4" placeholder="Alternativa D">
+<select id="correta">
+<option value="0">A correta</option>
+<option value="1">B correta</option>
+<option value="2">C correta</option>
+<option value="3">D correta</option>
+</select>
+<button onclick="salvarQuestao()">Salvar Questão</button>
+</div>
+
+<div class="card">
+<h4>Conteúdos Cadastrados</h4>
+<div id="listaConteudos"></div>
+</div>
+
+<div class="card">
+<h4>Questões Cadastradas</h4>
+<div id="listaQuestoes"></div>
+</div>
+</section>
+
+<!-- ÁREA ALUNO -->
+<section id="aluno">
+<h3>Área do Aluno</h3>
+
+<div class="card">
+<select id="serieAluno"></select>
+<button onclick="verConteudos()">Ver Conteúdos</button>
+<div id="conteudosAluno"></div>
+</div>
+
+<div class="card">
+<h4>Atividades e Simulados</h4>
+<select id="tipoAluno">
+<option value="atividade">Atividades</option>
+<option value="simulado">Simulados</option>
+</select>
+<select id="qtdQuestoes">
+<option>10</option>
+<option>20</option>
+<option>50</option>
+</select>
+<button onclick="iniciarQuestoes()">Iniciar</button>
+<form id="formQuestoes"></form>
+<button onclick="corrigir()">Finalizar</button>
+<div id="resultado"></div>
+</div>
+</section>
+
+<script>
+const senha="admin123";
+const series=[
+"Educação Infantil - 1º Período",
+"Educação Infantil - 2º Período",
+"1º Ano","2º Ano","3º Ano","4º Ano","5º Ano",
+"6º Ano","7º Ano","8º Ano","9º Ano"
+];
+
+const selSeries=[serieCont,serieQuest,serieAluno];
+selSeries.forEach(sel=>series.forEach(s=>sel.innerHTML+=`<option>${s}</option>`));
+
+let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]");
+let questoes=JSON.parse(localStorage.getItem("questoes")||"[]");
+
+function abrir(id){document.querySelectorAll("section").forEach(s=>s.style.display="none");document.getElementById(id).style.display="block";if(id==="admin")listarAdmin();}
+
+function loginAdmin(){if(senhaAdmin.value===senha){abrir("admin")}else alert("Senha incorreta");}
+
+function salvarConteudo(){
+const file=arquivoCont.files[0];
+const reader=new FileReader();
+reader.onload=()=>{
+conteudos.push({serie:serieCont.value,titulo:tituloCont.value,texto:textoCont.value,arquivo:reader.result,tipo:file?file.type:""});
+localStorage.setItem("conteudos",JSON.stringify(conteudos));
+listarAdmin();
+};
+if(file)reader.readAsDataURL(file);else reader.onload();
+}
+
+function salvarQuestao(){
+questoes.push({serie:serieQuest.value,tipo:tipoQuest.value,pergunta:pergunta.value,alts:[alt1.value,alt2.value,alt3.value,alt4.value],correta:correta.value});
+localStorage.setItem("questoes",JSON.stringify(questoes));
+listarAdmin();
+}
+
+function listarAdmin(){
 listaConteudos.innerHTML="";
-
-bancoConteudos.forEach((c,i)=>{
-if(c.serie===serieCont.value && c.disciplina===disciplinaCont.value){
-
-let arquivoHTML = "";
-
-if(c.tipo.includes("pdf")){
-arquivoHTML = `<a href="${c.arquivo}" target="_blank">
-<button style="background:#e53935;color:white;border:none;padding:8px;border-radius:5px;cursor:pointer">
-📄 Abrir Apostila (PDF)
-</button></a>`;
-}
-else if(c.tipo.includes("image")){
-arquivoHTML = `<img src="${c.arquivo}">`;
-}
-else if(c.tipo.includes("video")){
-arquivoHTML = `<video controls src="${c.arquivo}"></video>`;
-}
-
-listaConteudos.innerHTML += `
-<div class='conteudo'>
-<h3>${c.titulo}</h3>
-<p>${c.texto}</p>
-${arquivoHTML}
-<button class='edit-btn' onclick='editarConteudo(${i})'>Editar</button>
-<button class='del-btn' onclick='excluirConteudo(${i})'>Excluir</button>
-</div>`;
-}
+conteudos.forEach((c,i)=>{
+listaConteudos.innerHTML+=`<div class="card"><b>${c.titulo}</b>
+<button onclick="conteudos.splice(${i},1);localStorage.setItem('conteudos',JSON.stringify(conteudos));listarAdmin()">Excluir</button></div>`;
+});
+listaQuestoes.innerHTML="";
+questoes.forEach((q,i)=>{
+listaQuestoes.innerHTML+=`<div class="card">${q.pergunta}
+<button onclick="questoes.splice(${i},1);localStorage.setItem('questoes',JSON.stringify(questoes));listarAdmin()">Excluir</button></div>`;
 });
 }
+
+function verConteudos(){
+conteudosAluno.innerHTML="";
+conteudos.filter(c=>c.serie===serieAluno.value).forEach(c=>{
+let midia="";
+if(c.tipo?.includes("pdf")) midia=`<a href="${c.arquivo}" target="_blank">📄 Abrir PDF</a>`;
+else if(c.tipo?.includes("image")) midia=`<img src="${c.arquivo}">`;
+else if(c.tipo?.includes("video")) midia=`<video controls src="${c.arquivo}"></video>`;
+conteudosAluno.innerHTML+=`<div class="card"><h4>${c.titulo}</h4><p>${c.texto}</p>${midia}</div>`;
+});
+}
+
+let prova=[];
+function iniciarQuestoes(){
+formQuestoes.innerHTML="";
+prova=questoes.filter(q=>q.serie===serieAluno.value&&q.tipo===tipoAluno.value).slice(0,qtdQuestoes.value);
+prova.forEach((q,i)=>{
+formQuestoes.innerHTML+=`<div class="card"><p><b>${i+1}.</b> ${q.pergunta}</p>
+${q.alts.map((a,j)=>`<label class="alt"><input type="radio" name="q${i}" value="${j}"> ${String.fromCharCode(65+j)}) ${a}</label>`).join("")}
+</div>`;
+});
+}
+
+function corrigir(){
+let acertos=0;
+prova.forEach((q,i)=>{
+const resp=document.querySelector(`input[name=q${i}]:checked`);
+if(resp&&resp.value==q.correta)acertos++;
+});
+resultado.innerHTML=`<h3>Resultado: ${acertos} acertos de ${prova.length}</h3>
+<button onclick="window.print()">🖨 Gerar PDF</button>`;
+}
+
+abrir("aluno");
+</script>
+</body>
+</html>
