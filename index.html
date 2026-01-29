@@ -6,12 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{margin:0;font-family:Arial;background:#f4f6f9}
+body{margin:0;font-family:Arial;background:#f1f5f9}
 header{
   background:linear-gradient(90deg,#0d47a1,#1565c0);
   color:white;padding:10px 20px;display:flex;align-items:center
 }
-header img{height:55px;margin-right:15px}
+header img{height:60px;margin-right:15px}
 nav{background:#1976d2;display:flex;gap:15px;padding:10px 20px;flex-wrap:wrap}
 nav button{background:none;border:none;color:white;font-weight:bold;cursor:pointer;font-size:15px}
 nav button:hover{text-decoration:underline}
@@ -24,28 +24,23 @@ h2{color:#0d47a1;text-align:center}
   padding:15px;
   margin-bottom:15px;
   border-radius:8px;
-  text-align:left;
 }
 
-/* ALTERNATIVAS ESTILO PROVA — TUDO COLADO */
+/* ===== ALTERNATIVAS ESTILO PROVA ===== */
 .alt{
-  display:block;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
   margin:2px 0;
-  line-height:1.2;
-}
-
-.alt label{
   cursor:pointer;
 }
-
 .alt input[type="radio"]{
-  margin:0 2px 0 0;  /* quase zero espaço */
-  vertical-align:middle;
-  transform:scale(1.05);
+  margin:0;
 }
 .admin-panel{background:#fff3cd;padding:15px;border-radius:8px;margin-top:15px}
 input, select, textarea{width:100%;padding:8px;margin:5px 0}
 button.salvar{background:#2e7d32;color:white;border:none;padding:8px 12px;margin-top:5px;cursor:pointer}
+a.material{display:block;margin:5px 0;color:#0d47a1;font-weight:bold}
 </style>
 </head>
 
@@ -69,7 +64,7 @@ button.salvar{background:#2e7d32;color:white;border:none;padding:8px 12px;margin
 
 <section id="inicio" class="active">
 <h2>Bem-vindo ao Portal Educacional</h2>
-<p style="text-align:center">Ambiente de estudos com conteúdos, atividades e simulados.</p>
+<p style="text-align:center">Ambiente digital de aprendizagem.</p>
 </section>
 
 <section id="conteudos">
@@ -96,7 +91,7 @@ button.salvar{background:#2e7d32;color:white;border:none;padding:8px 12px;margin
 
 <div class="admin-panel">
 <h3>Cadastrar Conteúdo</h3>
-<input id="tituloConteudo" placeholder="Título">
+<input id="tituloConteudo" placeholder="Título do conteúdo">
 <input id="arquivoConteudo" type="file">
 <button class="salvar" onclick="salvarConteudo()">Salvar Conteúdo</button>
 </div>
@@ -136,8 +131,8 @@ else alert("Senha incorreta")
 
 /* CONTEÚDOS */
 function salvarConteudo(){
-let titulo=document.getElementById("tituloConteudo").value
-let file=document.getElementById("arquivoConteudo").files[0]
+let titulo=tituloConteudo.value
+let file=arquivoConteudo.files[0]
 let reader=new FileReader()
 reader.onload=function(){
 let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]")
@@ -153,7 +148,7 @@ let lista=document.getElementById("listaConteudos")
 lista.innerHTML=""
 let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]")
 conteudos.forEach(c=>{
-lista.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" target="_blank">📂 Abrir ${c.nome}</a></p>`
+lista.innerHTML+=`<a class="material" href="${c.arquivo}" target="_blank">📂 ${c.titulo} — Abrir ${c.nome}</a>`
 })
 }
 carregarConteudos()
@@ -182,10 +177,10 @@ questoes.forEach((q,i)=>{
 let html=`<div class='questao'>
 <p><b>${i+1}. ${q.pergunta}</b></p>
 
-<div class='alt'><label><input type='radio' name='q${q.tipo}${i}' value='A'>A) ${q.A}</label></div>
-<div class='alt'><label><input type='radio' name='q${q.tipo}${i}' value='B'>B) ${q.B}</label></div>
-<div class='alt'><label><input type='radio' name='q${q.tipo}${i}' value='C'>C) ${q.C}</label></div>
-<div class='alt'><label><input type='radio' name='q${q.tipo}${i}' value='D'>D) ${q.D}</label></div>
+<label class='alt'><input type='radio' name='q${q.tipo}${i}'>A) ${q.A}</label><br>
+<label class='alt'><input type='radio' name='q${q.tipo}${i}'>B) ${q.B}</label><br>
+<label class='alt'><input type='radio' name='q${q.tipo}${i}'>C) ${q.C}</label><br>
+<label class='alt'><input type='radio' name='q${q.tipo}${i}'>D) ${q.D}</label>
 
 </div>`
 if(q.tipo==="atividade") atv.innerHTML+=html
