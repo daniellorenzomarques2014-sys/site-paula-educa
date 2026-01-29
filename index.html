@@ -7,11 +7,10 @@
 
 <style>
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f7}
-header{display:flex;align-items:center;gap:15px;padding:15px 25px;
-background:linear-gradient(90deg,#0d47a1,#1565c0);color:white}
+header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1565c0);color:white}
 .logo{height:80px}
 nav{background:#1976d2;display:flex;justify-content:center;flex-wrap:wrap;align-items:center}
-nav a{color:white;padding:14px 16px;text-decoration:none;font-weight:bold;cursor:pointer}
+nav a{color:white;padding:14px 14px;text-decoration:none;font-weight:bold;cursor:pointer}
 nav a:hover{background:#0d47a1}
 .admin-top{margin-left:auto;margin-right:10px;background:#0d47a1;padding:8px 12px;border-radius:6px;cursor:pointer}
 
@@ -24,14 +23,13 @@ button:hover{background:#0d47a1}
 input, textarea, select{width:100%;padding:6px;margin:5px 0}
 
 .question{border:1px solid #ccc;border-radius:5px;padding:12px;margin-bottom:15px}
-.alt{display:flex;align-items:center;margin:6px 0}
-.alt input{margin-right:8px}
+.alt{display:flex;align-items:center;margin:4px 0;font-size:15px}
+.alt input{margin:0 6px 0 0} /* bolinha colada no texto */
 
 footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
 .file-link{display:block;margin:5px 0;color:#1565c0;font-weight:bold;cursor:pointer}
 
-.admin-panel{display:none;position:fixed;top:0;right:0;width:350px;height:100%;background:white;
-box-shadow:-2px 0 10px rgba(0,0,0,0.2);overflow:auto;padding:15px}
+.admin-panel{display:none;position:fixed;top:0;right:0;width:350px;height:100%;background:white;box-shadow:-2px 0 10px rgba(0,0,0,0.2);overflow:auto;padding:15px}
 .admin-panel h3{color:#0d47a1;text-align:center}
 .small-btn{background:#777;margin:2px 0}
 </style>
@@ -152,10 +150,10 @@ let area=document.getElementById(divId);area.innerHTML="";
 questoes.filter(q=>q.tipo===tipo).forEach((q,i)=>{
 area.innerHTML+=`<div class='question'><p><b>${i+1}. ${q.pergunta}</b></p>
 ${q.img?`<img src='${q.img}' width='150'>`:""}
-<div class='alt'><input type='radio' name='q${tipo}${i}'> A) ${q.A}</div>
-<div class='alt'><input type='radio' name='q${tipo}${i}'> B) ${q.B}</div>
-<div class='alt'><input type='radio' name='q${tipo}${i}'> C) ${q.C}</div>
-<div class='alt'><input type='radio' name='q${tipo}${i}'> D) ${q.D}</div>
+<label class='alt'><input type='radio' name='q${tipo}${i}'>A) ${q.A}</label>
+<label class='alt'><input type='radio' name='q${tipo}${i}'>B) ${q.B}</label>
+<label class='alt'><input type='radio' name='q${tipo}${i}'>C) ${q.C}</label>
+<label class='alt'><input type='radio' name='q${tipo}${i}'>D) ${q.D}</label>
 </div>`})
 }
 </script>
