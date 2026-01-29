@@ -7,54 +7,20 @@
 
 <style>
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef2f7}
-header{
-display:flex;align-items:center;gap:15px;padding:15px 25px;
-background:linear-gradient(90deg,#0d47a1,#1976d2);
-color:white;flex-wrap:wrap
-}
+header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1976d2);color:white;flex-wrap:wrap}
 .logo{height:80px}
 nav{background:#1565c0;display:flex;justify-content:center;flex-wrap:wrap}
-nav a{
-color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer
-}
+nav a{color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer}
 nav a:hover{background:#0d47a1}
-.container{
-max-width:1100px;margin:30px auto;padding:20px;background:white;
-border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)
-}
+.container{max-width:1100px;margin:30px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
 .hidden{display:none}
-
-.admin-btn{
-position:fixed;right:0;top:120px;background:#0d47a1;color:white;
-padding:10px;border-radius:8px 0 0 8px;cursor:pointer;font-weight:bold
-}
-
-.admin-panel{
-display:none;position:fixed;right:0;top:0;width:340px;height:100%;
-background:white;box-shadow:-2px 0 10px rgba(0,0,0,0.2);
-padding:15px;overflow:auto;z-index:999
-}
-.admin-panel h3{margin-top:0;color:#0d47a1}
-.admin-panel input,.admin-panel textarea,.admin-panel select{
-width:100%;margin:5px 0;padding:6px
-}
-.admin-panel button{
-width:100%;margin:5px 0;padding:8px;border:none;
-background:#1976d2;color:white;border-radius:5px;cursor:pointer
-}
-
-.question{
-margin-bottom:20px;padding:15px;border:1px solid #ddd;border-radius:6px
-}
-.question img{max-width:200px;display:block;margin:10px 0}
-
-.option{
-display:flex;align-items:center;margin:6px 0;font-size:15px
-}
-.option input{
-margin-right:8px;transform:scale(1.2)
-}
-
+.admin-btn{position:fixed;right:0;top:120px;background:#0d47a1;color:white;padding:10px;border-radius:8px 0 0 8px;cursor:pointer;font-weight:bold}
+.admin-panel{display:none;position:fixed;right:0;top:0;width:360px;height:100%;background:white;box-shadow:-2px 0 10px rgba(0,0,0,0.2);padding:15px;overflow:auto;z-index:999}
+.admin-panel input,.admin-panel textarea,.admin-panel select{width:100%;margin:5px 0;padding:6px}
+.admin-panel button{width:100%;margin:5px 0;padding:8px;border:none;background:#1976d2;color:white;border-radius:5px;cursor:pointer}
+.question{margin-bottom:20px;padding:15px;border:1px solid #ddd;border-radius:6px}
+.option{display:flex;align-items:center;margin:6px 0}
+.option input{margin-right:8px;transform:scale(1.2)}
 footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
 </style>
 </head>
@@ -75,23 +41,21 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 
 <div class="container" id="inicio">
 <h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2>
-<p style="text-align:center">Ambiente digital de aprendizagem da escola.</p>
 </div>
 
 <div class="container hidden" id="conteudos">
 <h2>Conteúdos</h2>
-<p>Área para textos, imagens e materiais educativos.</p>
+<p>Área exclusiva para materiais de estudo (textos, imagens, gráficos, vídeos).</p>
 </div>
 
 <div class="container hidden" id="atividades">
 <h2>Atividades</h2>
-<select id="serieAtv">
-<option>6º Ano</option><option>7º Ano</option><option>8º Ano</option><option>9º Ano</option>
-</select>
-<select id="disciplinaAtv">
-<option>Língua Portuguesa</option><option>Matemática</option><option>História</option>
-<option>Geografia</option><option>Ciências</option><option>Inglês</option>
-<option>Artes</option><option>Religião</option><option>Educação Física</option>
+<select id="serieAtv"></select>
+<select id="disciplinaAtv"></select>
+<select id="qtdAtv">
+<option value="10">10 Questões</option>
+<option value="20">20 Questões</option>
+<option value="50">50 Questões</option>
 </select>
 <button onclick="carregarAtividades()">Carregar</button>
 <div id="listaAtividades"></div>
@@ -99,13 +63,12 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 
 <div class="container hidden" id="simulados">
 <h2>Simulados</h2>
-<select id="serieSim">
-<option>6º Ano</option><option>7º Ano</option><option>8º Ano</option><option>9º Ano</option>
-</select>
-<select id="disciplinaSim">
-<option>Língua Portuguesa</option><option>Matemática</option><option>História</option>
-<option>Geografia</option><option>Ciências</option><option>Inglês</option>
-<option>Artes</option><option>Religião</option><option>Educação Física</option>
+<select id="serieSim"></select>
+<select id="disciplinaSim"></select>
+<select id="qtdSim">
+<option value="10">10 Questões</option>
+<option value="20">20 Questões</option>
+<option value="50">50 Questões</option>
 </select>
 <input type="text" id="nomeAluno" placeholder="Nome do aluno">
 <button onclick="carregarSimulado()">Iniciar</button>
@@ -120,9 +83,9 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
 
 <div class="admin-panel" id="adminPanel">
-<h3>Cadastro de Questões</h3>
+<h3>Cadastrar Questão</h3>
 <input type="text" id="pergunta" placeholder="Pergunta">
-<textarea id="textoQuestao" placeholder="Texto da questão"></textarea>
+<textarea id="textoQuestao" placeholder="Texto complementar"></textarea>
 <input type="file" id="imagemQuestao">
 <input type="text" id="altA" placeholder="Alternativa A">
 <input type="text" id="altB" placeholder="Alternativa B">
@@ -134,14 +97,8 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <option value="C">Correta: C</option>
 <option value="D">Correta: D</option>
 </select>
-<select id="serieQuestao">
-<option>6º Ano</option><option>7º Ano</option><option>8º Ano</option><option>9º Ano</option>
-</select>
-<select id="disciplinaQuestao">
-<option>Língua Portuguesa</option><option>Matemática</option><option>História</option>
-<option>Geografia</option><option>Ciências</option><option>Inglês</option>
-<option>Artes</option><option>Religião</option><option>Educação Física</option>
-</select>
+<select id="serieQuestao"></select>
+<select id="disciplinaQuestao"></select>
 <select id="tipoQuestao">
 <option>Atividade</option>
 <option>Simulado</option>
@@ -153,83 +110,62 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <footer>Portal Educacional © 2026</footer>
 
 <script>
-let bancoQuestoes = JSON.parse(localStorage.getItem('questoes')) || [];
-let resultados = JSON.parse(localStorage.getItem('resultados')) || [];
+const series=["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
+const disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Ciências","Inglês","Artes","Religião","Educação Física"];
 
-function showSection(id){
-document.querySelectorAll('.container').forEach(c=>c.classList.add('hidden'));
-document.getElementById(id).classList.remove('hidden')
-}
+function preencherSelect(id,lista){let s=document.getElementById(id);lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`)}
+preencherSelect("serieAtv",series);preencherSelect("serieSim",series);preencherSelect("serieQuestao",series);
+preencherSelect("disciplinaAtv",disciplinas);preencherSelect("disciplinaSim",disciplinas);preencherSelect("disciplinaQuestao",disciplinas);
 
-function abrirAdmin(){
-let s=prompt('Senha do administrador');
-if(s==='professor123'){adminPanel.style.display='block'}else{alert('Senha incorreta')}
-}
-function fecharAdmin(){adminPanel.style.display='none'}
+let bancoQuestoes=JSON.parse(localStorage.getItem('questoes'))||[];
+let resultados=JSON.parse(localStorage.getItem('resultados'))||[];
+
+function showSection(id){document.querySelectorAll('.container').forEach(c=>c.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
+function abrirAdmin(){if(prompt("Senha do administrador")==="professor123"){adminPanel.style.display="block"}else alert("Senha incorreta")}
+function fecharAdmin(){adminPanel.style.display="none"}
 
 function salvarQuestao(){
-let reader=new FileReader();
-let file=imagemQuestao.files[0];
+let reader=new FileReader();let file=imagemQuestao.files[0];
 reader.onload=function(){
-bancoQuestoes.push({
-pergunta:pergunta.value,texto:textoQuestao.value,imagem:reader.result,
-A:altA.value,B:altB.value,C:altC.value,D:altD.value,
-correta:correta.value,serie:serieQuestao.value,
-disciplina:disciplinaQuestao.value,tipo:tipoQuestao.value
-});
-localStorage.setItem('questoes',JSON.stringify(bancoQuestoes));
-alert('Questão salva!');
+bancoQuestoes.push({pergunta:pergunta.value,texto:textoQuestao.value,imagem:reader.result,A:altA.value,B:altB.value,C:altC.value,D:altD.value,correta:correta.value,serie:serieQuestao.value,disciplina:disciplinaQuestao.value,tipo:tipoQuestao.value});
+localStorage.setItem("questoes",JSON.stringify(bancoQuestoes));alert("Questão salva!")
 };
 if(file){reader.readAsDataURL(file)}else{reader.onload()}
 }
 
-function montarQuestoes(lista, destino){
+function montar(lista,destino,qtd){
 destino.innerHTML='';
-lista.forEach((q,i)=>{
-destino.innerHTML+=`
-<div class='question'>
-<p><b>${i+1}. ${q.pergunta}</b></p>
-<p>${q.texto||''}</p>
-${q.imagem?`<img src='${q.imagem}'>`:''}
+lista.slice(0,qtd).forEach((q,i)=>{
+destino.innerHTML+=`<div class='question'><p><b>${i+1}. ${q.pergunta}</b></p><p>${q.texto||""}</p>${q.imagem?`<img src='${q.imagem}' width='150'>`:''}
 <label class="option"><input type="radio" name="q${i}" value="A"> A) ${q.A}</label>
 <label class="option"><input type="radio" name="q${i}" value="B"> B) ${q.B}</label>
 <label class="option"><input type="radio" name="q${i}" value="C"> C) ${q.C}</label>
-<label class="option"><input type="radio" name="q${i}" value="D"> D) ${q.D}</label>
-</div>`;
+<label class="option"><input type="radio" name="q${i}" value="D"> D) ${q.D}</label></div>`
 });
-destino.innerHTML+=`<button onclick="corrigir('${destino.id}')">Finalizar</button>`;
+destino.innerHTML+=`<button onclick="corrigir('${destino.id}')">Finalizar</button>`
 }
 
 function carregarAtividades(){
-let lista=bancoQuestoes.filter(q=>q.tipo==='Atividade'&&q.serie===serieAtv.value&&q.disciplina===disciplinaAtv.value);
-montarQuestoes(lista,listaAtividades)
+let lista=bancoQuestoes.filter(q=>q.tipo==="Atividade"&&q.serie===serieAtv.value&&q.disciplina===disciplinaAtv.value);
+montar(lista,listaAtividades,qtdAtv.value)
 }
 
 function carregarSimulado(){
-let lista=bancoQuestoes.filter(q=>q.tipo==='Simulado'&&q.serie===serieSim.value&&q.disciplina===disciplinaSim.value);
-montarQuestoes(lista,areaSimulado)
+let lista=bancoQuestoes.filter(q=>q.tipo==="Simulado"&&q.serie===serieSim.value&&q.disciplina===disciplinaSim.value);
+montar(lista,areaSimulado,qtdSim.value)
 }
 
 function corrigir(area){
-let div=document.getElementById(area);
-let marcadas=div.querySelectorAll("input[type=radio]:checked");
-let perguntas=div.querySelectorAll(".question");
-let acertos=0;
+let div=document.getElementById(area);let marcadas=div.querySelectorAll("input[type=radio]:checked");let acertos=0;
 marcadas.forEach((r,i)=>{if(r.value===bancoQuestoes[i].correta)acertos++});
-let erros=perguntas.length-acertos;
-resultados.push({aluno:nomeAluno.value||'Aluno',acertos,erros});
-localStorage.setItem('resultados',JSON.stringify(resultados));
+let erros=div.querySelectorAll(".question").length-acertos;
+resultados.push({aluno:nomeAluno.value||"Aluno",acertos,erros});
+localStorage.setItem("resultados",JSON.stringify(resultados));
 alert(`Resultado: ${acertos} acertos e ${erros} erros`);
-mostrarRelatorios();
-showSection('resultados');
+mostrarRelatorios();showSection("resultados")
 }
 
-function mostrarRelatorios(){
-relatorios.innerHTML='';
-resultados.forEach(r=>{
-relatorios.innerHTML+=`<p>${r.aluno} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`
-})
-}
+function mostrarRelatorios(){relatorios.innerHTML='';resultados.forEach(r=>relatorios.innerHTML+=`<p>${r.aluno} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`)}
 mostrarRelatorios();
 </script>
 
