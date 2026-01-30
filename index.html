@@ -4,43 +4,40 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal Educacional</title>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f9}
-header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1565c0);color:white}
+header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1976d2);color:white}
 .logo{height:80px}
 
-nav{background:#0d47a1;display:flex;justify-content:center;flex-wrap:wrap}
+nav{background:#1565c0;display:flex;justify-content:center;flex-wrap:wrap}
 nav a{color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer}
-nav a:hover{background:#08306b}
+nav a:hover{background:#0d47a1}
 
 .container{max-width:1100px;margin:25px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
 .hidden{display:none}
 
-.admin-btn{position:fixed;right:15px;top:70px;background:#ff9800;color:white;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:bold}
+.admin-btn{position:fixed;right:15px;top:80px;background:#ff9800;color:white;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:bold}
 
 input,select,textarea{width:100%;padding:8px;margin:6px 0;border-radius:4px;border:1px solid #ccc}
-button{padding:8px 12px;margin-top:8px;border:none;border-radius:4px;background:#1565c0;color:white;cursor:pointer}
+button{padding:8px 12px;margin-top:8px;border:none;border-radius:4px;background:#1976d2;color:white;cursor:pointer}
 button:hover{opacity:0.9}
 
 .question{border:1px solid #ddd;padding:12px;border-radius:6px;margin-bottom:15px}
 
-/* 🔥 CORREÇÃO DEFINITIVA DAS ALTERNATIVAS */
-.alt{
+/* ===== CORREÇÃO DEFINITIVA DAS ALTERNATIVAS ===== */
+.alternativa{
 display:flex;
 align-items:center;
-gap:4px;
-margin:2px 0;
+gap:6px;
+margin:4px 0;
+cursor:pointer;
 }
-.alt input[type="radio"]{
-margin:0;
-}
-
-/* Faz texto ficar colado na bolinha */
-.alt span{
-display:inline;
+.alternativa input[type="radio"]{
+width:auto !important;
+margin:0 !important;
+flex-shrink:0;
 }
 
 footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
@@ -85,8 +82,8 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <div class="container hidden" id="adminPanel">
 <h2>Painel do Professor</h2>
 
-<h3>Cadastrar Conteúdo (PDF, imagem, vídeo)</h3>
-<input type="text" id="tituloConteudo" placeholder="Título">
+<h3>Cadastrar Conteúdo</h3>
+<input type="text" id="tituloConteudo" placeholder="Título do conteúdo">
 <input type="file" id="arquivoConteudo">
 <button onclick="salvarConteudo()">Salvar Conteúdo</button>
 
@@ -121,9 +118,9 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <footer>Portal Educacional © 2026</footer>
 
 <script>
-let conteudos = JSON.parse(localStorage.getItem("conteudos")||"[]");
-let questoes = JSON.parse(localStorage.getItem("questoes")||"[]");
-let resultados = JSON.parse(localStorage.getItem("resultados")||"[]");
+let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]");
+let questoes=JSON.parse(localStorage.getItem("questoes")||"[]");
+let resultados=JSON.parse(localStorage.getItem("resultados")||"[]");
 
 function showSection(id){
 document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
@@ -181,10 +178,10 @@ document.getElementById(elemento).innerHTML+=`
 <p><b>${i+1}. ${q.pergunta}</b></p>
 <p>${q.texto||""}</p>
 ${q.img?`<img src="${q.img}" width="150">`:""}
-<label class="alt"><input type="radio" name="q${i}"><span>A) ${q.a}</span></label>
-<label class="alt"><input type="radio" name="q${i}"><span>B) ${q.b}</span></label>
-<label class="alt"><input type="radio" name="q${i}"><span>C) ${q.c}</span></label>
-<label class="alt"><input type="radio" name="q${i}"><span>D) ${q.d}</span></label>
+<label class="alternativa"><input type="radio" name="q${i}" value="A"> A) ${q.a}</label>
+<label class="alternativa"><input type="radio" name="q${i}" value="B"> B) ${q.b}</label>
+<label class="alternativa"><input type="radio" name="q${i}" value="C"> C) ${q.c}</label>
+<label class="alternativa"><input type="radio" name="q${i}" value="D"> D) ${q.d}</label>
 </div>`;
 });
 }
@@ -192,9 +189,9 @@ ${q.img?`<img src="${q.img}" width="150">`:""}
 function listarAdminQuestoes(){
 listaAdminQuestoes.innerHTML="";
 questoes.forEach((q,i)=>{
-listaAdminQuestoes.innerHTML+=`<p>${q.pergunta}
-<button class="small-btn" onclick="editarQuestao(${i})">✏️ Editar</button>
-<button class="small-btn" onclick="excluirQuestao(${i})">🗑 Excluir</button></p>`;
+listaAdminQuestoes.innerHTML+=`${q.pergunta}
+<button class="small-btn" onclick="editarQuestao(${i})">✏️</button>
+<button class="small-btn" onclick="excluirQuestao(${i})">🗑</button><br>`;
 });
 }
 
