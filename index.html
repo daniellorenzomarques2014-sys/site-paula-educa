@@ -6,211 +6,223 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
-    margin:0;
-    font-family: Arial, Helvetica, sans-serif;
-    background:#f4f6f9;
-}
+body { margin:0; font-family: Arial, sans-serif; background:#f4f6f9; }
 
-/* ===== TOPO ===== */
-header{
-    background: linear-gradient(90deg,#0d47a1,#1976d2);
-    color:white;
-    padding:15px;
+/* CABEÇALHO */
+header {
+    background: linear-gradient(90deg, #0d47a1, #1976d2);
+    color: white;
+    padding: 10px 20px;
     display:flex;
     align-items:center;
-    gap:15px;
 }
-header img{
-    height:60px;
-}
-header h1{
-    margin:0;
-    font-size:22px;
-}
+header img { height:60px; margin-right:15px; }
+header h1 { margin:0; font-size:22px; }
 
-/* ===== MENU ===== */
-nav{
+/* MENU */
+nav {
     background:#1565c0;
     display:flex;
-    flex-wrap:wrap;
+    gap:15px;
+    padding:10px 20px;
 }
-nav button{
-    flex:1;
-    padding:12px;
-    border:none;
+nav button {
     background:none;
+    border:none;
     color:white;
     font-weight:bold;
     cursor:pointer;
 }
-nav button:hover{
-    background:#0d47a1;
-}
+nav button:hover { text-decoration:underline; }
 
-/* ===== CONTEÚDO ===== */
-section{
-    display:none;
-    padding:20px;
-}
-section.active{
-    display:block;
-}
+.container { padding:20px; display:none; }
+.active { display:block; }
 
-/* ===== QUESTÕES ===== */
-.questao{
+.card {
     background:white;
     padding:15px;
-    margin-bottom:15px;
     border-radius:8px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom:15px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
 }
 
-.alternativa{
-    display:flex;
-    align-items:center;
-    gap:6px;              /* espaço pequeno entre bolinha e texto */
-    margin:4px 0;
-    font-size:15px;
+input, select, textarea {
+    width:100%;
+    padding:8px;
+    margin:5px 0 10px;
 }
 
-.alternativa input{
-    margin:0;             /* remove espaço automático */
-}
-
-/* ===== BOTÕES ===== */
-button.acao{
+button.primary {
     background:#1976d2;
     color:white;
     border:none;
     padding:8px 12px;
     border-radius:5px;
     cursor:pointer;
-    margin-top:10px;
 }
 
-button.acao:hover{
-    background:#0d47a1;
+/* ALTERNATIVAS */
+.alternativa {
+    display:flex;
+    align-items:center;
+    gap:5px;
+    margin:4px 0;
 }
+.alternativa input[type="radio"] {
+    margin:0;
+}
+
+/* ADMIN */
+#adminPanel { display:none; background:#fff3e0; padding:15px; border-radius:8px; }
 </style>
-
-<script>
-function abrirGuia(id){
-    document.querySelectorAll("section").forEach(sec=>sec.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-}
-</script>
-
 </head>
 <body>
 
 <header>
-    <img src="logo.png" alt="Logo da Escola">
+    <img src="LOGO_DA_ESCOLA.png">
     <h1>Portal Educacional</h1>
 </header>
 
 <nav>
-    <button onclick="abrirGuia('inicio')">Início</button>
-    <button onclick="abrirGuia('conteudos')">Conteúdos</button>
-    <button onclick="abrirGuia('atividades')">Atividades</button>
-    <button onclick="abrirGuia('simulados')">Simulados</button>
-    <button onclick="abrirGuia('ade')">ADE</button>
-    <button onclick="abrirGuia('saeb')">SAEB</button>
-    <button onclick="abrirGuia('resultados')">Resultados</button>
+    <button onclick="showTab('inicio')">Início</button>
+    <button onclick="showTab('conteudos')">Conteúdos</button>
+    <button onclick="showTab('atividades')">Atividades</button>
+    <button onclick="showTab('simulados')">Simulados</button>
+    <button onclick="showTab('ade')">ADE</button>
+    <button onclick="showTab('saeb')">SAEB</button>
+    <button onclick="showTab('resultados')">Resultados</button>
+    <button onclick="toggleAdmin()">Administrador</button>
 </nav>
 
 <!-- INÍCIO -->
-<section id="inicio" class="active">
-    <h2>Bem-vindo ao Portal Educacional</h2>
-    <p>Escolha uma das guias acima para estudar.</p>
-</section>
+<div id="inicio" class="container active">
+    <div class="card"><h2 style="text-align:center;">Bem-vindo ao Portal Educacional</h2></div>
+</div>
 
 <!-- CONTEÚDOS -->
-<section id="conteudos">
-    <h2>Conteúdos Disponíveis</h2>
-    <p>Língua Portuguesa - 7º Ano</p>
-    <a href="apostila.pdf" target="_blank">📘 Abrir Apostila em PDF</a>
-</section>
+<div id="conteudos" class="container">
+    <h2>Conteúdos</h2>
+    <div id="listaConteudos"></div>
+</div>
 
 <!-- ATIVIDADES -->
-<section id="atividades">
+<div id="atividades" class="container">
     <h2>Atividades</h2>
-
-    <div class="questao">
-        <p><b>1.</b> A palavra <b>infeliz</b> foi formada com o acréscimo de:</p>
-
-        <label class="alternativa">
-            <input type="radio" name="q1">
-            A) sufixo de intensidade
-        </label>
-
-        <label class="alternativa">
-            <input type="radio" name="q1">
-            B) prefixo de negação
-        </label>
-
-        <label class="alternativa">
-            <input type="radio" name="q1">
-            C) sufixo de lugar
-        </label>
-
-        <label class="alternativa">
-            <input type="radio" name="q1">
-            D) prefixo de repetição
-        </label>
-    </div>
-
-    <button class="acao">Finalizar Atividade</button>
-</section>
+    <div id="listaAtividades"></div>
+</div>
 
 <!-- SIMULADOS -->
-<section id="simulados">
+<div id="simulados" class="container">
     <h2>Simulados</h2>
+    <div id="listaSimulados"></div>
+</div>
 
-    <div class="questao">
-        <p><b>1.</b> A palavra <b>refazer</b> indica ideia de:</p>
+<div id="ade" class="container"><h2>Avaliação ADE</h2></div>
+<div id="saeb" class="container"><h2>Avaliação SAEB</h2></div>
 
-        <label class="alternativa">
-            <input type="radio" name="q2">
-            A) negação
-        </label>
+<div id="resultados" class="container">
+    <h2>Resultados do Aluno</h2>
+    <div id="listaResultados"></div>
+</div>
 
-        <label class="alternativa">
-            <input type="radio" name="q2">
-            B) repetição
-        </label>
+<!-- ADMIN -->
+<div id="adminPanel" class="container">
+    <h2>Painel do Administrador</h2>
+    Senha: <input type="password" id="adminSenha">
+    <button class="primary" onclick="loginAdmin()">Entrar</button>
 
-        <label class="alternativa">
-            <input type="radio" name="q2">
-            C) intensidade
-        </label>
+    <div id="adminArea" style="display:none;">
+        <h3>Cadastrar Conteúdo</h3>
+        Título <input id="tituloConteudo">
+        Arquivo (PDF, imagem, vídeo) <input type="file" id="arquivoConteudo">
+        <button class="primary" onclick="salvarConteudo()">Salvar Conteúdo</button>
 
-        <label class="alternativa">
-            <input type="radio" name="q2">
-            D) lugar
-        </label>
+        <h3>Cadastrar Questão</h3>
+        Pergunta <textarea id="pergunta"></textarea>
+        A <input id="a">
+        B <input id="b">
+        C <input id="c">
+        D <input id="d">
+        Correta
+        <select id="correta">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+        </select>
+        Tipo
+        <select id="tipo">
+            <option value="atividade">Atividade</option>
+            <option value="simulado">Simulado</option>
+        </select>
+        <button class="primary" onclick="salvarQuestao()">Salvar Questão</button>
     </div>
+</div>
 
-    <button class="acao">Finalizar Simulado</button>
-</section>
+<script>
+let conteudos = JSON.parse(localStorage.getItem("conteudos")||"[]");
+let questoes = JSON.parse(localStorage.getItem("questoes")||"[]");
+let resultados = JSON.parse(localStorage.getItem("resultados")||"[]");
 
-<!-- ADE -->
-<section id="ade">
-    <h2>Avaliação Diagnóstica (ADE)</h2>
-    <p>Em breve atividades diagnósticas estarão disponíveis aqui.</p>
-</section>
+function showTab(id){
+    document.querySelectorAll(".container").forEach(c=>c.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
 
-<!-- SAEB -->
-<section id="saeb">
-    <h2>Simulados SAEB</h2>
-    <p>Questões modelo SAEB aparecerão aqui.</p>
-</section>
+function toggleAdmin(){
+    showTab('adminPanel');
+}
 
-<!-- RESULTADOS -->
-<section id="resultados">
-    <h2>Resultados</h2>
-    <p>Os resultados das atividades e simulados aparecerão aqui.</p>
-</section>
+function loginAdmin(){
+    if(document.getElementById("adminSenha").value==="1234"){
+        document.getElementById("adminArea").style.display="block";
+        alert("Login administrador OK");
+    } else alert("Senha incorreta");
+}
+
+function salvarConteudo(){
+    let file = document.getElementById("arquivoConteudo").files[0];
+    let url = URL.createObjectURL(file);
+    conteudos.push({titulo:tituloConteudo.value, url});
+    localStorage.setItem("conteudos",JSON.stringify(conteudos));
+    carregarConteudos();
+}
+
+function salvarQuestao(){
+    questoes.push({
+        pergunta:pergunta.value,
+        a:a.value, b:b.value, c:c.value, d:d.value,
+        correta:correta.value,
+        tipo:tipo.value
+    });
+    localStorage.setItem("questoes",JSON.stringify(questoes));
+    carregarQuestoes();
+}
+
+function carregarConteudos(){
+    listaConteudos.innerHTML="";
+    conteudos.forEach(c=>{
+        listaConteudos.innerHTML+=`<div class='card'><b>${c.titulo}</b><br><a href='${c.url}' target='_blank'>📂 Abrir material</a></div>`;
+    });
+}
+
+function carregarQuestoes(){
+    listaAtividades.innerHTML="";
+    listaSimulados.innerHTML="";
+    questoes.forEach((q,i)=>{
+        let html=`<div class='card'><p><b>${i+1}. ${q.pergunta}</b></p>
+        <label class='alternativa'><input type='radio' name='q${i}' value='A'>A) ${q.a}</label>
+        <label class='alternativa'><input type='radio' name='q${i}' value='B'>B) ${q.b}</label>
+        <label class='alternativa'><input type='radio' name='q${i}' value='C'>C) ${q.c}</label>
+        <label class='alternativa'><input type='radio' name='q${i}' value='D'>D) ${q.d}</label></div>`;
+        if(q.tipo==="atividade") listaAtividades.innerHTML+=html;
+        else listaSimulados.innerHTML+=html;
+    });
+}
+
+carregarConteudos();
+carregarQuestoes();
+</script>
 
 </body>
 </html>
