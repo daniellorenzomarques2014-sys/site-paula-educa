@@ -11,18 +11,38 @@
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f9}
 header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1565c0);color:white}
 .logo{height:80px}
+
 nav{background:#0d47a1;display:flex;justify-content:center;flex-wrap:wrap}
 nav a{color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer}
 nav a:hover{background:#08306b}
+
 .container{max-width:1100px;margin:25px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
 .hidden{display:none}
+
 .admin-btn{position:fixed;right:15px;top:70px;background:#ff9800;color:white;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:bold}
+
 input,select,textarea{width:100%;padding:8px;margin:6px 0;border-radius:4px;border:1px solid #ccc}
 button{padding:8px 12px;margin-top:8px;border:none;border-radius:4px;background:#1565c0;color:white;cursor:pointer}
 button:hover{opacity:0.9}
-.question{border:1px solid #ddd;padding:10px;border-radius:6px;margin-bottom:15px}
-.alternativa{display:flex;align-items:center;gap:6px;margin:2px 0}
-.alternativa input{margin:0}
+
+.question{border:1px solid #ddd;padding:12px;border-radius:6px;margin-bottom:15px}
+
+/* 🔥 CORREÇÃO DEFINITIVA DAS ALTERNATIVAS */
+.alt{
+display:flex;
+align-items:center;
+gap:4px;
+margin:2px 0;
+}
+.alt input[type="radio"]{
+margin:0;
+}
+
+/* Faz texto ficar colado na bolinha */
+.alt span{
+display:inline;
+}
+
 footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
 .small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
 </style>
@@ -65,7 +85,7 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <div class="container hidden" id="adminPanel">
 <h2>Painel do Professor</h2>
 
-<h3>Cadastrar Conteúdo</h3>
+<h3>Cadastrar Conteúdo (PDF, imagem, vídeo)</h3>
 <input type="text" id="tituloConteudo" placeholder="Título">
 <input type="file" id="arquivoConteudo">
 <button onclick="salvarConteudo()">Salvar Conteúdo</button>
@@ -136,7 +156,7 @@ reader.readAsDataURL(file);
 
 function listarConteudos(){
 listaConteudos.innerHTML="";
-conteudos.forEach((c,i)=>{
+conteudos.forEach(c=>{
 listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" target="_blank">Abrir</a></p>`;
 });
 }
@@ -156,20 +176,17 @@ if(file) reader.readAsDataURL(file); else reader.onload();
 function listarQuestoes(tipo,elemento){
 document.getElementById(elemento).innerHTML="";
 questoes.filter(q=>q.tipo===tipo).forEach((q,i)=>{
-document.getElementById(elemento).innerHTML+=montarQuestao(q,i);
-});
-}
-
-function montarQuestao(q,i){
-return `<div class="question">
+document.getElementById(elemento).innerHTML+=`
+<div class="question">
 <p><b>${i+1}. ${q.pergunta}</b></p>
 <p>${q.texto||""}</p>
 ${q.img?`<img src="${q.img}" width="150">`:""}
-<label class="alternativa"><input type="radio" name="q${i}"> A) ${q.a}</label>
-<label class="alternativa"><input type="radio" name="q${i}"> B) ${q.b}</label>
-<label class="alternativa"><input type="radio" name="q${i}"> C) ${q.c}</label>
-<label class="alternativa"><input type="radio" name="q${i}"> D) ${q.d}</label>
+<label class="alt"><input type="radio" name="q${i}"><span>A) ${q.a}</span></label>
+<label class="alt"><input type="radio" name="q${i}"><span>B) ${q.b}</span></label>
+<label class="alt"><input type="radio" name="q${i}"><span>C) ${q.c}</span></label>
+<label class="alt"><input type="radio" name="q${i}"><span>D) ${q.d}</span></label>
 </div>`;
+});
 }
 
 function listarAdminQuestoes(){
