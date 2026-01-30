@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal Educacional</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f9}
@@ -19,13 +18,9 @@ nav a:hover{background:#0d47a1}
 .admin-btn{position:fixed;right:15px;top:80px;background:#ff9800;color:white;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:bold}
 input,select,textarea{width:100%;padding:8px;margin:6px 0;border-radius:4px;border:1px solid #ccc}
 button{padding:8px 12px;margin-top:8px;border:none;border-radius:4px;background:#1976d2;color:white;cursor:pointer}
-button:hover{opacity:0.9}
 .question{border:1px solid #ddd;padding:12px;border-radius:6px;margin-bottom:15px}
-
-/* ALTERNATIVAS JUNTAS À ESQUERDA */
-.alternativa{display:flex;align-items:center;gap:4px;margin:2px 0;cursor:pointer}
+.alternativa{display:flex;align-items:center;gap:4px;margin:2px 0}
 .alternativa input{margin:0}
-
 footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
 .small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
 </style>
@@ -53,19 +48,32 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2>
 </div>
 
-<div class="container hidden" id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
+<!-- CONTEÚDOS -->
+<div class="container hidden" id="conteudos">
+<h2>Conteúdos</h2>
+<select id="filtroSerieConteudo"></select>
+<select id="filtroDisciplinaConteudo"></select>
+<button onclick="listarConteudos()">Carregar</button>
+<div id="listaConteudos"></div>
+</div>
 
+<!-- ATIVIDADES -->
 <div class="container hidden" id="atividades">
 <h2>Atividades</h2>
 <input id="nomeAlunoAtv" placeholder="Nome do aluno">
-<button onclick="corrigir('atividade')">Finalizar Atividade</button>
+<select id="serieAlunoAtv"></select>
+<select id="disciplinaAlunoAtv"></select>
+<button onclick="carregarQuestoesAluno('atividade')">Iniciar</button>
 <div id="listaAtividades"></div>
 </div>
 
+<!-- SIMULADOS -->
 <div class="container hidden" id="simulados">
 <h2>Simulados</h2>
 <input id="nomeAlunoSim" placeholder="Nome do aluno">
-<button onclick="corrigir('simulado')">Finalizar Simulado</button>
+<select id="serieAlunoSim"></select>
+<select id="disciplinaAlunoSim"></select>
+<button onclick="carregarQuestoesAluno('simulado')">Iniciar</button>
 <div id="listaSimulados"></div>
 </div>
 
@@ -75,17 +83,17 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <div class="container hidden" id="resultados">
 <h2>Resultados</h2>
 <button onclick="gerarPDF()">📊 Gerar PDF</button>
-<h3>🏆 Ranking de Desempenho</h3>
-<div id="ranking"></div>
-<canvas id="grafico" height="100"></canvas>
 <div id="relatorios"></div>
 </div>
 
+<!-- ADMIN -->
 <div class="container hidden" id="adminPanel">
 <h2>Painel do Professor</h2>
 
 <h3>Cadastrar Conteúdo</h3>
-<input type="text" id="tituloConteudo" placeholder="Título do conteúdo">
+<input type="text" id="tituloConteudo" placeholder="Título">
+<select id="serieConteudo"></select>
+<select id="disciplinaConteudo"></select>
 <input type="file" id="arquivoConteudo">
 <button onclick="salvarConteudo()">Salvar Conteúdo</button>
 
@@ -98,19 +106,14 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <option value="ade">ADE</option>
 <option value="saeb">SAEB</option>
 </select>
+<select id="serieQuestao"></select>
+<select id="disciplinaQuestao"></select>
 <input type="text" id="pergunta" placeholder="Pergunta">
-<textarea id="textoQuestao" placeholder="Texto da questão"></textarea>
-<input type="file" id="imagemQuestao">
 <input type="text" id="a" placeholder="Alternativa A">
 <input type="text" id="b" placeholder="Alternativa B">
 <input type="text" id="c" placeholder="Alternativa C">
 <input type="text" id="d" placeholder="Alternativa D">
-<select id="correta">
-<option value="A">Correta: A</option>
-<option value="B">Correta: B</option>
-<option value="C">Correta: C</option>
-<option value="D">Correta: D</option>
-</select>
+<select id="correta"><option>A</option><option>B</option><option>C</option><option>D</option></select>
 <button onclick="salvarQuestao()">Salvar Questão</button>
 
 <h3>Questões Cadastradas</h3>
@@ -120,6 +123,29 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <footer>Portal Educacional © 2026</footer>
 
 <script>
+const series=[
+"Educação Infantil - 1º Período",
+"Educação Infantil - 2º Período",
+"1º Ano","2º Ano","3º Ano","4º Ano","5º Ano",
+"6º Ano","7º Ano","8º Ano","9º Ano"
+];
+
+const disciplinas=[
+"Língua Portuguesa","Matemática","História","Geografia",
+"Ciências","Religião","Artes","Língua Inglesa","Educação Física"
+];
+
+function preencherSelect(id,lista){
+let s=document.getElementById(id);
+lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`);
+}
+
+["serieConteudo","serieQuestao","serieAlunoAtv","serieAlunoSim","filtroSerieConteudo"]
+.forEach(id=>preencherSelect(id,series));
+
+["disciplinaConteudo","disciplinaQuestao","disciplinaAlunoAtv","disciplinaAlunoSim","filtroDisciplinaConteudo"]
+.forEach(id=>preencherSelect(id,disciplinas));
+
 let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]");
 let questoes=JSON.parse(localStorage.getItem("questoes")||"[]");
 let resultados=JSON.parse(localStorage.getItem("resultados")||"[]");
@@ -128,54 +154,45 @@ function showSection(id){
 document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
 document.getElementById(id).classList.remove("hidden");
 if(id==="conteudos") listarConteudos();
-if(id==="atividades") listarQuestoes("atividade","listaAtividades");
-if(id==="simulados") listarQuestoes("simulado","listaSimulados");
-if(id==="ade") listarQuestoes("ade","listaADE");
-if(id==="saeb") listarQuestoes("saeb","listaSAEB");
 if(id==="resultados") listarResultados();
 }
 
-function abrirAdmin(){
-let senha=prompt("Senha do administrador:");
-if(senha==="1234"){showSection("adminPanel");listarAdminQuestoes();}
-else alert("Senha incorreta");
-}
+function abrirAdmin(){ if(prompt("Senha do admin:")=="1234"){showSection("adminPanel");listarAdminQuestoes();} }
 
-/* CONTEÚDOS PDF */
 function salvarConteudo(){
-let file=arquivoConteudo.files[0];
-if(!file) return alert("Selecione um arquivo!");
-let reader=new FileReader();
-reader.onload=function(){
-conteudos.push({titulo:tituloConteudo.value,nome:file.name,arquivo:reader.result});
-localStorage.setItem("conteudos",JSON.stringify(conteudos));
-listarConteudos();
-}
-reader.readAsDataURL(file);
+let f=arquivoConteudo.files[0]; if(!f) return;
+let r=new FileReader();
+r.onload=()=>{conteudos.push({titulo:tituloConteudo.value,serie:serieConteudo.value,disciplina:disciplinaConteudo.value,nome:f.name,arquivo:r.result});
+localStorage.setItem("conteudos",JSON.stringify(conteudos));alert("Salvo!");}
+r.readAsDataURL(f);
 }
 
 function listarConteudos(){
 listaConteudos.innerHTML="";
-conteudos.forEach((c,i)=>{
-listaConteudos.innerHTML+=`
-<p><b>${c.titulo}</b><br>
-<a href="${c.arquivo}" download="${c.nome}" target="_blank">📘 Abrir / Baixar PDF</a>
-<button class="small-btn" onclick="removerConteudo(${i})">🗑</button></p>`;
-});
+conteudos.filter(c=>c.serie==filtroSerieConteudo.value && c.disciplina==filtroDisciplinaConteudo.value)
+.forEach(c=>listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" download="${c.nome}" target="_blank">📘 Abrir</a></p>`);
 }
-function removerConteudo(i){conteudos.splice(i,1);localStorage.setItem("conteudos",JSON.stringify(conteudos));listarConteudos();}
 
-/* QUESTÕES */
 function salvarQuestao(){
-questoes.push({tipo:tipoQuestao.value,pergunta:pergunta.value,texto:textoQuestao.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
-localStorage.setItem("questoes",JSON.stringify(questoes));
-listarAdminQuestoes();
+questoes.push({tipo:tipoQuestao.value,serie:serieQuestao.value,disciplina:disciplinaQuestao.value,pergunta:pergunta.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
+localStorage.setItem("questoes",JSON.stringify(questoes));listarAdminQuestoes();
 }
 
-function listarQuestoes(tipo,el){
-document.getElementById(el).innerHTML="";
-questoes.filter(q=>q.tipo===tipo).forEach((q,i)=>{
-document.getElementById(el).innerHTML+=`
+function listarAdminQuestoes(){
+listaAdminQuestoes.innerHTML="";
+questoes.forEach((q,i)=>listaAdminQuestoes.innerHTML+=`${q.pergunta} (${q.serie} - ${q.disciplina})
+<button class="small-btn" onclick="questoes.splice(${i},1);localStorage.setItem('questoes',JSON.stringify(questoes));listarAdminQuestoes()">🗑</button><br>`);
+}
+
+function carregarQuestoesAluno(tipo){
+let serie=(tipo=="atividade")?serieAlunoAtv.value:serieAlunoSim.value;
+let disc=(tipo=="atividade")?disciplinaAlunoAtv.value:disciplinaAlunoSim.value;
+let nome=(tipo=="atividade")?nomeAlunoAtv.value:nomeAlunoSim.value;
+let lista=questoes.filter(q=>q.tipo==tipo && q.serie==serie && q.disciplina==disc);
+let div=(tipo=="atividade")?listaAtividades:listaSimulados;
+div.innerHTML="";
+lista.forEach((q,i)=>{
+div.innerHTML+=`
 <div class="question">
 <p><b>${i+1}. ${q.pergunta}</b></p>
 <label class="alternativa"><input type="radio" name="${tipo}${i}" value="A">A) ${q.a}</label>
@@ -184,46 +201,30 @@ document.getElementById(el).innerHTML+=`
 <label class="alternativa"><input type="radio" name="${tipo}${i}" value="D">D) ${q.d}</label>
 </div>`;
 });
+div.innerHTML+=`<button onclick="corrigir('${tipo}','${nome}',${lista.length})">Finalizar</button>`;
 }
 
-/* CORREÇÃO E RESULTADOS */
-function corrigir(tipo){
-let nome=(tipo==="atividade")?nomeAlunoAtv.value:nomeAlunoSim.value;
-let acertos=0,erros=0;
-questoes.filter(q=>q.tipo===tipo).forEach((q,i)=>{
+function corrigir(tipo,nome,total){
+let acertos=0;
+for(let i=0;i<total;i++){
 let m=document.querySelector(`input[name='${tipo}${i}']:checked`);
-if(m && m.value===q.correta) acertos++; else erros++;
-});
-resultados.push({nome,acertos,erros});
+let q=questoes.filter(q=>q.tipo==tipo)[i];
+if(m && m.value==q.correta) acertos++;
+}
+resultados.push({nome,acertos,erros:total-acertos});
 localStorage.setItem("resultados",JSON.stringify(resultados));
 alert("Resultado salvo!");
 }
 
 function listarResultados(){
 relatorios.innerHTML="";
-ranking.innerHTML="";
-let ordenado=[...resultados].sort((a,b)=>b.acertos-a.acertos);
-ordenado.forEach((r,i)=>{
-ranking.innerHTML+=`<p>${i+1}º ${r.nome} — ${r.acertos} acertos</p>`;
-relatorios.innerHTML+=`<p>${r.nome} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`;
-});
-
-new Chart(document.getElementById("grafico"),{
-type:"bar",
-data:{
-labels:ordenado.map(r=>r.nome),
-datasets:[{label:"Acertos",data:ordenado.map(r=>r.acertos)}]
-}
-});
+resultados.forEach(r=>relatorios.innerHTML+=`${r.nome} - ${r.acertos} acertos<br>`);
 }
 
 function gerarPDF(){
-const { jsPDF } = window.jspdf;
-let doc=new jsPDF();
-doc.text("Relatório de Resultados",10,10);
-let y=20;
-resultados.forEach(r=>{doc.text(`${r.nome} - Acertos: ${r.acertos} Erros: ${r.erros}`,10,y);y+=10;});
-doc.save("resultados.pdf");
+const{jsPDF}=window.jspdf;let d=new jsPDF();d.text("Resultados",10,10);let y=20;
+resultados.forEach(r=>{d.text(`${r.nome} - ${r.acertos} acertos`,10,y);y+=10});
+d.save("resultados.pdf");
 }
 </script>
 
