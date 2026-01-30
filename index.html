@@ -5,102 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal Educacional</title>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f9}
-header{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    padding:15px 25px;
-    background:linear-gradient(90deg,#0d47a1,#1565c0);
-    color:white
-}
+header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1565c0);color:white}
 .logo{height:80px}
-h1{font-size:20px;margin:0}
-
-nav{
-    background:#0d47a1;
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap
-}
-nav a{
-    color:white;
-    padding:14px 18px;
-    text-decoration:none;
-    font-weight:bold;
-    cursor:pointer
-}
+nav{background:#0d47a1;display:flex;justify-content:center;flex-wrap:wrap}
+nav a{color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer}
 nav a:hover{background:#08306b}
-
-.container{
-    max-width:1100px;
-    margin:25px auto;
-    padding:20px;
-    background:white;
-    border-radius:8px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.1)
-}
+.container{max-width:1100px;margin:25px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
 .hidden{display:none}
-
-.admin-btn{
-    position:fixed;
-    right:15px;
-    top:70px;
-    background:#ff9800;
-    color:white;
-    padding:10px 14px;
-    border-radius:6px;
-    cursor:pointer;
-    font-weight:bold
-}
-
-input,select,textarea{
-    width:100%;
-    padding:8px;
-    margin:6px 0;
-    border-radius:4px;
-    border:1px solid #ccc
-}
-
-button{
-    padding:8px 12px;
-    margin-top:8px;
-    border:none;
-    border-radius:4px;
-    background:#1565c0;
-    color:white;
-    cursor:pointer
-}
+.admin-btn{position:fixed;right:15px;top:70px;background:#ff9800;color:white;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:bold}
+input,select,textarea{width:100%;padding:8px;margin:6px 0;border-radius:4px;border:1px solid #ccc}
+button{padding:8px 12px;margin-top:8px;border:none;border-radius:4px;background:#1565c0;color:white;cursor:pointer}
 button:hover{opacity:0.9}
-
-.question{
-    border:1px solid #ddd;
-    padding:10px;
-    border-radius:6px;
-    margin-bottom:15px
-}
-
-/* ALTERNATIVAS ESTILO PROVA */
-.alternativa{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    margin:3px 0;
-    font-size:15px
-}
-.alternativa input[type=radio]{
-    width:auto;
-    margin:0
-}
-
-footer{
-    text-align:center;
-    padding:15px;
-    background:#0d47a1;
-    color:white;
-    margin-top:40px
-}
+.question{border:1px solid #ddd;padding:10px;border-radius:6px;margin-bottom:15px}
+.alternativa{display:flex;align-items:center;gap:6px;margin:2px 0}
+.alternativa input{margin:0}
+footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
+.small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
 </style>
 </head>
 <body>
@@ -115,45 +39,29 @@ footer{
 <a onclick="showSection('conteudos')">Conteúdos</a>
 <a onclick="showSection('atividades')">Atividades</a>
 <a onclick="showSection('simulados')">Simulados</a>
+<a onclick="showSection('ade')">ADE</a>
+<a onclick="showSection('saeb')">SAEB</a>
 <a onclick="showSection('resultados')">Resultados</a>
 </nav>
 
 <div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
 
-<!-- INÍCIO -->
 <div class="container" id="inicio">
 <h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2>
-<p style="text-align:center">Ambiente digital de aprendizagem da escola.</p>
 </div>
 
-<!-- CONTEÚDOS -->
-<div class="container hidden" id="conteudos">
-<h2>Conteúdos</h2>
-<div id="listaConteudos"></div>
-</div>
+<div class="container hidden" id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
+<div class="container hidden" id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></div>
+<div class="container hidden" id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></div>
+<div class="container hidden" id="ade"><h2>Avaliação ADE</h2><div id="listaADE"></div></div>
+<div class="container hidden" id="saeb"><h2>Avaliação SAEB</h2><div id="listaSAEB"></div></div>
 
-<!-- ATIVIDADES -->
-<div class="container hidden" id="atividades">
-<h2>Atividades</h2>
-<div id="listaAtividades"></div>
-</div>
-
-<!-- SIMULADOS -->
-<div class="container hidden" id="simulados">
-<h2>Simulados</h2>
-<input type="text" id="nomeAluno" placeholder="Nome do aluno">
-<select id="serieAluno"></select>
-<button onclick="iniciarSimulado()">Iniciar</button>
-<div id="areaSimulado"></div>
-</div>
-
-<!-- RESULTADOS -->
 <div class="container hidden" id="resultados">
 <h2>Resultados</h2>
+<button onclick="gerarPDF()">📊 Gerar PDF</button>
 <div id="relatorios"></div>
 </div>
 
-<!-- PAINEL ADMIN -->
 <div class="container hidden" id="adminPanel">
 <h2>Painel do Professor</h2>
 
@@ -164,7 +72,13 @@ footer{
 
 <hr>
 
-<h3>Cadastrar Questão (Atividade/Simulado)</h3>
+<h3>Cadastrar Questão</h3>
+<select id="tipoQuestao">
+<option value="atividade">Atividade</option>
+<option value="simulado">Simulado</option>
+<option value="ade">ADE</option>
+<option value="saeb">SAEB</option>
+</select>
 <input type="text" id="pergunta" placeholder="Pergunta">
 <textarea id="textoQuestao" placeholder="Texto da questão"></textarea>
 <input type="file" id="imagemQuestao">
@@ -179,6 +93,9 @@ footer{
 <option value="D">Correta: D</option>
 </select>
 <button onclick="salvarQuestao()">Salvar Questão</button>
+
+<h3>Questões Cadastradas</h3>
+<div id="listaAdminQuestoes"></div>
 </div>
 
 <footer>Portal Educacional © 2026</footer>
@@ -192,95 +109,114 @@ function showSection(id){
 document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
 document.getElementById(id).classList.remove("hidden");
 if(id==="conteudos") listarConteudos();
-if(id==="atividades") listarAtividades();
+if(id==="atividades") listarQuestoes("atividade","listaAtividades");
+if(id==="simulados") listarQuestoes("simulado","listaSimulados");
+if(id==="ade") listarQuestoes("ade","listaADE");
+if(id==="saeb") listarQuestoes("saeb","listaSAEB");
 if(id==="resultados") listarResultados();
 }
 
 function abrirAdmin(){
 let senha=prompt("Senha do administrador:");
-if(senha==="1234") showSection("adminPanel");
+if(senha==="1234"){showSection("adminPanel");listarAdminQuestoes();}
 else alert("Senha incorreta");
 }
 
 function salvarConteudo(){
-let file=document.getElementById("arquivoConteudo").files[0];
+let file=arquivoConteudo.files[0];
 let reader=new FileReader();
 reader.onload=function(){
 conteudos.push({titulo:tituloConteudo.value,arquivo:reader.result});
 localStorage.setItem("conteudos",JSON.stringify(conteudos));
 alert("Conteúdo salvo!");
+listarConteudos();
 }
 reader.readAsDataURL(file);
 }
 
 function listarConteudos(){
 listaConteudos.innerHTML="";
-conteudos.forEach(c=>{
+conteudos.forEach((c,i)=>{
 listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" target="_blank">Abrir</a></p>`;
 });
 }
 
 function salvarQuestao(){
 let reader=new FileReader();
-let file=document.getElementById("imagemQuestao").files[0];
+let file=imagemQuestao.files[0];
 reader.onload=function(){
-questoes.push({
-pergunta:pergunta.value,
-texto:textoQuestao.value,
-img:reader.result,
-a:a.value,b:b.value,c:c.value,d:d.value,
-correta:correta.value
-});
+questoes.push({tipo:tipoQuestao.value,pergunta:pergunta.value,texto:textoQuestao.value,img:reader.result,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
 localStorage.setItem("questoes",JSON.stringify(questoes));
 alert("Questão salva!");
+listarAdminQuestoes();
 };
 if(file) reader.readAsDataURL(file); else reader.onload();
 }
 
-function listarAtividades(){
-listaAtividades.innerHTML="";
-questoes.forEach((q,i)=>{
-listaAtividades.innerHTML+=montarQuestao(q,i,"atividade");
+function listarQuestoes(tipo,elemento){
+document.getElementById(elemento).innerHTML="";
+questoes.filter(q=>q.tipo===tipo).forEach((q,i)=>{
+document.getElementById(elemento).innerHTML+=montarQuestao(q,i);
 });
 }
 
-function iniciarSimulado(){
-areaSimulado.innerHTML="";
-questoes.forEach((q,i)=>{
-areaSimulado.innerHTML+=montarQuestao(q,i,"simulado");
-});
-areaSimulado.innerHTML+="<button onclick='corrigirSimulado()'>Finalizar</button>";
-}
-
-function montarQuestao(q,i,tipo){
+function montarQuestao(q,i){
 return `<div class="question">
 <p><b>${i+1}. ${q.pergunta}</b></p>
 <p>${q.texto||""}</p>
 ${q.img?`<img src="${q.img}" width="150">`:""}
-<label class="alternativa"><input type="radio" name="q${i}" value="A"> A) ${q.a}</label>
-<label class="alternativa"><input type="radio" name="q${i}" value="B"> B) ${q.b}</label>
-<label class="alternativa"><input type="radio" name="q${i}" value="C"> C) ${q.c}</label>
-<label class="alternativa"><input type="radio" name="q${i}" value="D"> D) ${q.d}</label>
+<label class="alternativa"><input type="radio" name="q${i}"> A) ${q.a}</label>
+<label class="alternativa"><input type="radio" name="q${i}"> B) ${q.b}</label>
+<label class="alternativa"><input type="radio" name="q${i}"> C) ${q.c}</label>
+<label class="alternativa"><input type="radio" name="q${i}"> D) ${q.d}</label>
 </div>`;
 }
 
-function corrigirSimulado(){
-let acertos=0;
+function listarAdminQuestoes(){
+listaAdminQuestoes.innerHTML="";
 questoes.forEach((q,i)=>{
-let marcada=document.querySelector(`input[name=q${i}]:checked`);
-if(marcada && marcada.value===q.correta) acertos++;
+listaAdminQuestoes.innerHTML+=`<p>${q.pergunta}
+<button class="small-btn" onclick="editarQuestao(${i})">✏️ Editar</button>
+<button class="small-btn" onclick="excluirQuestao(${i})">🗑 Excluir</button></p>`;
 });
-let erros=questoes.length-acertos;
-resultados.push({nome:nomeAluno.value,acertos,erros});
-localStorage.setItem("resultados",JSON.stringify(resultados));
-alert(`Resultado: ${acertos} acertos e ${erros} erros`);
+}
+
+function excluirQuestao(i){
+if(confirm("Excluir questão?")){
+questoes.splice(i,1);
+localStorage.setItem("questoes",JSON.stringify(questoes));
+listarAdminQuestoes();
+}
+}
+
+function editarQuestao(i){
+let q=questoes[i];
+pergunta.value=q.pergunta;
+textoQuestao.value=q.texto;
+a.value=q.a;b.value=q.b;c.value=q.c;d.value=q.d;
+correta.value=q.correta;
+questoes.splice(i,1);
+localStorage.setItem("questoes",JSON.stringify(questoes));
+listarAdminQuestoes();
 }
 
 function listarResultados(){
 relatorios.innerHTML="";
 resultados.forEach(r=>{
-relatorios.innerHTML+=`<p>${r.nome} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`;
+relatorios.innerHTML+=`<p>${r.nome||"Aluno"} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`;
 });
+}
+
+function gerarPDF(){
+const { jsPDF } = window.jspdf;
+let doc=new jsPDF();
+doc.text("Relatório de Resultados",10,10);
+let y=20;
+resultados.forEach(r=>{
+doc.text(`${r.nome||"Aluno"} - Acertos: ${r.acertos} Erros: ${r.erros}`,10,y);
+y+=10;
+});
+doc.save("resultados.pdf");
 }
 </script>
 
