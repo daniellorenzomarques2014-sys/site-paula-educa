@@ -5,40 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal Educacional</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f9}
 header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1976d2);color:white}
 .logo{height:80px}
-
 nav{background:#1565c0;display:flex;justify-content:center;flex-wrap:wrap}
 nav a{color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer}
 nav a:hover{background:#0d47a1}
-
 .container{max-width:1100px;margin:25px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
 .hidden{display:none}
-
 .admin-btn{position:fixed;right:15px;top:80px;background:#ff9800;color:white;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:bold}
-
 input,select,textarea{width:100%;padding:8px;margin:6px 0;border-radius:4px;border:1px solid #ccc}
 button{padding:8px 12px;margin-top:8px;border:none;border-radius:4px;background:#1976d2;color:white;cursor:pointer}
 button:hover{opacity:0.9}
-
 .question{border:1px solid #ddd;padding:12px;border-radius:6px;margin-bottom:15px}
 
-/* ===== CORREÇÃO DEFINITIVA DAS ALTERNATIVAS ===== */
-.alternativa{
-display:flex;
-align-items:center;
-gap:6px;
-margin:4px 0;
-cursor:pointer;
-}
-.alternativa input[type="radio"]{
-width:auto !important;
-margin:0 !important;
-flex-shrink:0;
-}
+/* ALTERNATIVAS JUNTAS À ESQUERDA */
+.alternativa{display:flex;align-items:center;gap:4px;margin:2px 0;cursor:pointer}
+.alternativa input{margin:0}
 
 footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
 .small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
@@ -68,14 +54,30 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 </div>
 
 <div class="container hidden" id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
-<div class="container hidden" id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></div>
-<div class="container hidden" id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></div>
+
+<div class="container hidden" id="atividades">
+<h2>Atividades</h2>
+<input id="nomeAlunoAtv" placeholder="Nome do aluno">
+<button onclick="corrigir('atividade')">Finalizar Atividade</button>
+<div id="listaAtividades"></div>
+</div>
+
+<div class="container hidden" id="simulados">
+<h2>Simulados</h2>
+<input id="nomeAlunoSim" placeholder="Nome do aluno">
+<button onclick="corrigir('simulado')">Finalizar Simulado</button>
+<div id="listaSimulados"></div>
+</div>
+
 <div class="container hidden" id="ade"><h2>Avaliação ADE</h2><div id="listaADE"></div></div>
 <div class="container hidden" id="saeb"><h2>Avaliação SAEB</h2><div id="listaSAEB"></div></div>
 
 <div class="container hidden" id="resultados">
 <h2>Resultados</h2>
 <button onclick="gerarPDF()">📊 Gerar PDF</button>
+<h3>🏆 Ranking de Desempenho</h3>
+<div id="ranking"></div>
+<canvas id="grafico" height="100"></canvas>
 <div id="relatorios"></div>
 </div>
 
@@ -139,13 +141,14 @@ if(senha==="1234"){showSection("adminPanel");listarAdminQuestoes();}
 else alert("Senha incorreta");
 }
 
+/* CONTEÚDOS PDF */
 function salvarConteudo(){
 let file=arquivoConteudo.files[0];
+if(!file) return alert("Selecione um arquivo!");
 let reader=new FileReader();
 reader.onload=function(){
-conteudos.push({titulo:tituloConteudo.value,arquivo:reader.result});
+conteudos.push({titulo:tituloConteudo.value,nome:file.name,arquivo:reader.result});
 localStorage.setItem("conteudos",JSON.stringify(conteudos));
-alert("Conteúdo salvo!");
 listarConteudos();
 }
 reader.readAsDataURL(file);
@@ -153,71 +156,64 @@ reader.readAsDataURL(file);
 
 function listarConteudos(){
 listaConteudos.innerHTML="";
-conteudos.forEach(c=>{
-listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" target="_blank">Abrir</a></p>`;
+conteudos.forEach((c,i)=>{
+listaConteudos.innerHTML+=`
+<p><b>${c.titulo}</b><br>
+<a href="${c.arquivo}" download="${c.nome}" target="_blank">📘 Abrir / Baixar PDF</a>
+<button class="small-btn" onclick="removerConteudo(${i})">🗑</button></p>`;
 });
 }
+function removerConteudo(i){conteudos.splice(i,1);localStorage.setItem("conteudos",JSON.stringify(conteudos));listarConteudos();}
 
+/* QUESTÕES */
 function salvarQuestao(){
-let reader=new FileReader();
-let file=imagemQuestao.files[0];
-reader.onload=function(){
-questoes.push({tipo:tipoQuestao.value,pergunta:pergunta.value,texto:textoQuestao.value,img:reader.result,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
+questoes.push({tipo:tipoQuestao.value,pergunta:pergunta.value,texto:textoQuestao.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
 localStorage.setItem("questoes",JSON.stringify(questoes));
-alert("Questão salva!");
 listarAdminQuestoes();
-};
-if(file) reader.readAsDataURL(file); else reader.onload();
 }
 
-function listarQuestoes(tipo,elemento){
-document.getElementById(elemento).innerHTML="";
+function listarQuestoes(tipo,el){
+document.getElementById(el).innerHTML="";
 questoes.filter(q=>q.tipo===tipo).forEach((q,i)=>{
-document.getElementById(elemento).innerHTML+=`
+document.getElementById(el).innerHTML+=`
 <div class="question">
 <p><b>${i+1}. ${q.pergunta}</b></p>
-<p>${q.texto||""}</p>
-${q.img?`<img src="${q.img}" width="150">`:""}
-<label class="alternativa"><input type="radio" name="q${i}" value="A"> A) ${q.a}</label>
-<label class="alternativa"><input type="radio" name="q${i}" value="B"> B) ${q.b}</label>
-<label class="alternativa"><input type="radio" name="q${i}" value="C"> C) ${q.c}</label>
-<label class="alternativa"><input type="radio" name="q${i}" value="D"> D) ${q.d}</label>
+<label class="alternativa"><input type="radio" name="${tipo}${i}" value="A">A) ${q.a}</label>
+<label class="alternativa"><input type="radio" name="${tipo}${i}" value="B">B) ${q.b}</label>
+<label class="alternativa"><input type="radio" name="${tipo}${i}" value="C">C) ${q.c}</label>
+<label class="alternativa"><input type="radio" name="${tipo}${i}" value="D">D) ${q.d}</label>
 </div>`;
 });
 }
 
-function listarAdminQuestoes(){
-listaAdminQuestoes.innerHTML="";
-questoes.forEach((q,i)=>{
-listaAdminQuestoes.innerHTML+=`${q.pergunta}
-<button class="small-btn" onclick="editarQuestao(${i})">✏️</button>
-<button class="small-btn" onclick="excluirQuestao(${i})">🗑</button><br>`;
+/* CORREÇÃO E RESULTADOS */
+function corrigir(tipo){
+let nome=(tipo==="atividade")?nomeAlunoAtv.value:nomeAlunoSim.value;
+let acertos=0,erros=0;
+questoes.filter(q=>q.tipo===tipo).forEach((q,i)=>{
+let m=document.querySelector(`input[name='${tipo}${i}']:checked`);
+if(m && m.value===q.correta) acertos++; else erros++;
 });
-}
-
-function excluirQuestao(i){
-if(confirm("Excluir questão?")){
-questoes.splice(i,1);
-localStorage.setItem("questoes",JSON.stringify(questoes));
-listarAdminQuestoes();
-}
-}
-
-function editarQuestao(i){
-let q=questoes[i];
-pergunta.value=q.pergunta;
-textoQuestao.value=q.texto;
-a.value=q.a;b.value=q.b;c.value=q.c;d.value=q.d;
-correta.value=q.correta;
-questoes.splice(i,1);
-localStorage.setItem("questoes",JSON.stringify(questoes));
-listarAdminQuestoes();
+resultados.push({nome,acertos,erros});
+localStorage.setItem("resultados",JSON.stringify(resultados));
+alert("Resultado salvo!");
 }
 
 function listarResultados(){
 relatorios.innerHTML="";
-resultados.forEach(r=>{
-relatorios.innerHTML+=`<p>${r.nome||"Aluno"} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`;
+ranking.innerHTML="";
+let ordenado=[...resultados].sort((a,b)=>b.acertos-a.acertos);
+ordenado.forEach((r,i)=>{
+ranking.innerHTML+=`<p>${i+1}º ${r.nome} — ${r.acertos} acertos</p>`;
+relatorios.innerHTML+=`<p>${r.nome} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`;
+});
+
+new Chart(document.getElementById("grafico"),{
+type:"bar",
+data:{
+labels:ordenado.map(r=>r.nome),
+datasets:[{label:"Acertos",data:ordenado.map(r=>r.acertos)}]
+}
 });
 }
 
@@ -226,14 +222,10 @@ const { jsPDF } = window.jspdf;
 let doc=new jsPDF();
 doc.text("Relatório de Resultados",10,10);
 let y=20;
-resultados.forEach(r=>{
-doc.text(`${r.nome||"Aluno"} - Acertos: ${r.acertos} Erros: ${r.erros}`,10,y);
-y+=10;
-});
+resultados.forEach(r=>{doc.text(`${r.nome} - Acertos: ${r.acertos} Erros: ${r.erros}`,10,y);y+=10;});
 doc.save("resultados.pdf");
 }
 </script>
 
 </body>
 </html>
-
