@@ -1,151 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Portal Educacional</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- FAVICON (usa o logotipo da escola) -->
+<link rel="icon" type="image/png" href="logo.png">
+
+<style>
+body {font-family: Arial, sans-serif; margin:0; background:#f4f6f9;}
+header {background:#0d47a1; color:white; padding:10px; display:flex; align-items:center;}
+header img {height:60px; margin-right:15px;}
+nav {background:#1565c0; padding:10px; text-align:center;}
+nav button {background:white; border:none; padding:10px 15px; margin:3px; cursor:pointer; font-weight:bold;}
+section {display:none; padding:20px;}
+.active {display:block;}
+.card {background:white; padding:15px; margin-bottom:15px; border-radius:8px;}
+h2 {color:#0d47a1;}
+
+.question label {
+display:flex;
+align-items:center;
+gap:5px;
+margin:3px 0;
+cursor:pointer;
+}
+
+input[type="radio"] {
+margin:0;
+}
+.admin {background:#ffe082; padding:10px; margin-bottom:10px;}
+button.small {padding:5px 8px; font-size:12px;}
+</style>
+</head>
+<body>
+
+<header>
+<img src="logo.png" alt="Logotipo da Escola">
+<h1>Portal Educacional</h1>
+</header>
+
+<nav>
+<button onclick="showTab('inicio')">Início</button>
+<button onclick="showTab('conteudos')">Conteúdos</button>
+<button onclick="showTab('atividades')">Atividades</button>
+<button onclick="showTab('simulados')">Simulados</button>
+<button onclick="showTab('ade')">ADE</button>
+<button onclick="showTab('saeb')">SAEB</button>
+<button onclick="showTab('resultados')">Resultados</button>
+<button onclick="adminLogin()">Área do Professor</button>
+</nav>
+
+<!-- INÍCIO -->
+<section id="inicio" class="active">
+<h2>Bem-vindo!</h2>
+<p>Escolha uma das opções acima para começar.</p>
+</section>
+
+<!-- CONTEÚDOS -->
+<section id="conteudos">
+<h2>Conteúdos</h2>
+<div id="listaConteudos"></div>
+</section>
+
+<!-- ATIVIDADES -->
+<section id="atividades">
+<h2>Atividades</h2>
+<div id="listaAtividades"></div>
+</section>
+
+<!-- SIMULADOS -->
+<section id="simulados">
+<h2>Simulados</h2>
+<div id="listaSimulados"></div>
+</section>
+
+<section id="ade"><h2>Avaliações ADE</h2></section>
+<section id="saeb"><h2>Avaliações SAEB</h2></section>
+<section id="resultados"><h2>Resultados</h2></section>
+
 <script>
-let conteudos = JSON.parse(localStorage.getItem("conteudos") || "[]");
-let questoes = JSON.parse(localStorage.getItem("questoes") || "[]");
-let resultados = JSON.parse(localStorage.getItem("resultados") || "[]");
+let conteudos = [];
+let questoes = [];
 
-function showSection(id){
-    document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
-    document.getElementById(id).classList.remove("hidden");
+function showTab(id){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+carregarQuestoes();
+carregarConteudos();
+}
 
-    if(id==="conteudos") listarConteudos();
-    if(id==="atividades") listarQuestoes("atividade","listaAtividades");
-    if(id==="simulados") listarQuestoes("simulado","listaSimulados");
-    if(id==="ade") listarQuestoes("ade","listaADE");
-    if(id==="saeb") listarQuestoes("saeb","listaSAEB");
-    if(id==="resultados") listarResultados();
+function adminLogin(){
+let senha = prompt("Digite a senha do professor:");
+if(senha==="admin123"){abrirAdmin();}
+else{alert("Senha incorreta");}
 }
 
 function abrirAdmin(){
-    let senha = prompt("Senha do administrador:");
-    if(senha==="1234"){
-        showSection("adminPanel");
-        listarAdminQuestoes();
-    } else alert("Senha incorreta");
+let area = document.createElement("div");
+area.innerHTML = `
+<section class="active">
+<h2>Painel do Professor</h2>
+
+<div class="admin">
+<h3>Cadastrar Conteúdo (PDF)</h3>
+Título: <input id="tituloC"><br><br>
+Série: <select id="serieC">
+<option>Educação Infantil</option>
+<option>1º ao 5º Ano</option>
+<option>6º ao 9º Ano</option>
+</select>
+Disciplina: <select id="discC">
+<option>Língua Portuguesa</option>
+<option>Matemática</option>
+<option>História</option>
+<option>Geografia</option>
+<option>Ciências</option>
+<option>Religião</option>
+<option>Artes</option>
+<option>Língua Inglesa</option>
+<option>Educação Física</option>
+</select>
+Arquivo PDF: <input type="file" id="pdfFile" accept="application/pdf">
+<br><br>
+<button onclick="salvarConteudo()">Salvar Conteúdo</button>
+</div>
+
+<div class="admin">
+<h3>Cadastrar Questão</h3>
+Pergunta:<br><textarea id="pergunta"></textarea><br>
+A: <input id="a"><br>
+B: <input id="b"><br>
+C: <input id="c"><br>
+D: <input id="d"><br>
+Correta: <select id="correta"><option>A</option><option>B</option><option>C</option><option>D</option></select><br>
+Tipo:
+<select id="tipo">
+<option>Atividade</option>
+<option>Simulado</option>
+</select>
+<br><br>
+<button onclick="salvarQuestao()">Salvar Questão</button>
+</div>
+</section>
+`;
+document.body.appendChild(area);
 }
 
 function salvarConteudo(){
-    let file = arquivoConteudo.files[0];
-    let reader = new FileReader();
-    reader.onload = function(){
-        conteudos.push({titulo:tituloConteudo.value,arquivo:reader.result});
-        localStorage.setItem("conteudos",JSON.stringify(conteudos));
-        alert("Conteúdo salvo!");
-        listarConteudos();
-    }
-    if(file) reader.readAsDataURL(file);
+let file = document.getElementById("pdfFile").files[0];
+let titulo = document.getElementById("tituloC").value;
+let reader = new FileReader();
+reader.onload = function(e){
+conteudos.push({titulo, arquivo:e.target.result});
+alert("Conteúdo salvo!");
+}
+reader.readAsDataURL(file);
 }
 
-function listarConteudos(){
-    listaConteudos.innerHTML="";
-    conteudos.forEach((c,i)=>{
-        listaConteudos.innerHTML+=`
-        <div class="question">
-            <b>${c.titulo}</b><br>
-            <a href="${c.arquivo}" target="_blank">📂 Abrir material</a>
-            <button class="small-btn" onclick="editarConteudo(${i})">✏️</button>
-            <button class="small-btn" onclick="excluirConteudo(${i})">🗑</button>
-        </div>`;
-    });
-}
-
-function editarConteudo(i){
-    tituloConteudo.value = conteudos[i].titulo;
-    conteudos.splice(i,1);
-    localStorage.setItem("conteudos",JSON.stringify(conteudos));
-    listarConteudos();
-}
-
-function excluirConteudo(i){
-    if(confirm("Excluir conteúdo?")){
-        conteudos.splice(i,1);
-        localStorage.setItem("conteudos",JSON.stringify(conteudos));
-        listarConteudos();
-    }
+function carregarConteudos(){
+let div = document.getElementById("listaConteudos");
+div.innerHTML="";
+conteudos.forEach(c=>{
+div.innerHTML += `<div class="card"><b>${c.titulo}</b><br>
+<a href="${c.arquivo}" download>📥 Baixar PDF</a></div>`;
+});
 }
 
 function salvarQuestao(){
-    let reader = new FileReader();
-    let file = imagemQuestao.files[0];
-
-    reader.onload = function(){
-        questoes.push({
-            tipo:tipoQuestao.value,
-            pergunta:pergunta.value,
-            texto:textoQuestao.value,
-            img:reader.result,
-            a:a.value,b:b.value,c:c.value,d:d.value,
-            correta:correta.value
-        });
-        localStorage.setItem("questoes",JSON.stringify(questoes));
-        alert("Questão salva!");
-        listarAdminQuestoes();
-    };
-    if(file) reader.readAsDataURL(file);
-    else reader.onload();
+questoes.push({
+pergunta:pergunta.value,
+a:a.value, b:b.value, c:c.value, d:d.value,
+correta:correta.value,
+tipo:tipo.value
+});
+alert("Questão salva!");
 }
 
-function listarQuestoes(tipo,elemento){
-    document.getElementById(elemento).innerHTML="";
+function carregarQuestoes(){
+let atv = document.getElementById("listaAtividades");
+let sim = document.getElementById("listaSimulados");
+atv.innerHTML=""; sim.innerHTML="";
 
-    questoes
-    .filter(q=>q.tipo===tipo)
-    .forEach((q,i)=>{
-        document.getElementById(elemento).innerHTML+=`
-        <div class="question">
-            <p><b>${i+1}. ${q.pergunta}</b></p>
-            <p>${q.texto||""}</p>
-            ${q.img?`<img src="${q.img}" width="150"><br>`:""}
-
-            <label class="alternativa"><input type="radio" name="${tipo}${i}" value="A"> A) ${q.a}</label>
-            <label class="alternativa"><input type="radio" name="${tipo}${i}" value="B"> B) ${q.b}</label>
-            <label class="alternativa"><input type="radio" name="${tipo}${i}" value="C"> C) ${q.c}</label>
-            <label class="alternativa"><input type="radio" name="${tipo}${i}" value="D"> D) ${q.d}</label>
-        </div>`;
-    });
-}
-
-function listarAdminQuestoes(){
-    listaAdminQuestoes.innerHTML="";
-    questoes.forEach((q,i)=>{
-        listaAdminQuestoes.innerHTML+=`
-        ${q.pergunta}
-        <button class="small-btn" onclick="editarQuestao(${i})">✏️</button>
-        <button class="small-btn" onclick="excluirQuestao(${i})">🗑</button><br>`;
-    });
-}
-
-function excluirQuestao(i){
-    if(confirm("Excluir questão?")){
-        questoes.splice(i,1);
-        localStorage.setItem("questoes",JSON.stringify(questoes));
-        listarAdminQuestoes();
-    }
-}
-
-function editarQuestao(i){
-    let q=questoes[i];
-    pergunta.value=q.pergunta;
-    textoQuestao.value=q.texto;
-    a.value=q.a; b.value=q.b; c.value=q.c; d.value=q.d;
-    correta.value=q.correta;
-    questoes.splice(i,1);
-    localStorage.setItem("questoes",JSON.stringify(questoes));
-    listarAdminQuestoes();
-}
-
-function listarResultados(){
-    relatorios.innerHTML="";
-    resultados.forEach(r=>{
-        relatorios.innerHTML+=`<p>${r.nome||"Aluno"} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`;
-    });
-}
-
-window.onload = function(){
-    listarConteudos();
-    listarQuestoes("atividade","listaAtividades");
-    listarQuestoes("simulado","listaSimulados");
-    listarQuestoes("ade","listaADE");
-    listarQuestoes("saeb","listaSAEB");
-    listarResultados();
+questoes.forEach((q,i)=>{
+let html = `<div class="card question">
+<p><b>${q.pergunta}</b></p>
+<label><input type="radio" name="q${i}"> A) ${q.a}</label>
+<label><input type="radio" name="q${i}"> B) ${q.b}</label>
+<label><input type="radio" name="q${i}"> C) ${q.c}</label>
+<label><input type="radio" name="q${i}"> D) ${q.d}</label>
+</div>`;
+if(q.tipo==="Atividade") atv.innerHTML += html;
+else sim.innerHTML += html;
+});
 }
 </script>
+</body>
+</html>
