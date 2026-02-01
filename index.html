@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal Educacional</title>
 
-<!-- FAVICON (LOGO EMBUTIDA) -->
-<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB...">
+<link rel="icon" type="image/png" href="logo-escola.png">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -14,34 +13,26 @@
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f9}
 header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1976d2);color:white}
 .logo{height:80px}
-
 nav{background:#1565c0;display:flex;justify-content:center;flex-wrap:wrap}
 nav a{color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer}
 nav a:hover{background:#0d47a1}
-
 .container{max-width:1100px;margin:25px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
 .hidden{display:none}
-
 .admin-btn{position:fixed;right:15px;top:80px;background:#ff9800;color:white;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:bold}
-
 input,select,textarea{width:100%;padding:8px;margin:6px 0;border-radius:4px;border:1px solid #ccc}
 button{padding:8px 12px;margin-top:8px;border:none;border-radius:4px;background:#1976d2;color:white;cursor:pointer}
 button:hover{opacity:0.9}
-
 .question{border:1px solid #ddd;padding:12px;border-radius:6px;margin-bottom:15px}
-
 .alternativa{display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer}
 .alternativa input{margin:0}
-
 footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
 .small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
 </style>
 </head>
-
 <body>
 
 <header>
-<img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB...">
+<img src="logo-escola.png" class="logo">
 <h1>Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</h1>
 </header>
 
@@ -50,8 +41,6 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <a onclick="showSection('conteudos')">Conteúdos</a>
 <a onclick="showSection('atividades')">Atividades</a>
 <a onclick="showSection('simulados')">Simulados</a>
-<a onclick="showSection('ade')">ADE</a>
-<a onclick="showSection('saeb')">SAEB</a>
 <a onclick="showSection('resultados')">Resultados</a>
 </nav>
 
@@ -64,8 +53,6 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <div class="container hidden" id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
 <div class="container hidden" id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></div>
 <div class="container hidden" id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></div>
-<div class="container hidden" id="ade"><h2>Avaliação ADE</h2><div id="listaADE"></div></div>
-<div class="container hidden" id="saeb"><h2>Avaliação SAEB</h2><div id="listaSAEB"></div></div>
 
 <div class="container hidden" id="resultados">
 <h2>Resultados</h2>
@@ -77,33 +64,27 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <h2>Painel do Professor</h2>
 
 <h3>Cadastrar Conteúdo</h3>
-<input type="text" id="tituloConteudo" placeholder="Título do conteúdo">
-<input type="file" id="arquivoConteudo">
+<input type="text" id="tituloConteudo" placeholder="Título">
+<select id="serieConteudo">
+<option>Educação Infantil</option><option>1º ao 5º Ano</option><option>6º ao 9º Ano</option>
+</select>
+<select id="disciplinaConteudo">
+<option>Língua Portuguesa</option><option>Matemática</option><option>História</option><option>Geografia</option><option>Ciências</option>
+</select>
+<input type="file" id="arquivoConteudo" accept=".pdf">
 <button onclick="salvarConteudo()">Salvar Conteúdo</button>
-<div id="listaAdminConteudos"></div>
-
 <hr>
 
 <h3>Cadastrar Questão</h3>
-<select id="tipoQuestao">
-<option value="atividade">Atividade</option>
-<option value="simulado">Simulado</option>
-<option value="ade">ADE</option>
-<option value="saeb">SAEB</option>
-</select>
+<select id="tipoQuestao"><option value="atividade">Atividade</option><option value="simulado">Simulado</option></select>
+<select id="serieQuestao"><option>1º ao 5º Ano</option><option>6º ao 9º Ano</option></select>
+<select id="disciplinaQuestao"><option>Língua Portuguesa</option><option>Matemática</option></select>
 <input type="text" id="pergunta" placeholder="Pergunta">
-<textarea id="textoQuestao" placeholder="Texto da questão"></textarea>
-<input type="file" id="imagemQuestao">
 <input type="text" id="a" placeholder="Alternativa A">
 <input type="text" id="b" placeholder="Alternativa B">
 <input type="text" id="c" placeholder="Alternativa C">
 <input type="text" id="d" placeholder="Alternativa D">
-<select id="correta">
-<option value="A">Correta: A</option>
-<option value="B">Correta: B</option>
-<option value="C">Correta: C</option>
-<option value="D">Correta: D</option>
-</select>
+<select id="correta"><option>A</option><option>B</option><option>C</option><option>D</option></select>
 <button onclick="salvarQuestao()">Salvar Questão</button>
 
 <h3>Questões Cadastradas</h3>
@@ -115,7 +96,7 @@ footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:
 <script>
 let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]");
 let questoes=JSON.parse(localStorage.getItem("questoes")||"[]");
-let resultados=JSON.parse(localStorage.getItem("resultados")||"[]");
+let resultados=[];
 
 function showSection(id){
 document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
@@ -123,99 +104,47 @@ document.getElementById(id).classList.remove("hidden");
 if(id==="conteudos") listarConteudos();
 if(id==="atividades") listarQuestoes("atividade","listaAtividades");
 if(id==="simulados") listarQuestoes("simulado","listaSimulados");
-if(id==="ade") listarQuestoes("ade","listaADE");
-if(id==="saeb") listarQuestoes("saeb","listaSAEB");
-if(id==="resultados") listarResultados();
 }
 
-function abrirAdmin(){
-let senha=prompt("Senha do administrador:");
-if(senha==="1234"){showSection("adminPanel");listarAdminQuestoes();listarAdminConteudos();}
-else alert("Senha incorreta");
-}
+function abrirAdmin(){if(prompt("Senha:")=="1234"){showSection("adminPanel");listarAdminQuestoes();}}
 
-/* CONTEÚDOS */
 function salvarConteudo(){
-let file=arquivoConteudo.files[0];
-let reader=new FileReader();
-reader.onload=function(){
-conteudos.push({titulo:tituloConteudo.value,arquivo:reader.result});
-localStorage.setItem("conteudos",JSON.stringify(conteudos));
-listarAdminConteudos();listarConteudos();
-}
-reader.readAsDataURL(file);
+let f=arquivoConteudo.files[0];let r=new FileReader();
+r.onload=()=>{conteudos.push({titulo:tituloConteudo.value,serie:serieConteudo.value,disciplina:disciplinaConteudo.value,arquivo:r.result});
+localStorage.setItem("conteudos",JSON.stringify(conteudos));alert("Salvo!");listarConteudos();}
+r.readAsDataURL(f);
 }
 
 function listarConteudos(){
 listaConteudos.innerHTML="";
-conteudos.forEach(c=>{
-listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" target="_blank">Abrir</a></p>`;
-});
+conteudos.forEach(c=>listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> (${c.serie} - ${c.disciplina}) <a href="${c.arquivo}" download>📥 Baixar PDF</a></p>`);
 }
 
-function listarAdminConteudos(){
-listaAdminConteudos.innerHTML="";
-conteudos.forEach((c,i)=>{
-listaAdminConteudos.innerHTML+=`${c.titulo}
-<button class="small-btn" onclick="conteudos.splice(${i},1);localStorage.setItem('conteudos',JSON.stringify(conteudos));listarAdminConteudos();">🗑</button><br>`;
-});
-}
-
-/* QUESTÕES */
 function salvarQuestao(){
-let reader=new FileReader();
-let file=imagemQuestao.files[0];
-reader.onload=function(){
-questoes.push({tipo:tipoQuestao.value,pergunta:pergunta.value,texto:textoQuestao.value,img:reader.result,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
-localStorage.setItem("questoes",JSON.stringify(questoes));
-listarAdminQuestoes();
-};
-if(file) reader.readAsDataURL(file); else reader.onload();
+questoes.push({tipo:tipoQuestao.value,serie:serieQuestao.value,disciplina:disciplinaQuestao.value,pergunta:pergunta.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
+localStorage.setItem("questoes",JSON.stringify(questoes));alert("Salva!");listarAdminQuestoes();
 }
 
-function listarQuestoes(tipo,elemento){
-let div=document.getElementById(elemento);
-div.innerHTML="";
+function listarQuestoes(tipo,el){
+document.getElementById(el).innerHTML="";
 questoes.filter(q=>q.tipo===tipo).forEach((q,i)=>{
-div.innerHTML+=`
+document.getElementById(el).innerHTML+=`
 <div class="question">
 <p><b>${i+1}. ${q.pergunta}</b></p>
-${q.texto||""}
-${q.img?`<img src="${q.img}" width="150">`:""}
-<label class="alternativa"><input type="radio" name="${tipo}${i}">A) ${q.a}</label>
-<label class="alternativa"><input type="radio" name="${tipo}${i}">B) ${q.b}</label>
-<label class="alternativa"><input type="radio" name="${tipo}${i}">C) ${q.c}</label>
-<label class="alternativa"><input type="radio" name="${tipo}${i}">D) ${q.d}</label>
-</div>`;
-});
+<label class="alternativa"><input type="radio" name="q${i}"> A) ${q.a}</label>
+<label class="alternativa"><input type="radio" name="q${i}"> B) ${q.b}</label>
+<label class="alternativa"><input type="radio" name="q${i}"> C) ${q.c}</label>
+<label class="alternativa"><input type="radio" name="q${i}"> D) ${q.d}</label>
+</div>`});
 }
 
 function listarAdminQuestoes(){
 listaAdminQuestoes.innerHTML="";
-questoes.forEach((q,i)=>{
-listaAdminQuestoes.innerHTML+=`${q.pergunta}
-<button class="small-btn" onclick="questoes.splice(${i},1);localStorage.setItem('questoes',JSON.stringify(questoes));listarAdminQuestoes();">🗑</button><br>`;
-});
-}
-
-/* RESULTADOS */
-function listarResultados(){
-relatorios.innerHTML="";
-resultados.forEach(r=>{
-relatorios.innerHTML+=`<p>${r.nome||"Aluno"} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`;
-});
+questoes.forEach((q,i)=>listaAdminQuestoes.innerHTML+=`${q.pergunta} <button onclick="questoes.splice(${i},1);localStorage.setItem('questoes',JSON.stringify(questoes));listarAdminQuestoes();">Excluir</button><br>`);
 }
 
 function gerarPDF(){
-const { jsPDF } = window.jspdf;
-let doc=new jsPDF();
-doc.text("Relatório de Resultados",10,10);
-let y=20;
-resultados.forEach(r=>{
-doc.text(`${r.nome||"Aluno"} - Acertos: ${r.acertos} Erros: ${r.erros}`,10,y);
-y+=10;
-});
-doc.save("resultados.pdf");
+const {jsPDF}=window.jspdf;let doc=new jsPDF();doc.text("Resultados",10,10);doc.save("resultados.pdf");
 }
 </script>
 
