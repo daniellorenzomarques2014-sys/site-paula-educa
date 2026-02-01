@@ -2,199 +2,222 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Portal Educacional</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Educacional</title>
 
-<!-- FAVICON (usa o logotipo da escola) -->
-<link rel="icon" type="image/png" href="logo.png">
+<!-- FAVICON (LOGO EMBUTIDA) -->
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB...">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-body {font-family: Arial, sans-serif; margin:0; background:#f4f6f9;}
-header {background:#0d47a1; color:white; padding:10px; display:flex; align-items:center;}
-header img {height:60px; margin-right:15px;}
-nav {background:#1565c0; padding:10px; text-align:center;}
-nav button {background:white; border:none; padding:10px 15px; margin:3px; cursor:pointer; font-weight:bold;}
-section {display:none; padding:20px;}
-.active {display:block;}
-.card {background:white; padding:15px; margin-bottom:15px; border-radius:8px;}
-h2 {color:#0d47a1;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f9}
+header{display:flex;align-items:center;gap:15px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1976d2);color:white}
+.logo{height:80px}
 
-.question label {
-display:flex;
-align-items:center;
-gap:5px;
-margin:3px 0;
-cursor:pointer;
-}
+nav{background:#1565c0;display:flex;justify-content:center;flex-wrap:wrap}
+nav a{color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer}
+nav a:hover{background:#0d47a1}
 
-input[type="radio"] {
-margin:0;
-}
-.admin {background:#ffe082; padding:10px; margin-bottom:10px;}
-button.small {padding:5px 8px; font-size:12px;}
+.container{max-width:1100px;margin:25px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+.hidden{display:none}
+
+.admin-btn{position:fixed;right:15px;top:80px;background:#ff9800;color:white;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:bold}
+
+input,select,textarea{width:100%;padding:8px;margin:6px 0;border-radius:4px;border:1px solid #ccc}
+button{padding:8px 12px;margin-top:8px;border:none;border-radius:4px;background:#1976d2;color:white;cursor:pointer}
+button:hover{opacity:0.9}
+
+.question{border:1px solid #ddd;padding:12px;border-radius:6px;margin-bottom:15px}
+
+.alternativa{display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer}
+.alternativa input{margin:0}
+
+footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
+.small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
 </style>
 </head>
+
 <body>
 
 <header>
-<img src="logo.png" alt="Logotipo da Escola">
-<h1>Portal Educacional</h1>
+<img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB...">
+<h1>Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</h1>
 </header>
 
 <nav>
-<button onclick="showTab('inicio')">Início</button>
-<button onclick="showTab('conteudos')">Conteúdos</button>
-<button onclick="showTab('atividades')">Atividades</button>
-<button onclick="showTab('simulados')">Simulados</button>
-<button onclick="showTab('ade')">ADE</button>
-<button onclick="showTab('saeb')">SAEB</button>
-<button onclick="showTab('resultados')">Resultados</button>
-<button onclick="adminLogin()">Área do Professor</button>
+<a onclick="showSection('inicio')">Início</a>
+<a onclick="showSection('conteudos')">Conteúdos</a>
+<a onclick="showSection('atividades')">Atividades</a>
+<a onclick="showSection('simulados')">Simulados</a>
+<a onclick="showSection('ade')">ADE</a>
+<a onclick="showSection('saeb')">SAEB</a>
+<a onclick="showSection('resultados')">Resultados</a>
 </nav>
 
-<!-- INÍCIO -->
-<section id="inicio" class="active">
-<h2>Bem-vindo!</h2>
-<p>Escolha uma das opções acima para começar.</p>
-</section>
+<div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
 
-<!-- CONTEÚDOS -->
-<section id="conteudos">
-<h2>Conteúdos</h2>
-<div id="listaConteudos"></div>
-</section>
+<div class="container" id="inicio">
+<h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2>
+</div>
 
-<!-- ATIVIDADES -->
-<section id="atividades">
-<h2>Atividades</h2>
-<div id="listaAtividades"></div>
-</section>
+<div class="container hidden" id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
+<div class="container hidden" id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></div>
+<div class="container hidden" id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></div>
+<div class="container hidden" id="ade"><h2>Avaliação ADE</h2><div id="listaADE"></div></div>
+<div class="container hidden" id="saeb"><h2>Avaliação SAEB</h2><div id="listaSAEB"></div></div>
 
-<!-- SIMULADOS -->
-<section id="simulados">
-<h2>Simulados</h2>
-<div id="listaSimulados"></div>
-</section>
+<div class="container hidden" id="resultados">
+<h2>Resultados</h2>
+<button onclick="gerarPDF()">📊 Gerar PDF</button>
+<div id="relatorios"></div>
+</div>
 
-<section id="ade"><h2>Avaliações ADE</h2></section>
-<section id="saeb"><h2>Avaliações SAEB</h2></section>
-<section id="resultados"><h2>Resultados</h2></section>
+<div class="container hidden" id="adminPanel">
+<h2>Painel do Professor</h2>
+
+<h3>Cadastrar Conteúdo</h3>
+<input type="text" id="tituloConteudo" placeholder="Título do conteúdo">
+<input type="file" id="arquivoConteudo">
+<button onclick="salvarConteudo()">Salvar Conteúdo</button>
+<div id="listaAdminConteudos"></div>
+
+<hr>
+
+<h3>Cadastrar Questão</h3>
+<select id="tipoQuestao">
+<option value="atividade">Atividade</option>
+<option value="simulado">Simulado</option>
+<option value="ade">ADE</option>
+<option value="saeb">SAEB</option>
+</select>
+<input type="text" id="pergunta" placeholder="Pergunta">
+<textarea id="textoQuestao" placeholder="Texto da questão"></textarea>
+<input type="file" id="imagemQuestao">
+<input type="text" id="a" placeholder="Alternativa A">
+<input type="text" id="b" placeholder="Alternativa B">
+<input type="text" id="c" placeholder="Alternativa C">
+<input type="text" id="d" placeholder="Alternativa D">
+<select id="correta">
+<option value="A">Correta: A</option>
+<option value="B">Correta: B</option>
+<option value="C">Correta: C</option>
+<option value="D">Correta: D</option>
+</select>
+<button onclick="salvarQuestao()">Salvar Questão</button>
+
+<h3>Questões Cadastradas</h3>
+<div id="listaAdminQuestoes"></div>
+</div>
+
+<footer>Portal Educacional © 2026</footer>
 
 <script>
-let conteudos = [];
-let questoes = [];
+let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]");
+let questoes=JSON.parse(localStorage.getItem("questoes")||"[]");
+let resultados=JSON.parse(localStorage.getItem("resultados")||"[]");
 
-function showTab(id){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-carregarQuestoes();
-carregarConteudos();
-}
-
-function adminLogin(){
-let senha = prompt("Digite a senha do professor:");
-if(senha==="admin123"){abrirAdmin();}
-else{alert("Senha incorreta");}
+function showSection(id){
+document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
+document.getElementById(id).classList.remove("hidden");
+if(id==="conteudos") listarConteudos();
+if(id==="atividades") listarQuestoes("atividade","listaAtividades");
+if(id==="simulados") listarQuestoes("simulado","listaSimulados");
+if(id==="ade") listarQuestoes("ade","listaADE");
+if(id==="saeb") listarQuestoes("saeb","listaSAEB");
+if(id==="resultados") listarResultados();
 }
 
 function abrirAdmin(){
-let area = document.createElement("div");
-area.innerHTML = `
-<section class="active">
-<h2>Painel do Professor</h2>
-
-<div class="admin">
-<h3>Cadastrar Conteúdo (PDF)</h3>
-Título: <input id="tituloC"><br><br>
-Série: <select id="serieC">
-<option>Educação Infantil</option>
-<option>1º ao 5º Ano</option>
-<option>6º ao 9º Ano</option>
-</select>
-Disciplina: <select id="discC">
-<option>Língua Portuguesa</option>
-<option>Matemática</option>
-<option>História</option>
-<option>Geografia</option>
-<option>Ciências</option>
-<option>Religião</option>
-<option>Artes</option>
-<option>Língua Inglesa</option>
-<option>Educação Física</option>
-</select>
-Arquivo PDF: <input type="file" id="pdfFile" accept="application/pdf">
-<br><br>
-<button onclick="salvarConteudo()">Salvar Conteúdo</button>
-</div>
-
-<div class="admin">
-<h3>Cadastrar Questão</h3>
-Pergunta:<br><textarea id="pergunta"></textarea><br>
-A: <input id="a"><br>
-B: <input id="b"><br>
-C: <input id="c"><br>
-D: <input id="d"><br>
-Correta: <select id="correta"><option>A</option><option>B</option><option>C</option><option>D</option></select><br>
-Tipo:
-<select id="tipo">
-<option>Atividade</option>
-<option>Simulado</option>
-</select>
-<br><br>
-<button onclick="salvarQuestao()">Salvar Questão</button>
-</div>
-</section>
-`;
-document.body.appendChild(area);
+let senha=prompt("Senha do administrador:");
+if(senha==="1234"){showSection("adminPanel");listarAdminQuestoes();listarAdminConteudos();}
+else alert("Senha incorreta");
 }
 
+/* CONTEÚDOS */
 function salvarConteudo(){
-let file = document.getElementById("pdfFile").files[0];
-let titulo = document.getElementById("tituloC").value;
-let reader = new FileReader();
-reader.onload = function(e){
-conteudos.push({titulo, arquivo:e.target.result});
-alert("Conteúdo salvo!");
+let file=arquivoConteudo.files[0];
+let reader=new FileReader();
+reader.onload=function(){
+conteudos.push({titulo:tituloConteudo.value,arquivo:reader.result});
+localStorage.setItem("conteudos",JSON.stringify(conteudos));
+listarAdminConteudos();listarConteudos();
 }
 reader.readAsDataURL(file);
 }
 
-function carregarConteudos(){
-let div = document.getElementById("listaConteudos");
-div.innerHTML="";
+function listarConteudos(){
+listaConteudos.innerHTML="";
 conteudos.forEach(c=>{
-div.innerHTML += `<div class="card"><b>${c.titulo}</b><br>
-<a href="${c.arquivo}" download>📥 Baixar PDF</a></div>`;
+listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" target="_blank">Abrir</a></p>`;
 });
 }
 
+function listarAdminConteudos(){
+listaAdminConteudos.innerHTML="";
+conteudos.forEach((c,i)=>{
+listaAdminConteudos.innerHTML+=`${c.titulo}
+<button class="small-btn" onclick="conteudos.splice(${i},1);localStorage.setItem('conteudos',JSON.stringify(conteudos));listarAdminConteudos();">🗑</button><br>`;
+});
+}
+
+/* QUESTÕES */
 function salvarQuestao(){
-questoes.push({
-pergunta:pergunta.value,
-a:a.value, b:b.value, c:c.value, d:d.value,
-correta:correta.value,
-tipo:tipo.value
-});
-alert("Questão salva!");
+let reader=new FileReader();
+let file=imagemQuestao.files[0];
+reader.onload=function(){
+questoes.push({tipo:tipoQuestao.value,pergunta:pergunta.value,texto:textoQuestao.value,img:reader.result,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
+localStorage.setItem("questoes",JSON.stringify(questoes));
+listarAdminQuestoes();
+};
+if(file) reader.readAsDataURL(file); else reader.onload();
 }
 
-function carregarQuestoes(){
-let atv = document.getElementById("listaAtividades");
-let sim = document.getElementById("listaSimulados");
-atv.innerHTML=""; sim.innerHTML="";
-
-questoes.forEach((q,i)=>{
-let html = `<div class="card question">
-<p><b>${q.pergunta}</b></p>
-<label><input type="radio" name="q${i}"> A) ${q.a}</label>
-<label><input type="radio" name="q${i}"> B) ${q.b}</label>
-<label><input type="radio" name="q${i}"> C) ${q.c}</label>
-<label><input type="radio" name="q${i}"> D) ${q.d}</label>
+function listarQuestoes(tipo,elemento){
+let div=document.getElementById(elemento);
+div.innerHTML="";
+questoes.filter(q=>q.tipo===tipo).forEach((q,i)=>{
+div.innerHTML+=`
+<div class="question">
+<p><b>${i+1}. ${q.pergunta}</b></p>
+${q.texto||""}
+${q.img?`<img src="${q.img}" width="150">`:""}
+<label class="alternativa"><input type="radio" name="${tipo}${i}">A) ${q.a}</label>
+<label class="alternativa"><input type="radio" name="${tipo}${i}">B) ${q.b}</label>
+<label class="alternativa"><input type="radio" name="${tipo}${i}">C) ${q.c}</label>
+<label class="alternativa"><input type="radio" name="${tipo}${i}">D) ${q.d}</label>
 </div>`;
-if(q.tipo==="Atividade") atv.innerHTML += html;
-else sim.innerHTML += html;
 });
+}
+
+function listarAdminQuestoes(){
+listaAdminQuestoes.innerHTML="";
+questoes.forEach((q,i)=>{
+listaAdminQuestoes.innerHTML+=`${q.pergunta}
+<button class="small-btn" onclick="questoes.splice(${i},1);localStorage.setItem('questoes',JSON.stringify(questoes));listarAdminQuestoes();">🗑</button><br>`;
+});
+}
+
+/* RESULTADOS */
+function listarResultados(){
+relatorios.innerHTML="";
+resultados.forEach(r=>{
+relatorios.innerHTML+=`<p>${r.nome||"Aluno"} → ✅ ${r.acertos} | ❌ ${r.erros}</p>`;
+});
+}
+
+function gerarPDF(){
+const { jsPDF } = window.jspdf;
+let doc=new jsPDF();
+doc.text("Relatório de Resultados",10,10);
+let y=20;
+resultados.forEach(r=>{
+doc.text(`${r.nome||"Aluno"} - Acertos: ${r.acertos} Erros: ${r.erros}`,10,y);
+y+=10;
+});
+doc.save("resultados.pdf");
 }
 </script>
+
 </body>
 </html>
