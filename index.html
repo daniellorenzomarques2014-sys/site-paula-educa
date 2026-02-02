@@ -1,189 +1,187 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Plataforma de Estudos</title>
-<link rel="icon" type="image/png" href="logo-escola.png">
+    <meta charset="UTF-8">
+    <title>PAULA EDUCA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Fonte estilo tribal -->
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo-escola.png">
 
-<style>
-body{
-    margin:0;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: linear-gradient(rgba(0,40,30,0.8), rgba(0,40,30,0.8)),
-                url('https://images.unsplash.com/photo-1502086223501-7ea6ecd79368') no-repeat center center fixed;
-    background-size: cover;
-    color:white;
-}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-/* TOPO */
-header{
-    background: rgba(0,0,0,0.6);
-    display:flex;
-    align-items:center;
-    padding:15px 25px;
-    gap:20px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.6);
-}
+        body {
+            background: url('fundo-amazonico.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
 
-header img{
-    height:90px;
-}
+        header {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0.55));
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid #2ecc71;
+        }
 
-.titulo{
-    font-family: 'Cinzel Decorative', serif;
-    font-size:32px;
-    letter-spacing:2px;
-}
+        header img {
+            width: 140px;
+            display: block;
+            margin: 0 auto 10px auto;
+        }
 
-.canoas{
-    font-size:22px;
-    margin-top:5px;
-}
+        header h1 {
+            font-size: 36px;
+            letter-spacing: 2px;
+        }
 
-/* MENU */
-nav{
-    background: rgba(0,0,0,0.7);
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:10px;
-    padding:10px;
-}
+        header p {
+            font-size: 16px;
+            margin-top: 5px;
+            color: #d4f5e9;
+        }
 
-nav button{
-    background: linear-gradient(145deg,#1b5e20,#2e7d32);
-    border:none;
-    color:white;
-    padding:10px 18px;
-    border-radius:25px;
-    cursor:pointer;
-    font-weight:bold;
-    transition:0.3s;
-}
+        nav {
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 10px 0;
+        }
 
-nav button:hover{
-    background:#66bb6a;
-    transform:scale(1.05);
-}
+        nav button {
+            background: linear-gradient(45deg, #27ae60, #1e8449);
+            border: none;
+            color: white;
+            padding: 10px 18px;
+            margin: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
 
-/* CONTEÚDO */
-section{
-    display:none;
-    padding:25px;
-    max-width:900px;
-    margin:auto;
-    background:rgba(0,0,0,0.55);
-    border-radius:15px;
-    margin-top:20px;
-}
+        nav button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, #2ecc71, #239b56);
+        }
 
-section.active{
-    display:block;
-}
+        section {
+            display: none;
+            padding: 20px;
+            max-width: 900px;
+            margin: 20px auto;
+            background: rgba(0,0,0,0.75);
+            border-radius: 10px;
+        }
 
-/* QUESTÕES */
-.questao{
-    margin-bottom:20px;
-    padding:15px;
-    background:rgba(255,255,255,0.08);
-    border-radius:10px;
-}
+        section.active {
+            display: block;
+        }
 
-.alternativas label{
-    display:block;
-    text-align:left;
-    margin:5px 0;
-    cursor:pointer;
-}
+        h2 {
+            margin-bottom: 10px;
+            border-bottom: 2px solid #2ecc71;
+            padding-bottom: 5px;
+        }
 
-.resultado{
-    margin-top:20px;
-    font-weight:bold;
-    font-size:18px;
-}
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 8px;
+        }
 
-footer{
-    text-align:center;
-    padding:15px;
-    margin-top:30px;
-    background:rgba(0,0,0,0.7);
-    font-size:14px;
-}
-</style>
+        .question label {
+            display: block;
+            margin: 4px 0;
+            cursor: pointer;
+        }
 
-<script>
-function abrir(secao){
-    document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-    document.getElementById(secao).classList.add("active");
-}
-
-function corrigir(){
-    let certas = 0;
-    if(document.querySelector('input[name="q1"]:checked')?.value === "B") certas++;
-    document.getElementById("resultado").innerHTML = "Você acertou " + certas + " de 1 questão.";
-}
-</script>
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.8);
+            margin-top: 30px;
+            font-size: 14px;
+        }
+    </style>
 </head>
-
 <body>
 
 <header>
     <img src="logo-escola.png" alt="Logotipo da Escola">
-    <div>
-        <div class="titulo">PLATAFORMA DE ESTUDOS</div>
-        <div class="canoas">🛶 🛶 🛶</div>
-    </div>
+    <h1>PAULA EDUCA</h1>
+    <p>Ensino • Qualidade • Cultura</p>
 </header>
 
 <nav>
-    <button onclick="abrir('inicio')">Início</button>
-    <button onclick="abrir('conteudos')">Conteúdos</button>
-    <button onclick="abrir('atividades')">Atividades</button>
-    <button onclick="abrir('simulados')">Simulados</button>
-    <button onclick="abrir('ade')">ADE</button>
-    <button onclick="abrir('saeb')">SAEB</button>
-    <button onclick="abrir('resultados')">Resultados</button>
+    <button onclick="mostrar('inicio')">Início</button>
+    <button onclick="mostrar('conteudos')">Conteúdos</button>
+    <button onclick="mostrar('atividades')">Atividades</button>
+    <button onclick="mostrar('simulados')">Simulados</button>
+    <button onclick="mostrar('ade')">ADE</button>
+    <button onclick="mostrar('saeb')">SAEB</button>
+    <button onclick="mostrar('resultados')">Resultados</button>
 </nav>
 
 <section id="inicio" class="active">
-    <h2>Bem-vindo!</h2>
-    <p>Plataforma de aprendizagem com identidade amazônica 🌿</p>
+    <h2>Bem-vindo à Plataforma</h2>
+    <p>Ambiente digital de aprendizagem da escola.</p>
 </section>
 
 <section id="conteudos">
     <h2>Conteúdos</h2>
-    <p>Material de estudo será adicionado aqui.</p>
+    <p>Os materiais em PDF cadastrados aparecerão aqui para download.</p>
 </section>
 
 <section id="atividades">
     <h2>Atividades</h2>
-
-    <div class="questao">
-        <p><b>1.</b> No bilhete, a mãe escreveu: "Estou muito contente com seu esforço na escola." A palavra contente indica que a mãe está:</p>
-        <div class="alternativas">
-            <label><input type="radio" name="q1" value="A"> Nervosa</label>
-            <label><input type="radio" name="q1" value="B"> Satisfeita</label>
-            <label><input type="radio" name="q1" value="C"> Surpresa</label>
-            <label><input type="radio" name="q1" value="D"> Preocupada</label>
-        </div>
-    </div>
-
-    <button onclick="corrigir()">Corrigir</button>
-    <div id="resultado" class="resultado"></div>
+    <div id="listaAtividades"></div>
 </section>
 
-<section id="simulados"><h2>Simulados</h2><p>Simulados aparecerão aqui.</p></section>
-<section id="ade"><h2>Avaliação ADE</h2><p>Conteúdo ADE.</p></section>
-<section id="saeb"><h2>Avaliação SAEB</h2><p>Conteúdo SAEB.</p></section>
-<section id="resultados"><h2>Resultados</h2><p>Seus resultados aparecerão aqui.</p></section>
+<section id="simulados">
+    <h2>Simulados</h2>
+    <div id="listaSimulados"></div>
+</section>
+
+<section id="ade">
+    <h2>Avaliação ADE</h2>
+    <p>Espaço destinado às atividades preparatórias ADE.</p>
+</section>
+
+<section id="saeb">
+    <h2>Avaliação SAEB</h2>
+    <p>Espaço destinado às atividades preparatórias SAEB.</p>
+</section>
+
+<section id="resultados">
+    <h2>Resultados</h2>
+    <p>Os resultados dos alunos aparecerão aqui.</p>
+</section>
 
 <footer>
-Produzido pelo Professor Ely
+    Plataforma Educacional • Produzido pelo Professor Ely
 </footer>
 
-</body>
-</html>
+<script>
+    function mostrar(secao) {
+        document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+        document.getElementById(secao).classList.add("active");
+    }
+
+    // EXEMPLO de questão aparecendo em Atividades
+    const atividades = [
+        {
+            pergunta: "A palavra 'contente' indica que a mãe está:",
+            opcoes: ["Nervosa", "Satisfeita", "Surpresa", "Preocupada"]
+        }
+    ];
+
+    function carregarQuestoes(lista, destino) {
+        const div = document.getElementById(destino
