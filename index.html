@@ -7,68 +7,104 @@
 
 <style>
 body{
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
     margin:0;
-    background:#f4f6f9;
+    background: linear-gradient(rgba(0,40,30,0.75), rgba(0,40,30,0.75)),
+                url('https://images.unsplash.com/photo-1502082553048-f009c37129b9') no-repeat center center fixed;
+    background-size: cover;
+    color:#fff;
 }
 
+/* ===== TOPO ===== */
 header{
-    background:#0d47a1;
-    color:white;
-    padding:10px;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(6px);
+    padding:15px 25px;
     display:flex;
     align-items:center;
-    gap:15px;
+    gap:20px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.4);
 }
 
 header img{
-    height:60px;
+    height:90px; /* LOGOTIPO MAIOR */
 }
 
+header h2{
+    margin:0;
+    font-size:26px;
+    letter-spacing:1px;
+}
+
+/* ===== MENU ===== */
 nav{
-    background:#1565c0;
-    padding:10px;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
+    padding:12px;
     display:flex;
     gap:10px;
     flex-wrap:wrap;
+    justify-content:center;
+    box-shadow:0 4px 8px rgba(0,0,0,0.3);
 }
 
 nav button{
-    background:white;
+    background: linear-gradient(135deg,#00c853,#009688);
     border:none;
-    padding:8px 12px;
-    cursor:pointer;
+    color:white;
+    padding:10px 16px;
+    border-radius:25px;
     font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 4px 6px rgba(0,0,0,0.3);
 }
 
+nav button:hover{
+    transform:translateY(-2px);
+    background: linear-gradient(135deg,#00e676,#00bfa5);
+}
+
+/* ===== CONTEÚDO ===== */
 section{
     display:none;
-    padding:20px;
+    padding:25px;
+    margin:20px;
+    background: rgba(0,0,0,0.45);
+    border-radius:12px;
+    backdrop-filter: blur(8px);
+    box-shadow:0 6px 12px rgba(0,0,0,0.4);
 }
 
 section.ativo{
     display:block;
 }
 
-/* ===== ALTERNATIVAS ALINHADAS CORRETAMENTE ===== */
+h3{
+    margin-top:0;
+    border-bottom:2px solid #00e676;
+    padding-bottom:6px;
+}
+
+/* ===== QUESTÕES ===== */
+.questao{
+    background: rgba(255,255,255,0.1);
+    padding:15px;
+    border-radius:8px;
+    margin-bottom:15px;
+}
+
+/* ===== ALTERNATIVAS CORRETAS ===== */
 .alternativa{
     display:flex;
     align-items:center;
     gap:6px;
-    margin:2px 0;
+    margin:3px 0;
     cursor:pointer;
-    justify-content:flex-start;
 }
 
-.alternativa input[type="radio"]{
+.alternativa input{
     margin:0;
-}
-
-.questao{
-    background:white;
-    padding:15px;
-    margin-bottom:15px;
-    border-radius:5px;
 }
 </style>
 </head>
@@ -91,7 +127,7 @@ section.ativo{
 
 <section id="inicio" class="ativo">
     <h3>Bem-vindo!</h3>
-    Plataforma educacional interativa.
+    Plataforma educacional interativa com temática amazônica 🌿
 </section>
 
 <section id="conteudos">
@@ -99,30 +135,11 @@ section.ativo{
     <input type="file" accept="application/pdf">
 </section>
 
-<section id="atividades">
-    <h3>Atividades</h3>
-    <div id="listaAtividades"></div>
-</section>
-
-<section id="simulados">
-    <h3>Simulados</h3>
-    <div id="listaSimulados"></div>
-</section>
-
-<section id="ade">
-    <h3>Avaliação ADE</h3>
-    <div id="listaADE"></div>
-</section>
-
-<section id="saeb">
-    <h3>Avaliação SAEB</h3>
-    <div id="listaSAEB"></div>
-</section>
-
-<section id="resultados">
-    <h3>Resultados</h3>
-    <div id="resultadoFinal"></div>
-</section>
+<section id="atividades"><h3>Atividades</h3><div id="listaAtividades"></div></section>
+<section id="simulados"><h3>Simulados</h3><div id="listaSimulados"></div></section>
+<section id="ade"><h3>Avaliação ADE</h3><div id="listaADE"></div></section>
+<section id="saeb"><h3>Avaliação SAEB</h3><div id="listaSAEB"></div></section>
+<section id="resultados"><h3>Resultados</h3><div id="resultadoFinal"></div></section>
 
 <script>
 function abrir(id){
@@ -135,68 +152,26 @@ function abrir(id){
     if(id==="saeb") carregarQuestoes("SAEB","listaSAEB");
 }
 
-let questoes = [
-{
-tipo:"Atividade",
-pergunta:"A palavra infeliz indica ideia de:",
-a:"intensidade",
-b:"negação",
-c:"repetição",
-d:"lugar",
-correta:"B"
-},
-{
-tipo:"Simulado",
-pergunta:"Qual é o resultado de 5 + 3?",
-a:"6",
-b:"7",
-c:"8",
-d:"9",
-correta:"C"
-},
-{
-tipo:"ADE",
-pergunta:"O Brasil pertence a qual continente?",
-a:"África",
-b:"Europa",
-c:"América",
-d:"Ásia",
-correta:"C"
-},
-{
-tipo:"SAEB",
-pergunta:"Qual é o plural de 'papel'?",
-a:"papeis",
-b:"papéis",
-c:"papels",
-d:"papelzes",
-correta:"B"
-}
+let questoes=[
+{tipo:"Atividade", pergunta:"A palavra infeliz indica ideia de:", a:"intensidade", b:"negação", c:"repetição", d:"lugar"},
+{tipo:"Simulado", pergunta:"Qual é o resultado de 5 + 3?", a:"6", b:"7", c:"8", d:"9"},
+{tipo:"ADE", pergunta:"O Brasil pertence a qual continente?", a:"África", b:"Europa", c:"América", d:"Ásia"},
+{tipo:"SAEB", pergunta:"Qual é o plural de 'papel'?", a:"papeis", b:"papéis", c:"papels", d:"papelzes"}
 ];
 
 function carregarQuestoes(tipo, destino){
     let area=document.getElementById(destino);
     area.innerHTML="";
-
     let filtradas=questoes.filter(q=>q.tipo===tipo);
 
     filtradas.forEach((q,i)=>{
         area.innerHTML+=`
         <div class="questao">
             <p><b>${i+1}. ${q.pergunta}</b></p>
-
-            <label class="alternativa">
-                <input type="radio" name="${destino}${i}" value="A"> A) ${q.a}
-            </label>
-            <label class="alternativa">
-                <input type="radio" name="${destino}${i}" value="B"> B) ${q.b}
-            </label>
-            <label class="alternativa">
-                <input type="radio" name="${destino}${i}" value="C"> C) ${q.c}
-            </label>
-            <label class="alternativa">
-                <input type="radio" name="${destino}${i}" value="D"> D) ${q.d}
-            </label>
+            <label class="alternativa"><input type="radio" name="${destino}${i}"> A) ${q.a}</label>
+            <label class="alternativa"><input type="radio" name="${destino}${i}"> B) ${q.b}</label>
+            <label class="alternativa"><input type="radio" name="${destino}${i}"> C) ${q.c}</label>
+            <label class="alternativa"><input type="radio" name="${destino}${i}"> D) ${q.d}</label>
         </div>`;
     });
 }
