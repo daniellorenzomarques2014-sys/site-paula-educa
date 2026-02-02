@@ -3,136 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>PAULA EDUCA</title>
 
-<!-- FAVICON -->
 <link rel="icon" type="image/png" href="logo-escola.png">
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:url('fundo-amazonico.png') no-repeat center center fixed;
-background-size:cover;
-}
-
-/* CABEÇALHO */
-header{
-display:flex;
-align-items:center;
-gap:20px;
-padding:15px 25px;
-background:linear-gradient(90deg,#0d47a1,#1976d2);
-color:white;
-}
-
-.logo{
-height:100px;
-}
-
-/* MENU */
-nav{
-background:#1565c0;
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-box-shadow:0 3px 6px rgba(0,0,0,0.2);
-}
-
-nav a{
-color:white;
-padding:14px 18px;
-text-decoration:none;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-}
-
-nav a:hover{
-background:#0d47a1;
-}
-
-/* CONTEÚDO */
-.container{
-max-width:1100px;
-margin:25px auto;
-padding:20px;
-background:white;
-border-radius:8px;
-box-shadow:0 4px 10px rgba(0,0,0,0.15);
-}
-
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:url('fundo-amazonico.png') center/cover fixed}
+header{display:flex;align-items:center;gap:20px;padding:15px 25px;background:linear-gradient(90deg,#0d47a1,#1976d2);color:white}
+.logo{height:100px}
+nav{background:#1565c0;display:flex;justify-content:center;flex-wrap:wrap}
+nav a{color:white;padding:14px 18px;text-decoration:none;font-weight:bold;cursor:pointer}
+nav a:hover{background:#0d47a1}
+.container{max-width:1100px;margin:25px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.15)}
 .hidden{display:none}
-
-.admin-btn{
-position:fixed;
-right:15px;
-top:90px;
-background:#ff9800;
-color:white;
-padding:10px 14px;
-border-radius:6px;
-cursor:pointer;
-font-weight:bold;
-}
-
-input,select,textarea{
-width:100%;
-padding:8px;
-margin:6px 0;
-border-radius:4px;
-border:1px solid #ccc;
-}
-
-button{
-padding:8px 12px;
-margin-top:8px;
-border:none;
-border-radius:4px;
-background:#1976d2;
-color:white;
-cursor:pointer;
-}
-
-button:hover{opacity:0.9}
-
-.question{
-border:1px solid #ddd;
-padding:12px;
-border-radius:6px;
-margin-bottom:15px;
-}
-
-/* 🔥 ALTERNATIVAS COLADAS À ESQUERDA */
-.alternativa{
-display:flex;
-align-items:center;
-gap:6px;
-margin:2px 0;
-cursor:pointer;
-}
-
-.alternativa input{
-margin:0;
-width:auto;
-}
-
-footer{
-text-align:center;
-padding:15px;
-background:#0d47a1;
-color:white;
-margin-top:40px;
-}
-.small-btn{
-background:#777;
-margin-left:5px;
-padding:4px 8px;
-font-size:12px
-}
+.admin-btn{position:fixed;right:15px;top:90px;background:#ff9800;color:white;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:bold}
+input,select,textarea{width:100%;padding:8px;margin:6px 0;border-radius:4px;border:1px solid #ccc}
+button{padding:8px 12px;margin-top:8px;border:none;border-radius:4px;background:#1976d2;color:white;cursor:pointer}
+.question{border:1px solid #ddd;padding:12px;border-radius:6px;margin-bottom:15px}
+.alternativa{display:flex;align-items:center;gap:6px;margin:2px 0;cursor:pointer}
+.alternativa input{margin:0;width:auto}
+footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
+.small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
+.filtro-serie{margin-bottom:10px;font-weight:bold}
 </style>
 </head>
 
@@ -158,30 +51,58 @@ font-size:12px
 
 <div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
 
-<div class="container" id="inicio">
-<h2 style="text-align:center">Bem-vindo à Plataforma Paula Educa</h2>
+<div class="container" id="inicio"><h2>Bem-vindo à Plataforma Paula Educa</h2></div>
+
+<div class="container hidden" id="conteudos">
+<h2>Conteúdos</h2>
+<select id="filtroConteudo" onchange="listarConteudos()">
+<option value="">Todas as Séries</option>
+<option>Educação Infantil</option>
+<option>Séries Iniciais</option>
+<option>Fundamental II</option>
+</select>
+<div id="listaConteudos"></div>
 </div>
 
-<div class="container hidden" id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
-<div class="container hidden" id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></div>
-<div class="container hidden" id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></div>
+<div class="container hidden" id="atividades">
+<h2>Atividades</h2>
+<select id="filtroAtividade" onchange="listarQuestoes('atividade','listaAtividades','filtroAtividade')">
+<option value="">Todas as Séries</option>
+<option>Educação Infantil</option>
+<option>Séries Iniciais</option>
+<option>Fundamental II</option>
+</select>
+<div id="listaAtividades"></div>
+</div>
+
+<div class="container hidden" id="simulados">
+<h2>Simulados</h2>
+<select id="filtroSimulado" onchange="listarQuestoes('simulado','listaSimulados','filtroSimulado')">
+<option value="">Todas as Séries</option>
+<option>Educação Infantil</option>
+<option>Séries Iniciais</option>
+<option>Fundamental II</option>
+</select>
+<div id="listaSimulados"></div>
+</div>
+
 <div class="container hidden" id="ade"><h2>Avaliação ADE</h2><div id="listaADE"></div></div>
 <div class="container hidden" id="saeb"><h2>Avaliação SAEB</h2><div id="listaSAEB"></div></div>
+<div class="container hidden" id="resultados"><h2>Resultados</h2><button onclick="gerarPDF()">📊 Gerar PDF</button></div>
 
-<div class="container hidden" id="resultados">
-<h2>Resultados</h2>
-<button onclick="gerarPDF()">📊 Gerar PDF</button>
-<div id="relatorios"></div>
-</div>
-
-<!-- PAINEL ADMIN -->
+<!-- ADMIN -->
 <div class="container hidden" id="adminPanel">
 <h2>Painel do Professor</h2>
 
 <h3>Cadastrar Conteúdo</h3>
 <input type="text" id="tituloConteudo" placeholder="Título">
-<input type="file" id="arquivoConteudo">
-<button onclick="salvarConteudo()">Salvar</button>
+<select id="serieConteudo">
+<option>Educação Infantil</option>
+<option>Séries Iniciais</option>
+<option>Fundamental II</option>
+</select>
+<input type="file" id="arquivoConteudo" accept=".pdf,image/*,video/*">
+<button onclick="salvarConteudo()">Salvar Conteúdo</button>
 <div id="adminConteudos"></div>
 
 <hr>
@@ -190,20 +111,27 @@ font-size:12px
 <select id="tipoQuestao">
 <option value="atividade">Atividade</option>
 <option value="simulado">Simulado</option>
-<option value="ade">ADE</option>
-<option value="saeb">SAEB</option>
 </select>
+
+<select id="serieQuestao">
+<option>Educação Infantil</option>
+<option>Séries Iniciais</option>
+<option>Fundamental II</option>
+</select>
+
 <input type="text" id="pergunta" placeholder="Pergunta">
 <input type="text" id="a" placeholder="Alternativa A">
 <input type="text" id="b" placeholder="Alternativa B">
 <input type="text" id="c" placeholder="Alternativa C">
 <input type="text" id="d" placeholder="Alternativa D">
+
 <select id="correta">
 <option value="A">Correta A</option>
 <option value="B">Correta B</option>
 <option value="C">Correta C</option>
 <option value="D">Correta D</option>
 </select>
+
 <button onclick="salvarQuestao()">Salvar Questão</button>
 <div id="listaAdminQuestoes"></div>
 </div>
@@ -218,23 +146,20 @@ function showSection(id){
 document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
 document.getElementById(id).classList.remove("hidden");
 if(id==="conteudos") listarConteudos();
-if(id==="atividades") listarQuestoes("atividade","listaAtividades");
-if(id==="simulados") listarQuestoes("simulado","listaSimulados");
-if(id==="ade") listarQuestoes("ade","listaADE");
-if(id==="saeb") listarQuestoes("saeb","listaSAEB");
+if(id==="atividades") listarQuestoes("atividade","listaAtividades","filtroAtividade");
+if(id==="simulados") listarQuestoes("simulado","listaSimulados","filtroSimulado");
 }
 
 function abrirAdmin(){
 let senha=prompt("Senha do administrador:");
 if(senha==="1234"){showSection("adminPanel");listarAdmin();}
-else alert("Senha incorreta");
 }
 
 function salvarConteudo(){
 let file=arquivoConteudo.files[0];
 let reader=new FileReader();
 reader.onload=function(){
-conteudos.push({titulo:tituloConteudo.value,arquivo:reader.result});
+conteudos.push({titulo:tituloConteudo.value,serie:serieConteudo.value,arquivo:reader.result,tipo:file.type});
 localStorage.setItem("conteudos",JSON.stringify(conteudos));
 listarConteudos();listarAdmin();
 }
@@ -242,22 +167,25 @@ reader.readAsDataURL(file);
 }
 
 function listarConteudos(){
+let filtro=filtroConteudo.value;
 listaConteudos.innerHTML="";
-conteudos.forEach((c,i)=>{
-listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" target="_blank">Abrir PDF</a></p>`;
+conteudos.filter(c=>!filtro||c.serie===filtro).forEach((c,i)=>{
+let link=`<a href="${c.arquivo}" target="_blank">Abrir</a>`;
+listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> (${c.serie}) - ${link}</p>`;
 });
 }
 
 function salvarQuestao(){
-questoes.push({tipo:tipoQuestao.value,pergunta:pergunta.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
+questoes.push({tipo:tipoQuestao.value,serie:serieQuestao.value,pergunta:pergunta.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
 localStorage.setItem("questoes",JSON.stringify(questoes));
 listarAdmin();
 }
 
-function listarQuestoes(tipo,elemento){
+function listarQuestoes(tipo,elemento,filtroId){
+let filtro=document.getElementById(filtroId).value;
 let div=document.getElementById(elemento);
 div.innerHTML="";
-questoes.filter(q=>q.tipo===tipo).forEach((q,i)=>{
+questoes.filter(q=>q.tipo===tipo && (!filtro||q.serie===filtro)).forEach((q,i)=>{
 div.innerHTML+=`
 <div class="question">
 <p><b>${i+1}. ${q.pergunta}</b></p>
@@ -272,14 +200,12 @@ div.innerHTML+=`
 function listarAdmin(){
 adminConteudos.innerHTML="<h3>Conteúdos</h3>";
 conteudos.forEach((c,i)=>{
-adminConteudos.innerHTML+=`${c.titulo}
-<button class='small-btn' onclick='conteudos.splice(${i},1);localStorage.setItem("conteudos",JSON.stringify(conteudos));listarAdmin();listarConteudos();'>🗑</button><br>`;
+adminConteudos.innerHTML+=`${c.titulo} (${c.serie}) <button class='small-btn' onclick='conteudos.splice(${i},1);localStorage.setItem("conteudos",JSON.stringify(conteudos));listarAdmin();'>🗑</button><br>`;
 });
 
 listaAdminQuestoes.innerHTML="<h3>Questões</h3>";
 questoes.forEach((q,i)=>{
-listaAdminQuestoes.innerHTML+=`${q.pergunta}
-<button class='small-btn' onclick='questoes.splice(${i},1);localStorage.setItem("questoes",JSON.stringify(questoes));listarAdmin();'>🗑</button><br>`;
+listaAdminQuestoes.innerHTML+=`${q.pergunta} (${q.tipo} - ${q.serie}) <button class='small-btn' onclick='questoes.splice(${i},1);localStorage.setItem("questoes",JSON.stringify(questoes));listarAdmin();'>🗑</button><br>`;
 });
 }
 
