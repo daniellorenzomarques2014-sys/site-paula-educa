@@ -15,7 +15,6 @@ background:url('fundo-amazonico.jpg.png') no-repeat center center fixed;
 background-size:cover;
 }
 
-/* TOPO */
 header{
 display:flex;
 align-items:center;
@@ -26,7 +25,6 @@ color:white;
 }
 .logo{height:120px}
 
-/* MENU */
 nav{
 background:#0d47a1;
 display:flex;
@@ -43,7 +41,6 @@ cursor:pointer;
 }
 nav a:hover{background:#1565c0}
 
-/* CONTEÚDO */
 .container{
 max-width:1100px;
 margin:25px auto;
@@ -85,7 +82,6 @@ cursor:pointer
 }
 button:hover{opacity:0.9}
 
-/* QUESTÕES */
 .question{
 border:1px solid #ddd;
 padding:12px;
@@ -93,7 +89,6 @@ border-radius:6px;
 margin-bottom:15px
 }
 
-/* BOLINHAS COLADAS */
 .alternativa{
 display:flex;
 align-items:center;
@@ -103,7 +98,6 @@ cursor:pointer;
 }
 .alternativa input{margin:0}
 
-/* RODAPÉ */
 footer{
 text-align:center;
 padding:15px;
@@ -111,6 +105,7 @@ background:#0d47a1;
 color:white;
 margin-top:40px
 }
+
 label{font-weight:bold;margin-top:8px;display:block}
 </style>
 </head>
@@ -174,32 +169,51 @@ label{font-weight:bold;margin-top:8px;display:block}
 <h2>Painel do Professor</h2>
 
 <h3>Cadastrar Conteúdo</h3>
-<input type="text" id="tituloConteudo" placeholder="Título">
+<label>Título:</label>
+<input type="text" id="tituloConteudo">
+
+<label>Série:</label>
 <select id="serieConteudo"></select>
+
+<label>Disciplina:</label>
 <select id="disciplinaConteudo"></select>
+
+<label>Arquivo (PDF, imagem ou vídeo):</label>
 <input type="file" id="arquivoConteudo" accept=".pdf,image/*,video/*">
 <button onclick="salvarConteudo()">Salvar Conteúdo</button>
 
 <hr>
 
 <h3>Cadastrar Questão</h3>
+
+<label>Tipo:</label>
 <select id="tipoQuestao">
 <option value="atividade">Atividade</option>
 <option value="simulado">Simulado</option>
 </select>
+
+<label>Série:</label>
 <select id="serieQuestao"></select>
+
+<label>Disciplina:</label>
 <select id="disciplinaQuestao"></select>
-<input type="text" id="pergunta" placeholder="Pergunta">
-<input type="text" id="a" placeholder="Alternativa A">
-<input type="text" id="b" placeholder="Alternativa B">
-<input type="text" id="c" placeholder="Alternativa C">
-<input type="text" id="d" placeholder="Alternativa D">
+
+<label>Pergunta:</label>
+<input type="text" id="pergunta">
+
+<label>Alternativa A:</label><input type="text" id="a">
+<label>Alternativa B:</label><input type="text" id="b">
+<label>Alternativa C:</label><input type="text" id="c">
+<label>Alternativa D:</label><input type="text" id="d">
+
+<label>Resposta Correta:</label>
 <select id="correta">
-<option value="A">Correta A</option>
-<option value="B">Correta B</option>
-<option value="C">Correta C</option>
-<option value="D">Correta D</option>
+<option value="A">A</option>
+<option value="B">B</option>
+<option value="C">C</option>
+<option value="D">D</option>
 </select>
+
 <button onclick="salvarQuestao()">Salvar Questão</button>
 
 <h3>Questões Cadastradas</h3>
@@ -271,24 +285,6 @@ function salvarQuestao(){
 questoes.push({tipo:tipoQuestao.value,serie:serieQuestao.value,disciplina:disciplinaQuestao.value,pergunta:pergunta.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
 localStorage.setItem("questoes",JSON.stringify(questoes));
 alert("Questão salva!");
-}
-
-function listarQuestoes(tipo,elemento){
-let serie=document.getElementById("filtroSerie"+(tipo==="atividade"?"Atividade":"Simulado")).value;
-let disc=document.getElementById("filtroDisciplina"+(tipo==="atividade"?"Atividade":"Simulado")).value;
-let div=document.getElementById(elemento);
-div.innerHTML="";
-questoes.filter(q=>q.tipo===tipo&&(!serie||q.serie===serie)&&(!disc||q.disciplina===disc))
-.forEach((q,i)=>{
-div.innerHTML+=`
-<div class="question">
-<p><b>${q.pergunta}</b></p>
-<label class="alternativa"><input type="radio" name="q${i}"> A) ${q.a}</label>
-<label class="alternativa"><input type="radio" name="q${i}"> B) ${q.b}</label>
-<label class="alternativa"><input type="radio" name="q${i}"> C) ${q.c}</label>
-<label class="alternativa"><input type="radio" name="q${i}"> D) ${q.d}</label>
-</div>`;
-});
 }
 </script>
 
