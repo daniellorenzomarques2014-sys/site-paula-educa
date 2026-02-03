@@ -21,10 +21,10 @@ display:flex;
 align-items:center;
 gap:15px;
 padding:15px 25px;
-background:rgba(0,0,0,0.7);
+background:rgba(0,0,0,0.75);
 color:white;
 }
-.logo{height:110px}
+.logo{height:120px}
 
 /* MENU */
 nav{
@@ -40,9 +40,6 @@ padding:14px 18px;
 text-decoration:none;
 font-weight:bold;
 cursor:pointer;
-display:flex;
-align-items:center;
-gap:6px;
 }
 nav a:hover{background:#1565c0}
 
@@ -96,17 +93,15 @@ border-radius:6px;
 margin-bottom:15px
 }
 
-/* BOLINHAS COLADAS NAS ALTERNATIVAS */
+/* BOLINHAS COLADAS */
 .alternativa{
 display:flex;
 align-items:center;
-gap:6px;
+gap:5px;
 margin:2px 0;
 cursor:pointer;
 }
-.alternativa input{
-margin:0;
-}
+.alternativa input{margin:0}
 
 /* RODAPÉ */
 footer{
@@ -116,9 +111,7 @@ background:#0d47a1;
 color:white;
 margin-top:40px
 }
-
 label{font-weight:bold;margin-top:8px;display:block}
-.small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
 </style>
 </head>
 <body>
@@ -132,13 +125,13 @@ label{font-weight:bold;margin-top:8px;display:block}
 </header>
 
 <nav>
-<a onclick="showSection('inicio')">🏠 Início</a>
-<a onclick="showSection('conteudos')">📚 Conteúdos</a>
-<a onclick="showSection('atividades')">📝 Atividades</a>
-<a onclick="showSection('simulados')">🎯 Simulados</a>
-<a onclick="showSection('ade')">📊 ADE</a>
-<a onclick="showSection('saeb')">📈 SAEB</a>
-<a onclick="showSection('resultados')">🏆 Resultados</a>
+<a onclick="showSection('inicio')">Início</a>
+<a onclick="showSection('conteudos')">Conteúdos</a>
+<a onclick="showSection('atividades')">Atividades</a>
+<a onclick="showSection('simulados')">Simulados</a>
+<a onclick="showSection('ade')">ADE</a>
+<a onclick="showSection('saeb')">SAEB</a>
+<a onclick="showSection('resultados')">Resultados</a>
 </nav>
 
 <div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
@@ -148,13 +141,8 @@ label{font-weight:bold;margin-top:8px;display:block}
 <!-- CONTEÚDOS -->
 <div class="container hidden" id="conteudos">
 <h2>Conteúdos</h2>
-
-<label>Série:</label>
-<select id="filtroSerieConteudo"></select>
-
-<label>Disciplina:</label>
-<select id="filtroDisciplinaConteudo"></select>
-
+<label>Série:</label><select id="filtroSerieConteudo"></select>
+<label>Disciplina:</label><select id="filtroDisciplinaConteudo"></select>
 <button onclick="listarConteudos()">Carregar</button>
 <div id="listaConteudos"></div>
 </div>
@@ -162,13 +150,8 @@ label{font-weight:bold;margin-top:8px;display:block}
 <!-- ATIVIDADES -->
 <div class="container hidden" id="atividades">
 <h2>Atividades</h2>
-
-<label>Série:</label>
-<select id="filtroSerieAtividade"></select>
-
-<label>Disciplina:</label>
-<select id="filtroDisciplinaAtividade"></select>
-
+<label>Série:</label><select id="filtroSerieAtividade"></select>
+<label>Disciplina:</label><select id="filtroDisciplinaAtividade"></select>
 <button onclick="listarQuestoes('atividade','listaAtividades')">Carregar</button>
 <div id="listaAtividades"></div>
 </div>
@@ -176,13 +159,8 @@ label{font-weight:bold;margin-top:8px;display:block}
 <!-- SIMULADOS -->
 <div class="container hidden" id="simulados">
 <h2>Simulados</h2>
-
-<label>Série:</label>
-<select id="filtroSerieSimulado"></select>
-
-<label>Disciplina:</label>
-<select id="filtroDisciplinaSimulado"></select>
-
+<label>Série:</label><select id="filtroSerieSimulado"></select>
+<label>Disciplina:</label><select id="filtroDisciplinaSimulado"></select>
 <button onclick="listarQuestoes('simulado','listaSimulados')">Carregar</button>
 <div id="listaSimulados"></div>
 </div>
@@ -199,7 +177,7 @@ label{font-weight:bold;margin-top:8px;display:block}
 <input type="text" id="tituloConteudo" placeholder="Título">
 <select id="serieConteudo"></select>
 <select id="disciplinaConteudo"></select>
-<input type="file" id="arquivoConteudo">
+<input type="file" id="arquivoConteudo" accept=".pdf,image/*,video/*">
 <button onclick="salvarConteudo()">Salvar Conteúdo</button>
 
 <hr>
@@ -231,8 +209,14 @@ label{font-weight:bold;margin-top:8px;display:block}
 <footer>Portal Educacional © 2026</footer>
 
 <script>
-const series=["Educação Infantil","1º ao 5º Ano","6º ao 9º Ano"];
-const disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Ciências","Religião","Artes","Inglês","Educação Física"];
+const series=[
+"Educação Infantil - 1º Período",
+"Educação Infantil - 2º Período",
+"1º Ano","2º Ano","3º Ano","4º Ano","5º Ano",
+"6º Ano","7º Ano","8º Ano","9º Ano"
+];
+
+const disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Ciências","Religião","Artes","Língua Inglesa","Educação Física"];
 
 function preencherSelect(id,lista){
 let s=document.getElementById(id);
@@ -262,7 +246,7 @@ let reader=new FileReader();
 reader.onload=function(){
 conteudos.push({titulo:tituloConteudo.value,serie:serieConteudo.value,disciplina:disciplinaConteudo.value,arquivo:reader.result});
 localStorage.setItem("conteudos",JSON.stringify(conteudos));
-alert("Salvo!");
+alert("Conteúdo salvo!");
 }
 reader.readAsDataURL(file);
 }
@@ -272,7 +256,15 @@ let serie=filtroSerieConteudo.value;
 let disc=filtroDisciplinaConteudo.value;
 listaConteudos.innerHTML="";
 conteudos.filter(c=>(!serie||c.serie===serie)&&(!disc||c.disciplina===disc))
-.forEach(c=>listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" target="_blank">Abrir</a></p>`);
+.forEach(c=>{
+if(c.arquivo.includes("application/pdf")){
+listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" target="_blank">📘 Abrir PDF</a></p>`;
+}else if(c.arquivo.includes("video")){
+listaConteudos.innerHTML+=`<p><b>${c.titulo}</b><br><video src="${c.arquivo}" controls width="300"></video></p>`;
+}else{
+listaConteudos.innerHTML+=`<p><b>${c.titulo}</b><br><img src="${c.arquivo}" width="200"></p>`;
+}
+});
 }
 
 function salvarQuestao(){
