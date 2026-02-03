@@ -3,269 +3,232 @@
 <head>
 <meta charset="UTF-8">
 <title>PAULA EDUCA</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- FONTE MODERNA -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-
 <style>
 body{
-margin:0;
-font-family:'Poppins', sans-serif;
-background:url('fundo-amazonico.jpg') no-repeat center center fixed;
-background-size:cover;
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:#f4efe6;
+  background-image:url('https://www.transparenttextures.com/patterns/az-subtle.png');
 }
 
-/* ===== TOPO ===== */
+/* CABEÇALHO TRIBAL */
 header{
-background:linear-gradient(90deg,#0a3d2e,#0f5c45,#0a3d2e);
-color:white;
-padding:20px;
-text-align:center;
-border-bottom:8px solid #c49b3d;
-box-shadow:0 4px 10px rgba(0,0,0,0.4);
+  background:#1b5e20;
+  background-image:url('https://www.transparenttextures.com/patterns/black-linen.png');
+  color:white;
+  padding:20px;
+  text-align:center;
+  font-size:42px;
+  font-weight:800;
+  letter-spacing:3px;
 }
 
-header img{
-height:110px;
-display:block;
-margin:0 auto 10px;
-}
-
-header h1{
-margin:0;
-font-size:48px;
-font-weight:800;
-letter-spacing:4px;
-text-transform:uppercase;
-background:linear-gradient(45deg,#ffd700,#ffffff);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-}
-
-header p{
-margin:5px 0 0;
-font-size:16px;
-letter-spacing:2px;
-}
-
-/* ===== MENU ===== */
+/* MENU */
 nav{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-background:#083c30;
-padding:8px;
-border-bottom:4px solid #c49b3d;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  background:#2e7d32;
+  padding:10px;
 }
-
 nav button{
-background:linear-gradient(145deg,#0f5c45,#14795c);
-color:white;
-border:none;
-padding:12px 18px;
-margin:6px;
-cursor:pointer;
-border-radius:30px;
-font-weight:600;
-transition:0.3s;
-box-shadow:0 4px 6px rgba(0,0,0,0.3);
+  background:white;
+  border:none;
+  padding:10px 18px;
+  border-radius:20px;
+  font-weight:600;
+  cursor:pointer;
 }
-
 nav button:hover{
-transform:translateY(-3px);
-background:linear-gradient(145deg,#1c8a6a,#22a07a);
+  background:#c8e6c9;
 }
 
-/* ===== SEÇÕES ===== */
+/* SEÇÕES */
 section{
-display:none;
-padding:25px;
-background:rgba(255,255,255,0.95);
-margin:20px;
-border-radius:14px;
-box-shadow:0 8px 20px rgba(0,0,0,0.25);
+  display:none;
+  padding:20px;
 }
+.active{display:block;}
 
-h2{
-color:#0f5c45;
-border-left:6px solid #c49b3d;
-padding-left:10px;
+/* PAINEL PROFESSOR */
+#loginBox{
+  text-align:center;
+  margin-top:40px;
 }
-
-/* ===== CAMPOS ===== */
+#painelProfessor{
+  display:none;
+  margin-top:20px;
+  padding:15px;
+  border-radius:10px;
+  background:#ffffffcc;
+}
 input, select, textarea{
-width:100%;
-padding:10px;
-margin:6px 0 12px;
-border-radius:8px;
-border:1px solid #bbb;
-font-family:'Poppins';
+  padding:8px;
+  margin:5px;
+  border-radius:5px;
+  border:1px solid #ccc;
 }
-
 button.salvar{
-background:#0f5c45;
-color:white;
-border:none;
-padding:12px;
-border-radius:10px;
-cursor:pointer;
-font-weight:600;
-transition:0.3s;
+  background:#2e7d32;
+  color:white;
+  border:none;
+  padding:8px 15px;
+  border-radius:8px;
+  cursor:pointer;
 }
 
-button.salvar:hover{
-background:#15916c;
-}
-
-.questao{
-background:#e8f5e9;
-padding:12px;
-margin:10px 0;
-border-radius:10px;
-border-left:5px solid #0f5c45;
-}
-
-.admin-login{
-text-align:center;
-margin-top:40px;
-}
-
-footer{
-text-align:center;
-color:white;
-padding:15px;
-background:#0a3d2e;
-margin-top:40px;
+/* CONTEÚDO INÍCIO */
+#inicioConteudo img, video{
+  max-width:200px;
+  display:block;
+  margin:10px 0;
+  border-radius:8px;
 }
 </style>
 </head>
-
 <body>
 
-<header>
-<img src="logo-escola.png">
-<h1>PAULA EDUCA</h1>
-<p>Ensino • Qualidade • Cultura</p>
-</header>
+<header>PAULA EDUCA</header>
 
 <nav>
-<button onclick="abrir('inicio')">Início</button>
-<button onclick="abrir('conteudos')">Conteúdos</button>
-<button onclick="abrir('atividades')">Atividades</button>
-<button onclick="abrir('simulados')">Simulados</button>
-<button onclick="abrir('ade')">ADE</button>
-<button onclick="abrir('saeb')">SAEB</button>
-<button onclick="abrir('resultados')">Resultados</button>
-<button onclick="abrir('adminLogin')">Professor</button>
+<button onclick="mostrar('inicio')">Início</button>
+<button onclick="mostrar('conteudos')">Conteúdos</button>
+<button onclick="mostrar('atividades')">Atividades</button>
+<button onclick="mostrar('simulados')">Simulados</button>
+<button onclick="mostrar('ade')">ADE</button>
+<button onclick="mostrar('saeb')">SAEB</button>
+<button onclick="mostrar('resultados')">Resultados</button>
+<button onclick="mostrar('professor')">Professor</button>
 </nav>
 
-<!-- ================= SEÇÕES ================= -->
-
-<section id="inicio" style="display:block">
-<h2>Bem-vindo</h2>
-Selecione a série:
-<select id="serieAluno">
-<option>1º Ano</option><option>2º Ano</option><option>3º Ano</option>
-<option>4º Ano</option><option>5º Ano</option>
-<option>6º Ano</option><option>7º Ano</option>
-<option>8º Ano</option><option>9º Ano</option>
-</select>
+<!-- INÍCIO EDITÁVEL -->
+<section id="inicio" class="active">
+<h2>Apresentação da Escola</h2>
+<textarea id="textoInicio" placeholder="Digite a apresentação da escola aqui..." rows="4" cols="50"></textarea><br>
+<input type="file" id="imgInicio" accept="image/*">
+<input type="file" id="videoInicio" accept="video/*"><br>
+<button class="salvar" onclick="salvarInicio()">Salvar Conteúdo</button>
+<div id="inicioConteudo"></div>
 </section>
 
 <section id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></section>
-<section id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></section>
-<section id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></section>
-<section id="ade"><h2>Avaliação ADE</h2><div id="listaADE"></div></section>
-<section id="saeb"><h2>Avaliação SAEB</h2><div id="listaSAEB"></div></section>
-<section id="resultados"><h2>Resultados dos Alunos</h2>Em breve painel de desempenho.</section>
+<section id="atividades"><h2>Atividades</h2></section>
+<section id="simulados"><h2>Simulados</h2></section>
+<section id="ade"><h2>Avaliação ADE</h2></section>
+<section id="saeb"><h2>Avaliação SAEB</h2></section>
+<section id="resultados"><h2>Resultados</h2></section>
 
-<!-- LOGIN -->
-<section id="adminLogin" class="admin-login">
-<h2>Painel do Professor</h2>
-<input type="password" id="senha" placeholder="Digite a senha">
-<button class="salvar" onclick="login()">Entrar</button>
-</section>
+<!-- PROFESSOR -->
+<section id="professor">
+<div id="loginBox">
+<h3>Login Professor</h3>
+<input type="password" id="senha" placeholder="Senha do administrador">
+<button onclick="login()">Entrar</button>
+</div>
 
-<!-- ADMIN -->
-<section id="admin">
-<h2>Cadastrar Questão</h2>
+<div id="painelProfessor">
+<h3>Cadastrar Conteúdo</h3>
 
-<label>Tipo de Avaliação</label>
-<select id="tipoQuestao">
-<option value="atividade">Atividade</option>
-<option value="simulado">Simulado</option>
-<option value="ade">ADE</option>
-<option value="saeb">SAEB</option>
-</select>
-
-<label>Série</label>
-<select id="serieQuest">
+<select id="serie">
+<option>Educação Infantil - 1º Período</option>
+<option>Educação Infantil - 2º Período</option>
 <option>1º Ano</option><option>2º Ano</option><option>3º Ano</option>
 <option>4º Ano</option><option>5º Ano</option>
 <option>6º Ano</option><option>7º Ano</option>
 <option>8º Ano</option><option>9º Ano</option>
 </select>
 
-<textarea id="pergunta" placeholder="Digite a pergunta"></textarea>
-<input type="text" id="a" placeholder="Alternativa A">
-<input type="text" id="b" placeholder="Alternativa B">
-<input type="text" id="c" placeholder="Alternativa C">
-<input type="text" id="d" placeholder="Alternativa D">
-<input type="text" id="correta" placeholder="Resposta correta (a,b,c,d)">
+<select id="disciplina">
+<option>Língua Portuguesa</option>
+<option>Matemática</option>
+<option>História</option>
+<option>Geografia</option>
+<option>Artes</option>
+<option>Religião</option>
+<option>Ciências</option>
+<option>Língua Inglesa</option>
+<option>Educação Física</option>
+</select>
 
-<button class="salvar" onclick="salvarQuestao()">Salvar</button>
+<textarea id="conteudoTexto" placeholder="Digite o conteúdo..." rows="3" cols="40"></textarea><br>
+<button class="salvar" onclick="salvarConteudo()">Salvar</button>
+
+<div id="conteudosSalvos"></div>
+</div>
 </section>
 
-<footer>PAULA EDUCA © 2026</footer>
-
 <script>
-const senhaAdmin="1234";
-
-function abrir(id){
-document.querySelectorAll("section").forEach(s=>s.style.display="none");
-document.getElementById(id).style.display="block";
-if(id!=="admin" && id!=="adminLogin") carregar();
+function mostrar(sec){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(sec).classList.add("active");
 }
 
+/* LOGIN */
 function login(){
-if(document.getElementById("senha").value===senhaAdmin){
-abrir("admin");
-}else alert("Senha incorreta!");
+  if(document.getElementById("senha").value==="1234"){
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("painelProfessor").style.display="block";
+  }else{
+    alert("Senha incorreta!");
+  }
 }
 
-function salvarQuestao(){
-const tipo=tipoQuestao.value;
-const quest={
-serie:serieQuest.value,
-pergunta:pergunta.value,
-a:a.value,b:b.value,c:c.value,d:d.value,
-correta:correta.value
-};
-localStorage.setItem(tipo+"_"+Date.now(),JSON.stringify(quest));
-alert("Questão salva com sucesso!");
+/* INÍCIO */
+function salvarInicio(){
+  const texto=document.getElementById("textoInicio").value;
+  localStorage.setItem("textoInicio",texto);
+
+  const img=document.getElementById("imgInicio").files[0];
+  const video=document.getElementById("videoInicio").files[0];
+
+  if(img){
+    const reader=new FileReader();
+    reader.onload=e=>localStorage.setItem("imgInicio",e.target.result);
+    reader.readAsDataURL(img);
+  }
+  if(video){
+    const reader=new FileReader();
+    reader.onload=e=>localStorage.setItem("videoInicio",e.target.result);
+    reader.readAsDataURL(video);
+  }
+  carregarInicio();
 }
 
-function carregar(){
-const serieSel=serieAluno.value;
-listaAtividades.innerHTML="";
-listaSimulados.innerHTML="";
-listaADE.innerHTML="";
-listaSAEB.innerHTML="";
+function carregarInicio(){
+  const div=document.getElementById("inicioConteudo");
+  div.innerHTML="";
+  const texto=localStorage.getItem("textoInicio");
+  const img=localStorage.getItem("imgInicio");
+  const video=localStorage.getItem("videoInicio");
 
-for(let i=0;i<localStorage.length;i++){
-let k=localStorage.key(i);
-let obj=JSON.parse(localStorage.getItem(k));
-if(obj.serie===serieSel){
-if(k.startsWith("atividade")) listaAtividades.innerHTML+=`<div class='questao'>${obj.pergunta}</div>`;
-if(k.startsWith("simulado")) listaSimulados.innerHTML+=`<div class='questao'>${obj.pergunta}</div>`;
-if(k.startsWith("ade")) listaADE.innerHTML+=`<div class='questao'>${obj.pergunta}</div>`;
-if(k.startsWith("saeb")) listaSAEB.innerHTML+=`<div class='questao'>${obj.pergunta}</div>`;
+  if(texto) div.innerHTML+=`<p>${texto}</p>`;
+  if(img) div.innerHTML+=`<img src="${img}">`;
+  if(video) div.innerHTML+=`<video src="${video}" controls></video>`;
 }
-}
+carregarInicio();
+
+/* CONTEÚDOS */
+function salvarConteudo(){
+  const serie=document.getElementById("serie").value;
+  const disc=document.getElementById("disciplina").value;
+  const texto=document.getElementById("conteudoTexto").value;
+
+  let dados=JSON.parse(localStorage.getItem("conteudos")||"[]");
+  dados.push({serie,disc,texto});
+  localStorage.setItem("conteudos",JSON.stringify(dados));
+  listarConteudos();
 }
 
-serieAluno.addEventListener("change",carregar);
+function listarConteudos(){
+  let dados=JSON.parse(localStorage.getItem("conteudos")||"[]");
+  const div=document.getElementById("listaConteudos");
+  div.innerHTML="";
+  dados.forEach(d=>{
+    div.innerHTML+=`<p><b>${d.serie}</b> - ${d.disc} <br>${d.texto}</p><hr>`;
+  });
+}
+listarConteudos();
 </script>
 
 </body>
