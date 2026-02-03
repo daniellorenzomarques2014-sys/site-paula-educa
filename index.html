@@ -5,103 +5,130 @@
 <title>PAULA EDUCA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- FONTE MODERNA -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
 body{
 margin:0;
-font-family:Arial, sans-serif;
+font-family:'Poppins', sans-serif;
 background:url('fundo-amazonico.jpg') no-repeat center center fixed;
 background-size:cover;
 }
 
+/* ===== TOPO ===== */
 header{
 background:linear-gradient(90deg,#0a3d2e,#0f5c45,#0a3d2e);
 color:white;
 padding:20px;
 text-align:center;
 border-bottom:8px solid #c49b3d;
+box-shadow:0 4px 10px rgba(0,0,0,0.4);
 }
 
 header img{
-height:120px;
+height:110px;
 display:block;
 margin:0 auto 10px;
 }
 
 header h1{
 margin:0;
-font-size:44px;
-letter-spacing:3px;
-font-weight:bold;
+font-size:48px;
+font-weight:800;
+letter-spacing:4px;
+text-transform:uppercase;
+background:linear-gradient(45deg,#ffd700,#ffffff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 header p{
 margin:5px 0 0;
-font-size:18px;
+font-size:16px;
+letter-spacing:2px;
 }
 
+/* ===== MENU ===== */
 nav{
 display:flex;
 justify-content:center;
 flex-wrap:wrap;
 background:#083c30;
+padding:8px;
 border-bottom:4px solid #c49b3d;
 }
 
 nav button{
-background:#0f5c45;
+background:linear-gradient(145deg,#0f5c45,#14795c);
 color:white;
 border:none;
 padding:12px 18px;
 margin:6px;
 cursor:pointer;
-border-radius:8px;
-font-weight:bold;
+border-radius:30px;
+font-weight:600;
 transition:0.3s;
+box-shadow:0 4px 6px rgba(0,0,0,0.3);
 }
 
 nav button:hover{
-background:#1a7a5c;
-transform:scale(1.05);
+transform:translateY(-3px);
+background:linear-gradient(145deg,#1c8a6a,#22a07a);
 }
 
+/* ===== SEÇÕES ===== */
 section{
 display:none;
-padding:20px;
-background:rgba(255,255,255,0.92);
+padding:25px;
+background:rgba(255,255,255,0.95);
 margin:20px;
-border-radius:12px;
+border-radius:14px;
+box-shadow:0 8px 20px rgba(0,0,0,0.25);
 }
 
-h2{color:#0f5c45;}
+h2{
+color:#0f5c45;
+border-left:6px solid #c49b3d;
+padding-left:10px;
+}
 
+/* ===== CAMPOS ===== */
 input, select, textarea{
 width:100%;
-padding:8px;
-margin:5px 0 10px;
-border-radius:6px;
-border:1px solid #ccc;
+padding:10px;
+margin:6px 0 12px;
+border-radius:8px;
+border:1px solid #bbb;
+font-family:'Poppins';
 }
 
 button.salvar{
 background:#0f5c45;
 color:white;
 border:none;
-padding:10px;
-border-radius:8px;
+padding:12px;
+border-radius:10px;
 cursor:pointer;
-font-weight:bold;
+font-weight:600;
+transition:0.3s;
+}
+
+button.salvar:hover{
+background:#15916c;
 }
 
 .questao{
 background:#e8f5e9;
-padding:10px;
+padding:12px;
 margin:10px 0;
-border-radius:8px;
+border-radius:10px;
+border-left:5px solid #0f5c45;
 }
 
 .admin-login{
 text-align:center;
-margin-top:50px;
+margin-top:40px;
 }
 
 footer{
@@ -127,15 +154,18 @@ margin-top:40px;
 <button onclick="abrir('conteudos')">Conteúdos</button>
 <button onclick="abrir('atividades')">Atividades</button>
 <button onclick="abrir('simulados')">Simulados</button>
+<button onclick="abrir('ade')">ADE</button>
+<button onclick="abrir('saeb')">SAEB</button>
+<button onclick="abrir('resultados')">Resultados</button>
 <button onclick="abrir('adminLogin')">Professor</button>
 </nav>
 
+<!-- ================= SEÇÕES ================= -->
+
 <section id="inicio" style="display:block">
-<h2>Bem-vindo à Plataforma</h2>
-Escolha sua série para acessar conteúdos e atividades.
+<h2>Bem-vindo</h2>
+Selecione a série:
 <select id="serieAluno">
-<option>Educação Infantil - 1º Período</option>
-<option>Educação Infantil - 2º Período</option>
 <option>1º Ano</option><option>2º Ano</option><option>3º Ano</option>
 <option>4º Ano</option><option>5º Ano</option>
 <option>6º Ano</option><option>7º Ano</option>
@@ -143,51 +173,48 @@ Escolha sua série para acessar conteúdos e atividades.
 </select>
 </section>
 
-<section id="conteudos">
-<h2>Conteúdos</h2>
-<div id="listaConteudos"></div>
-</section>
+<section id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></section>
+<section id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></section>
+<section id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></section>
+<section id="ade"><h2>Avaliação ADE</h2><div id="listaADE"></div></section>
+<section id="saeb"><h2>Avaliação SAEB</h2><div id="listaSAEB"></div></section>
+<section id="resultados"><h2>Resultados dos Alunos</h2>Em breve painel de desempenho.</section>
 
-<section id="atividades">
-<h2>Atividades</h2>
-<div id="listaAtividades"></div>
-</section>
-
-<section id="simulados">
-<h2>Simulados</h2>
-<div id="listaSimulados"></div>
-</section>
-
+<!-- LOGIN -->
 <section id="adminLogin" class="admin-login">
 <h2>Painel do Professor</h2>
 <input type="password" id="senha" placeholder="Digite a senha">
 <button class="salvar" onclick="login()">Entrar</button>
 </section>
 
+<!-- ADMIN -->
 <section id="admin">
-<h2>Cadastrar Conteúdo</h2>
-<label>SÉRIE</label>
-<select id="serieCont"></select>
-<label>DISCIPLINA</label>
-<select id="discCont"><option>Português</option><option>Matemática</option><option>Ciências</option></select>
-<input type="text" id="tituloCont" placeholder="Título">
-<input type="file" id="arquivoCont">
-<button class="salvar" onclick="salvarConteudo()">Salvar Conteúdo</button>
-
 <h2>Cadastrar Questão</h2>
-<label>Tipo</label>
-<select id="tipoQuestao"><option>atividade</option><option>simulado</option></select>
-<label>SÉRIE</label>
-<select id="serieQuest"></select>
-<label>DISCIPLINA</label>
-<select id="discQuest"><option>Português</option><option>Matemática</option><option>Ciências</option></select>
-<textarea id="pergunta" placeholder="Pergunta"></textarea>
+
+<label>Tipo de Avaliação</label>
+<select id="tipoQuestao">
+<option value="atividade">Atividade</option>
+<option value="simulado">Simulado</option>
+<option value="ade">ADE</option>
+<option value="saeb">SAEB</option>
+</select>
+
+<label>Série</label>
+<select id="serieQuest">
+<option>1º Ano</option><option>2º Ano</option><option>3º Ano</option>
+<option>4º Ano</option><option>5º Ano</option>
+<option>6º Ano</option><option>7º Ano</option>
+<option>8º Ano</option><option>9º Ano</option>
+</select>
+
+<textarea id="pergunta" placeholder="Digite a pergunta"></textarea>
 <input type="text" id="a" placeholder="Alternativa A">
 <input type="text" id="b" placeholder="Alternativa B">
 <input type="text" id="c" placeholder="Alternativa C">
 <input type="text" id="d" placeholder="Alternativa D">
 <input type="text" id="correta" placeholder="Resposta correta (a,b,c,d)">
-<button class="salvar" onclick="salvarQuestao()">Salvar Questão</button>
+
+<button class="salvar" onclick="salvarQuestao()">Salvar</button>
 </section>
 
 <footer>PAULA EDUCA © 2026</footer>
@@ -198,53 +225,42 @@ const senhaAdmin="1234";
 function abrir(id){
 document.querySelectorAll("section").forEach(s=>s.style.display="none");
 document.getElementById(id).style.display="block";
+if(id!=="admin" && id!=="adminLogin") carregar();
 }
 
 function login(){
 if(document.getElementById("senha").value===senhaAdmin){
 abrir("admin");
-}else alert("Senha incorreta");
-}
-
-const series=[
-"Educação Infantil - 1º Período","Educação Infantil - 2º Período",
-"1º Ano","2º Ano","3º Ano","4º Ano","5º Ano",
-"6º Ano","7º Ano","8º Ano","9º Ano"
-];
-
-series.forEach(s=>{
-serieCont.innerHTML+=`<option>${s}</option>`;
-serieQuest.innerHTML+=`<option>${s}</option>`;
-});
-
-function salvarConteudo(){
-const titulo= tituloCont.value;
-const serie= serieCont.value;
-localStorage.setItem("cont_"+Date.now(),JSON.stringify({titulo,serie}));
-alert("Conteúdo salvo!");
+}else alert("Senha incorreta!");
 }
 
 function salvarQuestao(){
-const tipo= tipoQuestao.value;
-const serie= serieQuest.value;
-const pergunta= pergunta.value;
-const quest={serie,pergunta,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value};
+const tipo=tipoQuestao.value;
+const quest={
+serie:serieQuest.value,
+pergunta:pergunta.value,
+a:a.value,b:b.value,c:c.value,d:d.value,
+correta:correta.value
+};
 localStorage.setItem(tipo+"_"+Date.now(),JSON.stringify(quest));
-alert("Questão salva!");
+alert("Questão salva com sucesso!");
 }
 
 function carregar(){
-const serieSel=document.getElementById("serieAluno").value;
-listaConteudos.innerHTML="";
+const serieSel=serieAluno.value;
 listaAtividades.innerHTML="";
 listaSimulados.innerHTML="";
+listaADE.innerHTML="";
+listaSAEB.innerHTML="";
+
 for(let i=0;i<localStorage.length;i++){
 let k=localStorage.key(i);
 let obj=JSON.parse(localStorage.getItem(k));
 if(obj.serie===serieSel){
-if(k.startsWith("cont_")) listaConteudos.innerHTML+=`<div class='questao'>${obj.titulo}</div>`;
-if(k.startsWith("atividade_")) listaAtividades.innerHTML+=`<div class='questao'>${obj.pergunta}</div>`;
-if(k.startsWith("simulado_")) listaSimulados.innerHTML+=`<div class='questao'>${obj.pergunta}</div>`;
+if(k.startsWith("atividade")) listaAtividades.innerHTML+=`<div class='questao'>${obj.pergunta}</div>`;
+if(k.startsWith("simulado")) listaSimulados.innerHTML+=`<div class='questao'>${obj.pergunta}</div>`;
+if(k.startsWith("ade")) listaADE.innerHTML+=`<div class='questao'>${obj.pergunta}</div>`;
+if(k.startsWith("saeb")) listaSAEB.innerHTML+=`<div class='questao'>${obj.pergunta}</div>`;
 }
 }
 }
