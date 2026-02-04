@@ -3,232 +3,197 @@
 <head>
 <meta charset="UTF-8">
 <title>PAULA EDUCA</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="icon" href="logo-escola.png">
+
 <style>
 body{
   margin:0;
-  font-family:'Poppins',sans-serif;
-  background:#f4efe6;
-  background-image:url('https://www.transparenttextures.com/patterns/az-subtle.png');
+  font-family:Arial, Helvetica, sans-serif;
+  background:#f0f4f8;
 }
 
-/* CABEÇALHO TRIBAL */
+/* CABEÇALHO COM LOGOTIPO */
 header{
-  background:#1b5e20;
-  background-image:url('https://www.transparenttextures.com/patterns/black-linen.png');
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:15px 25px;
+  background:#0d47a1;
   color:white;
-  padding:20px;
-  text-align:center;
-  font-size:42px;
-  font-weight:800;
-  letter-spacing:3px;
+}
+header img{
+  height:90px;
+}
+header h1{
+  margin:0;
+  font-size:32px;
 }
 
 /* MENU */
 nav{
+  background:#1565c0;
   display:flex;
   justify-content:center;
-  gap:10px;
-  background:#2e7d32;
-  padding:10px;
+  flex-wrap:wrap;
 }
 nav button{
-  background:white;
+  background:none;
   border:none;
-  padding:10px 18px;
-  border-radius:20px;
-  font-weight:600;
+  color:white;
+  padding:14px 18px;
+  font-weight:bold;
   cursor:pointer;
 }
-nav button:hover{
-  background:#c8e6c9;
-}
+nav button:hover{background:#0d47a1}
 
-/* SEÇÕES */
 section{
   display:none;
   padding:20px;
 }
-.active{display:block;}
+.active{display:block}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  background:white;
+  padding:20px;
+  border-radius:8px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
 
 /* PAINEL PROFESSOR */
-#loginBox{
-  text-align:center;
-  margin-top:40px;
-}
-#painelProfessor{
-  display:none;
-  margin-top:20px;
-  padding:15px;
-  border-radius:10px;
-  background:#ffffffcc;
-}
-input, select, textarea{
-  padding:8px;
-  margin:5px;
-  border-radius:5px;
-  border:1px solid #ccc;
-}
-button.salvar{
-  background:#2e7d32;
+#adminBtn{
+  position:fixed;
+  right:15px;
+  top:90px;
+  background:#ff9800;
   color:white;
-  border:none;
-  padding:8px 15px;
-  border-radius:8px;
+  padding:10px 14px;
+  border-radius:6px;
   cursor:pointer;
+  font-weight:bold;
 }
 
-/* CONTEÚDO INÍCIO */
-#inicioConteudo img, video{
-  max-width:200px;
-  display:block;
-  margin:10px 0;
+input, textarea{
+  width:100%;
+  padding:8px;
+  margin:6px 0;
+  border-radius:4px;
+  border:1px solid #ccc;
+}
+
+button.salvar{background:#2e7d32;color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer}
+button.remover{background:#c62828;color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer}
+
+#inicio img{
+  max-width:300px;
+  margin-top:10px;
   border-radius:8px;
 }
 </style>
 </head>
 <body>
 
-<header>PAULA EDUCA</header>
+<header>
+<img src="logo-escola.png">
+<div>
+<h1>PAULA EDUCA</h1>
+<p>Ensino • Qualidade • Cultura</p>
+</div>
+</header>
 
 <nav>
-<button onclick="mostrar('inicio')">Início</button>
-<button onclick="mostrar('conteudos')">Conteúdos</button>
-<button onclick="mostrar('atividades')">Atividades</button>
-<button onclick="mostrar('simulados')">Simulados</button>
-<button onclick="mostrar('ade')">ADE</button>
-<button onclick="mostrar('saeb')">SAEB</button>
-<button onclick="mostrar('resultados')">Resultados</button>
-<button onclick="mostrar('professor')">Professor</button>
+<button onclick="show('inicio')">Início</button>
+<button onclick="show('conteudos')">Conteúdos</button>
+<button onclick="show('atividades')">Atividades</button>
+<button onclick="show('simulados')">Simulados</button>
+<button onclick="show('ade')">ADE</button>
+<button onclick="show('saeb')">SAEB</button>
+<button onclick="show('resultados')">Resultados</button>
 </nav>
 
-<!-- INÍCIO EDITÁVEL -->
+<div id="adminBtn" onclick="abrirAdmin()">PROFESSOR</div>
+
+<!-- INÍCIO (VISUALIZAÇÃO) -->
 <section id="inicio" class="active">
-<h2>Apresentação da Escola</h2>
-<textarea id="textoInicio" placeholder="Digite a apresentação da escola aqui..." rows="4" cols="50"></textarea><br>
-<input type="file" id="imgInicio" accept="image/*">
-<input type="file" id="videoInicio" accept="video/*"><br>
-<button class="salvar" onclick="salvarInicio()">Salvar Conteúdo</button>
-<div id="inicioConteudo"></div>
+<div class="container">
+<h2>Sobre a Escola</h2>
+<div id="conteudoInicio"></div>
+</div>
 </section>
 
-<section id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></section>
-<section id="atividades"><h2>Atividades</h2></section>
-<section id="simulados"><h2>Simulados</h2></section>
-<section id="ade"><h2>Avaliação ADE</h2></section>
-<section id="saeb"><h2>Avaliação SAEB</h2></section>
-<section id="resultados"><h2>Resultados</h2></section>
+<section id="conteudos" class="container"><h2>Conteúdos</h2></section>
+<section id="atividades" class="container"><h2>Atividades</h2></section>
+<section id="simulados" class="container"><h2>Simulados</h2></section>
+<section id="ade" class="container"><h2>Avaliação ADE</h2></section>
+<section id="saeb" class="container"><h2>Avaliação SAEB</h2></section>
+<section id="resultados" class="container"><h2>Resultados</h2></section>
 
-<!-- PROFESSOR -->
-<section id="professor">
-<div id="loginBox">
-<h3>Login Professor</h3>
-<input type="password" id="senha" placeholder="Senha do administrador">
-<button onclick="login()">Entrar</button>
-</div>
+<!-- PAINEL ADMIN -->
+<section id="admin" class="container">
+<h2>Painel do Professor</h2>
 
-<div id="painelProfessor">
-<h3>Cadastrar Conteúdo</h3>
+<label>Texto de apresentação / histórico da escola</label>
+<textarea id="textoInicio" rows="5"></textarea>
 
-<select id="serie">
-<option>Educação Infantil - 1º Período</option>
-<option>Educação Infantil - 2º Período</option>
-<option>1º Ano</option><option>2º Ano</option><option>3º Ano</option>
-<option>4º Ano</option><option>5º Ano</option>
-<option>6º Ano</option><option>7º Ano</option>
-<option>8º Ano</option><option>9º Ano</option>
-</select>
+<label>Inserir imagem da escola</label>
+<input type="file" id="imagemInicio" accept="image/*">
 
-<select id="disciplina">
-<option>Língua Portuguesa</option>
-<option>Matemática</option>
-<option>História</option>
-<option>Geografia</option>
-<option>Artes</option>
-<option>Religião</option>
-<option>Ciências</option>
-<option>Língua Inglesa</option>
-<option>Educação Física</option>
-</select>
-
-<textarea id="conteudoTexto" placeholder="Digite o conteúdo..." rows="3" cols="40"></textarea><br>
-<button class="salvar" onclick="salvarConteudo()">Salvar</button>
-
-<div id="conteudosSalvos"></div>
-</div>
+<button class="salvar" onclick="salvarInicio()">Salvar</button>
+<button class="remover" onclick="removerInicio()">Remover Tudo</button>
 </section>
 
 <script>
-function mostrar(sec){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(sec).classList.add("active");
+function show(sec){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.getElementById(sec).classList.add("active");
+if(sec==="inicio") carregarInicio();
 }
 
-/* LOGIN */
-function login(){
-  if(document.getElementById("senha").value==="1234"){
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("painelProfessor").style.display="block";
-  }else{
-    alert("Senha incorreta!");
-  }
+function abrirAdmin(){
+let senha=prompt("Senha do professor:");
+if(senha==="1234"){
+show("admin");
+document.getElementById("textoInicio").value=localStorage.getItem("textoInicio")||"";
+}else alert("Senha incorreta");
 }
 
-/* INÍCIO */
 function salvarInicio(){
-  const texto=document.getElementById("textoInicio").value;
-  localStorage.setItem("textoInicio",texto);
+let texto=document.getElementById("textoInicio").value;
+let imgInput=document.getElementById("imagemInicio").files[0];
 
-  const img=document.getElementById("imgInicio").files[0];
-  const video=document.getElementById("videoInicio").files[0];
+localStorage.setItem("textoInicio",texto);
 
-  if(img){
-    const reader=new FileReader();
-    reader.onload=e=>localStorage.setItem("imgInicio",e.target.result);
-    reader.readAsDataURL(img);
-  }
-  if(video){
-    const reader=new FileReader();
-    reader.onload=e=>localStorage.setItem("videoInicio",e.target.result);
-    reader.readAsDataURL(video);
-  }
-  carregarInicio();
+if(imgInput){
+let reader=new FileReader();
+reader.onload=function(){
+localStorage.setItem("imgInicio",reader.result);
+carregarInicio();
+}
+reader.readAsDataURL(imgInput);
+}else{
+carregarInicio();
+}
+alert("Salvo com sucesso!");
 }
 
 function carregarInicio(){
-  const div=document.getElementById("inicioConteudo");
-  div.innerHTML="";
-  const texto=localStorage.getItem("textoInicio");
-  const img=localStorage.getItem("imgInicio");
-  const video=localStorage.getItem("videoInicio");
-
-  if(texto) div.innerHTML+=`<p>${texto}</p>`;
-  if(img) div.innerHTML+=`<img src="${img}">`;
-  if(video) div.innerHTML+=`<video src="${video}" controls></video>`;
+let texto=localStorage.getItem("textoInicio")||"";
+let img=localStorage.getItem("imgInicio")||"";
+let div=document.getElementById("conteudoInicio");
+div.innerHTML=`<p>${texto}</p>${img?`<img src="${img}">`:""}`;
 }
+
+function removerInicio(){
+localStorage.removeItem("textoInicio");
+localStorage.removeItem("imgInicio");
 carregarInicio();
-
-/* CONTEÚDOS */
-function salvarConteudo(){
-  const serie=document.getElementById("serie").value;
-  const disc=document.getElementById("disciplina").value;
-  const texto=document.getElementById("conteudoTexto").value;
-
-  let dados=JSON.parse(localStorage.getItem("conteudos")||"[]");
-  dados.push({serie,disc,texto});
-  localStorage.setItem("conteudos",JSON.stringify(dados));
-  listarConteudos();
+alert("Conteúdo removido");
 }
 
-function listarConteudos(){
-  let dados=JSON.parse(localStorage.getItem("conteudos")||"[]");
-  const div=document.getElementById("listaConteudos");
-  div.innerHTML="";
-  dados.forEach(d=>{
-    div.innerHTML+=`<p><b>${d.serie}</b> - ${d.disc} <br>${d.texto}</p><hr>`;
-  });
-}
-listarConteudos();
+carregarInicio();
 </script>
 
 </body>
