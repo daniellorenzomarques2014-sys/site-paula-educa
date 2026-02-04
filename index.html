@@ -2,201 +2,232 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PAULA EDUCA</title>
-
-<link rel="icon" type="image/png" href="logo-escola.png">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 body{
 margin:0;
-font-family:'Montserrat',sans-serif;
-background:linear-gradient(rgba(0,40,30,0.85), rgba(0,40,30,0.85)),
-url('fundo-amazonico.jpg.png') no-repeat center center fixed;
-background-size:cover;
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#0f3d3e,#145a32,#1e8449);
+color:#fff;
 }
 
+/* CABEÇALHO */
 header{
-display:flex;align-items:center;gap:20px;
-padding:20px 30px;color:white;
-background:repeating-linear-gradient(45deg,#0b3d2e,#0b3d2e 10px,#145a32 10px,#145a32 20px);
-border-bottom:8px solid #c62828;
+background:linear-gradient(to right,#0b5345,#117864,#148f77);
+padding:15px;
+display:flex;
+align-items:center;
+gap:20px;
+border-bottom:5px solid #d4ac0d;
 }
-.logo{height:130px}
-header h1{margin:0;font-size:38px;font-weight:900}
-header p{margin:0;opacity:0.9}
+header img{
+height:80px;
+}
+header h1{
+margin:0;
+font-size:32px;
+letter-spacing:2px;
+}
 
+/* MENU */
 nav{
-background:linear-gradient(90deg,#3e2723,#5d4037,#3e2723);
-display:flex;justify-content:center;flex-wrap:wrap;
+display:flex;
+justify-content:center;
+gap:15px;
+background:#0e6251;
+padding:10px;
+flex-wrap:wrap;
 }
-nav a{color:white;padding:14px 22px;text-decoration:none;font-weight:700;cursor:pointer;}
-nav a:hover{background:#8d6e63}
+nav button{
+background:#117864;
+border:none;
+color:#fff;
+padding:10px 15px;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+}
+nav button:hover{background:#1abc9c;}
 
-.container{
-max-width:1100px;margin:25px auto;padding:20px;background:white;
-border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.25)
-}
-.hidden{display:none}
+/* SEÇÕES */
+section{display:none;padding:20px;}
+section.active{display:block;}
 
-.admin-btn{
-position:fixed;right:15px;top:80px;background:#bf360c;color:white;
-padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:bold
-}
-
-input,select,textarea{
-width:100%;padding:8px;margin:6px 0;border-radius:6px;border:1px solid #bbb
-}
-button{
-padding:8px 14px;margin-top:8px;border:none;border-radius:6px;
-background:#2e7d32;color:white;cursor:pointer;font-weight:700
+/* CAIXAS */
+.card{
+background:rgba(0,0,0,0.3);
+padding:15px;
+border-radius:10px;
+margin-bottom:15px;
 }
 
-.question{border:1px solid #ddd;padding:12px;border-radius:8px;margin-bottom:15px}
-.alternativa{display:flex;align-items:center;gap:5px;margin:2px 0}
-footer{text-align:center;padding:15px;background:#3e2723;color:white;margin-top:40px}
-.small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
+/* INPUTS */
+input, select, textarea{
+width:100%;
+padding:8px;
+margin-top:5px;
+margin-bottom:10px;
+border-radius:6px;
+border:none;
+}
+button.salvar{
+background:#d4ac0d;
+color:#000;
+font-weight:bold;
+}
 </style>
 </head>
 <body>
 
 <header>
-<img src="logo-escola.png" class="logo">
-<div>
+<img src="logo.png" alt="Logo da Escola">
 <h1>PAULA EDUCA</h1>
-<p>Ensino • Qualidade • Cultura</p>
-</div>
 </header>
 
 <nav>
-<a onclick="showSection('inicio')">🏠 Início</a>
-<a onclick="showSection('conteudos')">📚 Conteúdos</a>
-<a onclick="showSection('atividades')">📝 Atividades</a>
-<a onclick="showSection('simulados')">🎯 Simulados</a>
-<a onclick="showSection('ade')">📊 ADE</a>
-<a onclick="showSection('saeb')">📈 SAEB</a>
-<a onclick="showSection('resultados')">🏆 Resultados</a>
+<button onclick="mostrar('inicio')">Início</button>
+<button onclick="mostrar('conteudos')">Conteúdos</button>
+<button onclick="mostrar('atividades')">Atividades</button>
+<button onclick="mostrar('simulados')">Simulados</button>
+<button onclick="mostrar('ade')">ADE</button>
+<button onclick="mostrar('saeb')">SAEB</button>
+<button onclick="mostrar('resultados')">Resultados</button>
+<button onclick="login()">Professor</button>
 </nav>
 
-<div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
-
-<!-- INÍCIO (APENAS APRESENTAÇÃO) -->
-<div class="container" id="inicio">
-<h2>Apresentação</h2>
-<div id="conteudoInicio"></div>
-</div>
+<!-- INÍCIO -->
+<section id="inicio" class="active">
+<div class="card" id="apresentacaoTexto"></div>
+<div class="card" id="apresentacaoMidia"></div>
+</section>
 
 <!-- OUTRAS GUIAS -->
-<div class="container hidden" id="conteudos"><h2>Conteúdos</h2></div>
-<div class="container hidden" id="atividades"><h2>Atividades</h2></div>
-<div class="container hidden" id="simulados"><h2>Simulados</h2></div>
-<div class="container hidden" id="ade"><h2>Avaliação ADE</h2></div>
-<div class="container hidden" id="saeb"><h2>Avaliação SAEB</h2></div>
-<div class="container hidden" id="resultados"><h2>Resultados</h2></div>
+<section id="conteudos"><h2>📚 Conteúdos</h2><div id="listaConteudos"></div></section>
+<section id="atividades"><h2>📝 Atividades</h2><div id="listaAtividades"></div></section>
+<section id="simulados"><h2>🎯 Simulados</h2><div id="listaSimulados"></div></section>
+<section id="ade"><h2>📊 ADE</h2><div id="listaAde"></div></section>
+<section id="saeb"><h2>📈 SAEB</h2><div id="listaSaeb"></div></section>
+<section id="resultados"><h2>🏆 Resultados</h2></section>
 
-<!-- ADMIN -->
-<div class="container hidden" id="adminPanel">
-<h2>Painel do Professor</h2>
+<!-- ÁREA PROFESSOR -->
+<section id="professor">
+<h2>🔒 Painel do Professor</h2>
 
+<div class="card">
 <h3>Editar Guia Início (Apresentação)</h3>
-<textarea id="textoInicio" placeholder="Digite o histórico, apresentação da escola..."></textarea>
-
-<label>Adicionar Imagem</label>
-<input type="file" id="imgInicioInput" accept="image/*">
-
-<label>Adicionar Vídeo</label>
-<input type="file" id="videoInicioInput" accept="video/*">
-
-<button onclick="salvarInicio()">Salvar Conteúdo</button>
-<button onclick="limparInicio()" style="background:#c62828">Remover Tudo</button>
-
-<h4>Mídias Cadastradas</h4>
-<div id="listaMidiasInicio"></div>
+<textarea id="textoInicio" placeholder="Digite o histórico da escola..."></textarea>
+<input type="file" id="midiaInicio" multiple>
+<button class="salvar" onclick="salvarInicio()">Salvar Apresentação</button>
 </div>
 
-<footer>Portal Educacional © 2026</footer>
+<div class="card">
+<h3>Cadastrar Conteúdo / Atividade / Simulado / ADE / SAEB</h3>
+<select id="tipo">
+<option>Conteúdo</option>
+<option>Atividade</option>
+<option>Simulado</option>
+<option>ADE</option>
+<option>SAEB</option>
+</select>
+
+<select id="serie">
+<option>Educação Infantil - 1º Período</option>
+<option>Educação Infantil - 2º Período</option>
+<option>1º Ano</option><option>2º Ano</option><option>3º Ano</option>
+<option>4º Ano</option><option>5º Ano</option>
+<option>6º Ano</option><option>7º Ano</option>
+<option>8º Ano</option><option>9º Ano</option>
+</select>
+
+<select id="disciplina">
+<option>Língua Portuguesa</option>
+<option>Matemática</option>
+<option>História</option>
+<option>Geografia</option>
+<option>Artes</option>
+<option>Religião</option>
+<option>Ciências</option>
+<option>Língua Inglesa</option>
+<option>Educação Física</option>
+</select>
+
+<input type="text" id="titulo" placeholder="Título">
+<textarea id="descricao" placeholder="Descrição"></textarea>
+<button class="salvar" onclick="salvarCadastro()">Salvar</button>
+</div>
+</section>
 
 <script>
-function showSection(id){
-document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
-document.getElementById(id).classList.remove("hidden");
-if(id==="inicio") carregarInicio();
+function mostrar(id){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+carregarListas();
 }
 
-function abrirAdmin(){
-if(prompt("Senha do administrador:")==="1234"){
-showSection("adminPanel");
-carregarInicioAdmin();
-}else alert("Senha incorreta");
+function login(){
+let senha=prompt("Digite a senha do professor:");
+if(senha==="1234"){mostrar('professor');}
+else{alert("Senha incorreta");}
 }
 
-/* ===== INÍCIO ADMIN ===== */
-
-let midiasInicio = JSON.parse(localStorage.getItem("midiasInicio")||"[]");
-
+/* INÍCIO */
 function salvarInicio(){
-localStorage.setItem("textoInicio", textoInicio.value);
-
-let img = imgInicioInput.files[0];
-let vid = videoInicioInput.files[0];
-
-if(img){
-let r=new FileReader();
-r.onload=()=>{midiasInicio.push({tipo:"img",src:r.result});salvarMidia();};
-r.readAsDataURL(img);
+localStorage.setItem("textoInicio",textoInicio.value);
+let midias=[];
+for(let file of midiaInicio.files){
+midias.push(URL.createObjectURL(file));
 }
-if(vid){
-let r=new FileReader();
-r.onload=()=>{midiasInicio.push({tipo:"video",src:r.result});salvarMidia();};
-r.readAsDataURL(vid);
-}
-
+localStorage.setItem("midiasInicio",JSON.stringify(midias));
 carregarInicio();
-carregarInicioAdmin();
 }
-
-function salvarMidia(){
-localStorage.setItem("midiasInicio",JSON.stringify(midiasInicio));
-carregarInicio();
-carregarInicioAdmin();
-}
-
 function carregarInicio(){
-let area=document.getElementById("conteudoInicio");
-area.innerHTML="<p>"+(localStorage.getItem("textoInicio")||"")+"</p>";
-midiasInicio.forEach(m=>{
-if(m.tipo==="img") area.innerHTML+=`<img src="${m.src}" style="max-width:300px;margin:10px">`;
-if(m.tipo==="video") area.innerHTML+=`<video src="${m.src}" controls style="max-width:300px;margin:10px"></video>`;
+apresentacaoTexto.innerHTML=localStorage.getItem("textoInicio")||"";
+let midias=JSON.parse(localStorage.getItem("midiasInicio")||"[]");
+apresentacaoMidia.innerHTML="";
+midias.forEach(m=>{
+if(m.includes("video")) apresentacaoMidia.innerHTML+=`<video src="${m}" controls width="300"></video>`;
+else apresentacaoMidia.innerHTML+=`<img src="${m}" width="300">`;
 });
 }
 
-function carregarInicioAdmin(){
-textoInicio.value=localStorage.getItem("textoInicio")||"";
-let lista=document.getElementById("listaMidiasInicio");
-lista.innerHTML="";
-midiasInicio.forEach((m,i)=>{
-lista.innerHTML+=`Mídia ${i+1} 
-<button class="small-btn" onclick="removerMidia(${i})">Remover</button><br>`;
+/* CADASTROS */
+function salvarCadastro(){
+let item={
+tipo:tipo.value,
+serie:serie.value,
+disciplina:disciplina.value,
+titulo:titulo.value,
+descricao:descricao.value
+};
+let lista=JSON.parse(localStorage.getItem("dados")||"[]");
+lista.push(item);
+localStorage.setItem("dados",JSON.stringify(lista));
+alert("Salvo!");
+carregarListas();
+}
+
+function carregarListas(){
+let lista=JSON.parse(localStorage.getItem("dados")||"[]");
+listaConteudos.innerHTML="";
+listaAtividades.innerHTML="";
+listaSimulados.innerHTML="";
+listaAde.innerHTML="";
+listaSaeb.innerHTML="";
+
+lista.forEach(i=>{
+let bloco=`<div class='card'><b>${i.titulo}</b><br>${i.serie} - ${i.disciplina}<br>${i.descricao}</div>`;
+if(i.tipo==="Conteúdo") listaConteudos.innerHTML+=bloco;
+if(i.tipo==="Atividade") listaAtividades.innerHTML+=bloco;
+if(i.tipo==="Simulado") listaSimulados.innerHTML+=bloco;
+if(i.tipo==="ADE") listaAde.innerHTML+=bloco;
+if(i.tipo==="SAEB") listaSaeb.innerHTML+=bloco;
 });
 }
 
-function removerMidia(i){
-midiasInicio.splice(i,1);
-localStorage.setItem("midiasInicio",JSON.stringify(midiasInicio));
 carregarInicio();
-carregarInicioAdmin();
-}
-
-function limparInicio(){
-localStorage.removeItem("textoInicio");
-localStorage.removeItem("midiasInicio");
-midiasInicio=[];
-carregarInicio();
-carregarInicioAdmin();
-}
-
-carregarInicio();
+carregarListas();
 </script>
 
 </body>
