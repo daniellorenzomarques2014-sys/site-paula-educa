@@ -12,39 +12,28 @@
 body{
 margin:0;
 font-family:'Montserrat',sans-serif;
-background:
-linear-gradient(rgba(0,40,30,0.85), rgba(0,40,30,0.85)),
+background:linear-gradient(rgba(0,40,30,0.85), rgba(0,40,30,0.85)),
 url('fundo-amazonico.jpg.png') no-repeat center center fixed;
 background-size:cover;
 }
 
-/* CABEÇALHO */
 header{
-display:flex;
-align-items:center;
-gap:20px;
-padding:20px 30px;
-color:white;
+display:flex;align-items:center;gap:20px;
+padding:20px 30px;color:white;
 background:repeating-linear-gradient(45deg,#0b3d2e,#0b3d2e 10px,#145a32 10px,#145a32 20px);
 border-bottom:8px solid #c62828;
-box-shadow:0 4px 15px rgba(0,0,0,0.5);
 }
 .logo{height:130px}
-
-header h1{margin:0;font-size:38px;font-weight:900;letter-spacing:3px}
+header h1{margin:0;font-size:38px;font-weight:900}
 header p{margin:0;opacity:0.9}
 
-/* MENU */
 nav{
 background:linear-gradient(90deg,#3e2723,#5d4037,#3e2723);
 display:flex;justify-content:center;flex-wrap:wrap;
 }
-nav a{
-color:white;padding:14px 22px;text-decoration:none;font-weight:700;cursor:pointer;
-}
+nav a{color:white;padding:14px 22px;text-decoration:none;font-weight:700;cursor:pointer;}
 nav a:hover{background:#8d6e63}
 
-/* CONTEÚDO */
 .container{
 max-width:1100px;margin:25px auto;padding:20px;background:white;
 border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.25)
@@ -65,13 +54,8 @@ background:#2e7d32;color:white;cursor:pointer;font-weight:700
 }
 
 .question{border:1px solid #ddd;padding:12px;border-radius:8px;margin-bottom:15px}
-
-/* BOLINHAS */
-.alternativa{display:flex;align-items:center;gap:5px;margin:2px 0;cursor:pointer}
-.alternativa input{margin:0}
-
+.alternativa{display:flex;align-items:center;gap:5px;margin:2px 0}
 footer{text-align:center;padding:15px;background:#3e2723;color:white;margin-top:40px}
-label{font-weight:600;margin-top:8px;display:block}
 .small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
 </style>
 </head>
@@ -97,157 +81,122 @@ label{font-weight:600;margin-top:8px;display:block}
 
 <div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
 
-<div class="container" id="inicio"><h2>Bem-vindo à Plataforma PAULA EDUCA</h2></div>
-
-<div class="container hidden" id="conteudos">
-<h2>Conteúdos</h2>
-<label>Série</label><select id="filtroSerieConteudo"></select>
-<label>Disciplina</label><select id="filtroDisciplinaConteudo"></select>
-<button onclick="listarConteudos()">Carregar</button>
-<div id="listaConteudos"></div>
+<!-- INÍCIO (APENAS APRESENTAÇÃO) -->
+<div class="container" id="inicio">
+<h2>Apresentação</h2>
+<div id="conteudoInicio"></div>
 </div>
 
-<div class="container hidden" id="atividades">
-<h2>Atividades</h2>
-<label>Série</label><select id="filtroSerieAtividade"></select>
-<label>Disciplina</label><select id="filtroDisciplinaAtividade"></select>
-<button onclick="listarQuestoes('atividade','listaAtividades')">Carregar</button>
-<div id="listaAtividades"></div>
-</div>
-
-<div class="container hidden" id="simulados">
-<h2>Simulados</h2>
-<label>Série</label><select id="filtroSerieSimulado"></select>
-<label>Disciplina</label><select id="filtroDisciplinaSimulado"></select>
-<button onclick="listarQuestoes('simulado','listaSimulados')">Carregar</button>
-<div id="listaSimulados"></div>
-</div>
-
+<!-- OUTRAS GUIAS -->
+<div class="container hidden" id="conteudos"><h2>Conteúdos</h2></div>
+<div class="container hidden" id="atividades"><h2>Atividades</h2></div>
+<div class="container hidden" id="simulados"><h2>Simulados</h2></div>
 <div class="container hidden" id="ade"><h2>Avaliação ADE</h2></div>
 <div class="container hidden" id="saeb"><h2>Avaliação SAEB</h2></div>
 <div class="container hidden" id="resultados"><h2>Resultados</h2></div>
 
+<!-- ADMIN -->
 <div class="container hidden" id="adminPanel">
 <h2>Painel do Professor</h2>
 
-<h3>Cadastrar Conteúdo</h3>
-<input type="text" id="tituloConteudo" placeholder="Título">
-<label>Série</label><select id="serieConteudo"></select>
-<label>Disciplina</label><select id="disciplinaConteudo"></select>
-<input type="file" id="arquivoConteudo">
-<button onclick="salvarConteudo()">Salvar Conteúdo</button>
+<h3>Editar Guia Início (Apresentação)</h3>
+<textarea id="textoInicio" placeholder="Digite o histórico, apresentação da escola..."></textarea>
 
-<hr>
+<label>Adicionar Imagem</label>
+<input type="file" id="imgInicioInput" accept="image/*">
 
-<h3>Cadastrar Questão</h3>
-<select id="tipoQuestao"><option value="atividade">Atividade</option><option value="simulado">Simulado</option></select>
-<label>Série</label><select id="serieQuestao"></select>
-<label>Disciplina</label><select id="disciplinaQuestao"></select>
-<input type="text" id="pergunta" placeholder="Pergunta">
-<input type="text" id="a" placeholder="Alternativa A">
-<input type="text" id="b" placeholder="Alternativa B">
-<input type="text" id="c" placeholder="Alternativa C">
-<input type="text" id="d" placeholder="Alternativa D">
-<select id="correta"><option value="A">Correta A</option><option value="B">Correta B</option><option value="C">Correta C</option><option value="D">Correta D</option></select>
-<button onclick="salvarQuestao()">Salvar Questão</button>
+<label>Adicionar Vídeo</label>
+<input type="file" id="videoInicioInput" accept="video/*">
 
-<h3>Questões Cadastradas</h3>
-<div id="listaAdminQuestoes"></div>
+<button onclick="salvarInicio()">Salvar Conteúdo</button>
+<button onclick="limparInicio()" style="background:#c62828">Remover Tudo</button>
+
+<h4>Mídias Cadastradas</h4>
+<div id="listaMidiasInicio"></div>
 </div>
 
 <footer>Portal Educacional © 2026</footer>
 
 <script>
-const series=[
-"Educação Infantil - 1º Período","Educação Infantil - 2º Período",
-"1º Ano","2º Ano","3º Ano","4º Ano","5º Ano",
-"6º Ano","7º Ano","8º Ano","9º Ano"
-];
-const disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Ciências","Religião","Artes","Língua Inglesa","Educação Física"];
-
-function preencherSelect(id,lista){
-let s=document.getElementById(id);
-s.innerHTML="<option value=''>Selecionar</option>";
-lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`);
-}
-["filtroSerieConteudo","filtroSerieAtividade","filtroSerieSimulado","serieConteudo","serieQuestao"]
-.forEach(id=>preencherSelect(id,series));
-["filtroDisciplinaConteudo","filtroDisciplinaAtividade","filtroDisciplinaSimulado","disciplinaConteudo","disciplinaQuestao"]
-.forEach(id=>preencherSelect(id,disciplinas));
-
-let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]");
-let questoes=JSON.parse(localStorage.getItem("questoes")||"[]");
-
 function showSection(id){
 document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
 document.getElementById(id).classList.remove("hidden");
-if(id==="conteudos") listarConteudos();
-if(id==="atividades") listarQuestoes("atividade","listaAtividades");
-if(id==="simulados") listarQuestoes("simulado","listaSimulados");
+if(id==="inicio") carregarInicio();
 }
 
 function abrirAdmin(){
-if(prompt("Senha do administrador:")==="1234"){showSection("adminPanel");listarAdminQuestoes();}
-else alert("Senha incorreta");
+if(prompt("Senha do administrador:")==="1234"){
+showSection("adminPanel");
+carregarInicioAdmin();
+}else alert("Senha incorreta");
 }
 
-function salvarConteudo(){
-let file=arquivoConteudo.files[0];
-let reader=new FileReader();
-reader.onload=function(){
-conteudos.push({titulo:tituloConteudo.value,serie:serieConteudo.value,disciplina:disciplinaConteudo.value,arquivo:reader.result});
-localStorage.setItem("conteudos",JSON.stringify(conteudos));
-alert("Conteúdo salvo!");
-};
-reader.readAsDataURL(file);
+/* ===== INÍCIO ADMIN ===== */
+
+let midiasInicio = JSON.parse(localStorage.getItem("midiasInicio")||"[]");
+
+function salvarInicio(){
+localStorage.setItem("textoInicio", textoInicio.value);
+
+let img = imgInicioInput.files[0];
+let vid = videoInicioInput.files[0];
+
+if(img){
+let r=new FileReader();
+r.onload=()=>{midiasInicio.push({tipo:"img",src:r.result});salvarMidia();};
+r.readAsDataURL(img);
+}
+if(vid){
+let r=new FileReader();
+r.onload=()=>{midiasInicio.push({tipo:"video",src:r.result});salvarMidia();};
+r.readAsDataURL(vid);
 }
 
-function listarConteudos(){
-let serie=filtroSerieConteudo.value;
-let disc=filtroDisciplinaConteudo.value;
-listaConteudos.innerHTML="";
-conteudos.filter(c=>(!serie||c.serie===serie)&&(!disc||c.disciplina===disc))
-.forEach(c=>listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" download>Baixar</a></p>`);
+carregarInicio();
+carregarInicioAdmin();
 }
 
-function salvarQuestao(){
-questoes.push({tipo:tipoQuestao.value,serie:serieQuestao.value,disciplina:disciplinaQuestao.value,pergunta:pergunta.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
-localStorage.setItem("questoes",JSON.stringify(questoes));
-alert("Questão salva!");
-listarAdminQuestoes();
+function salvarMidia(){
+localStorage.setItem("midiasInicio",JSON.stringify(midiasInicio));
+carregarInicio();
+carregarInicioAdmin();
 }
 
-function listarQuestoes(tipo,elemento){
-let serie=document.getElementById("filtroSerie"+(tipo==="atividade"?"Atividade":"Simulado")).value;
-let disc=document.getElementById("filtroDisciplina"+(tipo==="atividade"?"Atividade":"Simulado")).value;
-let div=document.getElementById(elemento);
-div.innerHTML="";
-questoes.filter(q=>q.tipo===tipo&&(!serie||q.serie===serie)&&(!disc||q.disciplina===disc))
-.forEach((q,i)=>{
-div.innerHTML+=`
-<div class="question">
-<p><b>${q.pergunta}</b></p>
-<label class="alternativa"><input type="radio" name="q${tipo}${i}"> A) ${q.a}</label>
-<label class="alternativa"><input type="radio" name="q${tipo}${i}"> B) ${q.b}</label>
-<label class="alternativa"><input type="radio" name="q${tipo}${i}"> C) ${q.c}</label>
-<label class="alternativa"><input type="radio" name="q${tipo}${i}"> D) ${q.d}</label>
-</div>`;
+function carregarInicio(){
+let area=document.getElementById("conteudoInicio");
+area.innerHTML="<p>"+(localStorage.getItem("textoInicio")||"")+"</p>";
+midiasInicio.forEach(m=>{
+if(m.tipo==="img") area.innerHTML+=`<img src="${m.src}" style="max-width:300px;margin:10px">`;
+if(m.tipo==="video") area.innerHTML+=`<video src="${m.src}" controls style="max-width:300px;margin:10px"></video>`;
 });
 }
 
-function listarAdminQuestoes(){
-listaAdminQuestoes.innerHTML="";
-questoes.forEach((q,i)=>{
-listaAdminQuestoes.innerHTML+=`${q.pergunta}
-<button class="small-btn" onclick="excluirQuestao(${i})">🗑</button><br>`;
+function carregarInicioAdmin(){
+textoInicio.value=localStorage.getItem("textoInicio")||"";
+let lista=document.getElementById("listaMidiasInicio");
+lista.innerHTML="";
+midiasInicio.forEach((m,i)=>{
+lista.innerHTML+=`Mídia ${i+1} 
+<button class="small-btn" onclick="removerMidia(${i})">Remover</button><br>`;
 });
 }
 
-function excluirQuestao(i){
-questoes.splice(i,1);
-localStorage.setItem("questoes",JSON.stringify(questoes));
-listarAdminQuestoes();
+function removerMidia(i){
+midiasInicio.splice(i,1);
+localStorage.setItem("midiasInicio",JSON.stringify(midiasInicio));
+carregarInicio();
+carregarInicioAdmin();
 }
+
+function limparInicio(){
+localStorage.removeItem("textoInicio");
+localStorage.removeItem("midiasInicio");
+midiasInicio=[];
+carregarInicio();
+carregarInicioAdmin();
+}
+
+carregarInicio();
 </script>
 
 </body>
