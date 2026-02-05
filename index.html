@@ -13,7 +13,6 @@ background:linear-gradient(135deg,#0f3d3e,#145a32,#1e8449);
 color:#fff;
 }
 
-/* CABEÇALHO */
 header{
 background:linear-gradient(to right,#0b5345,#117864,#148f77);
 padding:15px;
@@ -22,15 +21,19 @@ align-items:center;
 gap:20px;
 border-bottom:5px solid #d4ac0d;
 }
+
 .logo-box{
 background:white;
-padding:5px 10px;
-border-radius:12px;
+padding:8px 14px;
+border-radius:14px;
+box-shadow:0 0 10px rgba(0,0,0,0.4);
 }
+
 .logo-box img{
 height:95px;
 display:block;
 }
+
 header h1{
 margin:0;
 font-size:34px;
@@ -38,7 +41,6 @@ letter-spacing:2px;
 font-weight:700;
 }
 
-/* MENU */
 nav{
 display:flex;
 justify-content:center;
@@ -47,6 +49,7 @@ background:#0e6251;
 padding:10px;
 flex-wrap:wrap;
 }
+
 nav button{
 background:#117864;
 border:none;
@@ -57,13 +60,12 @@ cursor:pointer;
 font-weight:bold;
 transition:0.3s;
 }
+
 nav button:hover{background:#1abc9c; transform:scale(1.05);}
 
-/* SEÇÕES */
 section{display:none;padding:20px;}
 section.active{display:block;}
 
-/* CARDS */
 .card{
 background:rgba(0,0,0,0.35);
 padding:15px;
@@ -71,7 +73,6 @@ border-radius:12px;
 margin-bottom:15px;
 }
 
-/* INPUTS */
 input, select, textarea{
 width:100%;
 padding:8px;
@@ -81,17 +82,32 @@ border-radius:8px;
 border:none;
 font-family:'Poppins',sans-serif;
 }
+
 button.salvar{
 background:#d4ac0d;
 color:#000;
 font-weight:bold;
 cursor:pointer;
+padding:8px 12px;
+border:none;
+border-radius:8px;
 }
+
 button.remover{
 background:#922b21;
 color:#fff;
 font-weight:bold;
 cursor:pointer;
+padding:8px 12px;
+border:none;
+border-radius:8px;
+}
+
+.admin-area{
+background:#1b2631;
+padding:15px;
+border-radius:10px;
+margin-bottom:20px;
 }
 </style>
 </head>
@@ -99,7 +115,175 @@ cursor:pointer;
 
 <header>
 <div class="logo-box">
-<img src="logo.png" alt="Logo da Escola"
-onerror="this.style.display='none';document.getElementById('erroLogo').style.display='block';">
+<!-- LOGO FIXO INCORPORADO -->
+<img src="LOGO_BASE64_AQUI">
 </div>
-<h1>PAULA EDUCA
+<h1>PAULA EDUCA</h1>
+</header>
+
+<nav>
+<button onclick="abrir('inicio')">Início</button>
+<button onclick="abrir('conteudos')">Conteúdos</button>
+<button onclick="abrir('atividades')">Atividades</button>
+<button onclick="abrir('simulados')">Simulados</button>
+<button onclick="abrir('ade')">ADE</button>
+<button onclick="abrir('saeb')">SAEB</button>
+<button onclick="abrir('resultados')">Resultados</button>
+<button onclick="abrir('admin')">Professor</button>
+</nav>
+
+<!-- INÍCIO -->
+<section id="inicio" class="active">
+<div class="card" id="apresentacaoInicio">
+<h2>Apresentação da Escola</h2>
+<div id="conteudoInicio"></div>
+</div>
+</section>
+
+<!-- CONTEÚDOS -->
+<section id="conteudos"><div class="card"><h2>Conteúdos</h2><div id="listaConteudos"></div></div></section>
+
+<!-- ATIVIDADES -->
+<section id="atividades"><div class="card"><h2>Atividades</h2><div id="listaAtividades"></div></div></section>
+
+<!-- SIMULADOS -->
+<section id="simulados"><div class="card"><h2>Simulados</h2><div id="listaSimulados"></div></div></section>
+
+<!-- ADE -->
+<section id="ade"><div class="card"><h2>Avaliação ADE</h2><div id="listaADE"></div></div></section>
+
+<!-- SAEB -->
+<section id="saeb"><div class="card"><h2>Avaliação SAEB</h2><div id="listaSAEB"></div></div></section>
+
+<!-- RESULTADOS -->
+<section id="resultados"><div class="card"><h2>Resultados</h2><p>Painel de desempenho dos alunos.</p></div></section>
+
+<!-- ADMIN -->
+<section id="admin">
+<div class="admin-area">
+<h2>Painel do Professor Administrador</h2>
+<input type="password" id="senhaAdmin" placeholder="Senha do administrador">
+<button class="salvar" onclick="loginAdmin()">Entrar</button>
+</div>
+
+<div id="painelAdmin" style="display:none;">
+
+<div class="card">
+<h3>Editar Guia Início (Apresentação)</h3>
+<textarea id="textoInicio" placeholder="Digite o histórico, apresentação, informações da escola..."></textarea>
+<input type="file" id="imagemInicio">
+<button class="salvar" onclick="salvarInicio()">Salvar</button>
+<button class="remover" onclick="limparInicio()">Remover Tudo</button>
+</div>
+
+<div class="card">
+<h3>Cadastrar Conteúdo / Atividade / Avaliação</h3>
+<select id="tipoCadastro">
+<option value="conteudos">Conteúdo</option>
+<option value="atividades">Atividade</option>
+<option value="simulados">Simulado</option>
+<option value="ade">ADE</option>
+<option value="saeb">SAEB</option>
+</select>
+
+<select id="serie">
+<option>Educação Infantil - 1º Período</option>
+<option>Educação Infantil - 2º Período</option>
+<option>1º Ano</option><option>2º Ano</option><option>3º Ano</option>
+<option>4º Ano</option><option>5º Ano</option>
+<option>6º Ano</option><option>7º Ano</option>
+<option>8º Ano</option><option>9º Ano</option>
+</select>
+
+<select id="disciplina">
+<option>Língua Portuguesa</option>
+<option>Matemática</option>
+<option>História</option>
+<option>Geografia</option>
+<option>Ciências</option>
+<option>Artes</option>
+<option>Religião</option>
+<option>Língua Inglesa</option>
+<option>Educação Física</option>
+</select>
+
+<textarea id="descricaoCadastro" placeholder="Descrição..."></textarea>
+<button class="salvar" onclick="salvarCadastro()">Salvar</button>
+</div>
+
+</div>
+</section>
+
+<script>
+function abrir(sec){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.getElementById(sec).classList.add("active");
+}
+
+function loginAdmin(){
+if(document.getElementById("senhaAdmin").value==="1234"){
+document.getElementById("painelAdmin").style.display="block";
+alert("Login realizado!");
+}else{alert("Senha incorreta");}
+}
+
+/* INÍCIO */
+function salvarInicio(){
+let texto=document.getElementById("textoInicio").value;
+let imgInput=document.getElementById("imagemInicio").files[0];
+let reader=new FileReader();
+reader.onload=function(){
+localStorage.setItem("inicioTexto",texto);
+localStorage.setItem("inicioImagem",reader.result);
+carregarInicio();
+}
+if(imgInput){reader.readAsDataURL(imgInput);}else{
+localStorage.setItem("inicioTexto",texto);
+carregarInicio();
+}
+}
+
+function limparInicio(){
+localStorage.removeItem("inicioTexto");
+localStorage.removeItem("inicioImagem");
+carregarInicio();
+}
+
+function carregarInicio(){
+let area=document.getElementById("conteudoInicio");
+area.innerHTML="";
+let texto=localStorage.getItem("inicioTexto");
+let img=localStorage.getItem("inicioImagem");
+if(texto) area.innerHTML+=`<p>${texto}</p>`;
+if(img) area.innerHTML+=`<img src="${img}" style="max-width:300px;margin-top:10px;border-radius:10px;">`;
+}
+carregarInicio();
+
+/* CADASTROS */
+function salvarCadastro(){
+let tipo=document.getElementById("tipoCadastro").value;
+let serie=document.getElementById("serie").value;
+let disc=document.getElementById("disciplina").value;
+let desc=document.getElementById("descricaoCadastro").value;
+let lista=JSON.parse(localStorage.getItem(tipo)||"[]");
+lista.push({serie,disc,desc});
+localStorage.setItem(tipo,JSON.stringify(lista));
+carregarListas();
+}
+
+function carregarListas(){
+["conteudos","atividades","simulados","ade","saeb"].forEach(tipo=>{
+let area=document.getElementById("lista"+tipo.charAt(0).toUpperCase()+tipo.slice(1));
+if(!area) return;
+area.innerHTML="";
+let lista=JSON.parse(localStorage.getItem(tipo)||"[]");
+lista.forEach(item=>{
+area.innerHTML+=`<div class="card"><b>${item.serie}</b> - ${item.disc}<br>${item.desc}</div>`;
+});
+});
+}
+carregarListas();
+</script>
+
+</body>
+</html>
