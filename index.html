@@ -2,199 +2,104 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal Educacional</title>
+<title>PAULA EDUCA</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body {margin:0;font-family:Arial;background:#f4f6f9;}
-header {
-    background: linear-gradient(90deg,#0d47a1,#1976d2);
-    color:white;
-    padding:15px;
-    display:flex;
-    align-items:center;
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#0f3d3e,#145a32,#1e8449);
+color:#fff;
 }
-header img {height:60px;margin-right:15px;}
-header h1 {flex:1;text-align:center;font-size:26px;margin:0;}
-nav {background:#1565c0;display:flex;justify-content:center;gap:20px;padding:10px;}
-nav button {background:none;border:none;color:white;font-weight:bold;cursor:pointer;font-size:16px;}
-nav button:hover {text-decoration:underline;}
-.section {display:none;padding:20px;}
-.active {display:block;}
-.card {background:white;padding:15px;margin:10px 0;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
-input, select, textarea {width:100%;padding:8px;margin:5px 0 10px;}
-button.primary {background:#1976d2;color:white;border:none;padding:10px;border-radius:5px;cursor:pointer;}
-button.danger {background:#c62828;color:white;border:none;padding:6px 10px;border-radius:5px;cursor:pointer;}
-.alt {margin:5px 0;display:flex;align-items:center;gap:8px;}
-.alt input {width:auto;}
-footer {text-align:center;padding:15px;background:#e3f2fd;margin-top:30px;}
+
+/* CABEÇALHO */
+header{
+background:linear-gradient(to right,#0b5345,#117864,#148f77);
+padding:15px;
+display:flex;
+align-items:center;
+gap:20px;
+border-bottom:5px solid #d4ac0d;
+}
+.logo-box{
+background:white;
+padding:5px 10px;
+border-radius:12px;
+}
+.logo-box img{
+height:95px;
+display:block;
+}
+header h1{
+margin:0;
+font-size:34px;
+letter-spacing:2px;
+font-weight:700;
+}
+
+/* MENU */
+nav{
+display:flex;
+justify-content:center;
+gap:12px;
+background:#0e6251;
+padding:10px;
+flex-wrap:wrap;
+}
+nav button{
+background:#117864;
+border:none;
+color:#fff;
+padding:10px 16px;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+transition:0.3s;
+}
+nav button:hover{background:#1abc9c; transform:scale(1.05);}
+
+/* SEÇÕES */
+section{display:none;padding:20px;}
+section.active{display:block;}
+
+/* CARDS */
+.card{
+background:rgba(0,0,0,0.35);
+padding:15px;
+border-radius:12px;
+margin-bottom:15px;
+}
+
+/* INPUTS */
+input, select, textarea{
+width:100%;
+padding:8px;
+margin-top:5px;
+margin-bottom:10px;
+border-radius:8px;
+border:none;
+font-family:'Poppins',sans-serif;
+}
+button.salvar{
+background:#d4ac0d;
+color:#000;
+font-weight:bold;
+cursor:pointer;
+}
+button.remover{
+background:#922b21;
+color:#fff;
+font-weight:bold;
+cursor:pointer;
+}
 </style>
 </head>
-
 <body>
 
 <header>
-<img src="LOGO_DA_ESCOLA.png">
-<h1>Portal Educacional</h1>
-</header>
-
-<nav>
-<button onclick="show('inicio')">Início</button>
-<button onclick="show('conteudos')">Conteúdos</button>
-<button onclick="show('atividades')">Atividades</button>
-<button onclick="show('simulados')">Simulados</button>
-<button onclick="show('resultados')">Resultados</button>
-<button onclick="show('admin')">Administrador</button>
-</nav>
-
-<div id="inicio" class="section active">
-<div class="card"><h2 style="text-align:center">Bem-vindo ao Portal Educacional</h2></div>
+<div class="logo-box">
+<img src="logo.png" alt="Logo da Escola"
+onerror="this.style.display='none';document.getElementById('erroLogo').style.display='block';">
 </div>
-
-<div id="conteudos" class="section">
-<h2>Conteúdos Disponíveis</h2>
-<div id="listaConteudos"></div>
-</div>
-
-<div id="atividades" class="section">
-<h2>Atividades</h2>
-<div id="listaAtividades"></div>
-</div>
-
-<div id="simulados" class="section">
-<h2>Simulados</h2>
-<div id="listaSimulados"></div>
-</div>
-
-<div id="resultados" class="section">
-<h2>Resultados</h2>
-<div id="relatorio"></div>
-<button class="primary" onclick="window.print()">🖨 Gerar PDF</button>
-</div>
-
-<div id="admin" class="section">
-<h2>Área do Administrador</h2>
-
-<input type="password" id="senhaAdmin" placeholder="Senha do administrador">
-<button class="primary" onclick="loginAdmin()">Entrar</button>
-
-<div id="painelAdmin" style="display:none">
-
-<div class="card">
-<h3>Cadastrar Conteúdo</h3>
-<select id="serieConteudo"></select>
-<select id="discConteudo"></select>
-<textarea id="textoConteudo" placeholder="Texto do conteúdo"></textarea>
-<input type="file" id="arquivoConteudo">
-<button class="primary" onclick="salvarConteudo()">Salvar Conteúdo</button>
-</div>
-
-<div class="card">
-<h3>Cadastrar Questão (Atividade/Simulado)</h3>
-<select id="tipoQuestao">
-<option value="atividade">Atividade</option>
-<option value="simulado">Simulado</option>
-</select>
-<select id="serieQuestao"></select>
-<select id="discQuestao"></select>
-<textarea id="pergunta"></textarea>
-
-<div class="alt"><input type="radio" name="correta" value="0"> A <input id="a0"></div>
-<div class="alt"><input type="radio" name="correta" value="1"> B <input id="a1"></div>
-<div class="alt"><input type="radio" name="correta" value="2"> C <input id="a2"></div>
-<div class="alt"><input type="radio" name="correta" value="3"> D <input id="a3"></div>
-
-<button class="primary" onclick="salvarQuestao()">Salvar Questão</button>
-</div>
-
-</div>
-</div>
-
-<footer>Produzido para uso educacional</footer>
-
-<script>
-const series = ["Educação Infantil 1º Período","Educação Infantil 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
-const disciplinas = ["Língua Portuguesa","Matemática","História","Geografia","Ciências","Artes","Religião","Inglês","Educação Física"];
-
-function preencherSelects(){
-series.forEach(s=>{
-serieConteudo.innerHTML+=`<option>${s}</option>`;
-serieQuestao.innerHTML+=`<option>${s}</option>`;
-});
-disciplinas.forEach(d=>{
-discConteudo.innerHTML+=`<option>${d}</option>`;
-discQuestao.innerHTML+=`<option>${d}</option>`;
-});
-}
-preencherSelects();
-
-function show(id){
-document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-if(id==="conteudos") carregarConteudos();
-if(id==="atividades") carregarQuestoes("atividade");
-if(id==="simulados") carregarQuestoes("simulado");
-}
-
-function loginAdmin(){
-if(document.getElementById('senhaAdmin').value==="admin123"){
-painelAdmin.style.display="block";
-alert("Login realizado");
-}else alert("Senha incorreta");
-}
-
-function salvarConteudo(){
-let conteudos = JSON.parse(localStorage.getItem("conteudos")||"[]");
-let file = arquivoConteudo.files[0];
-let reader = new FileReader();
-reader.onload = function(){
-conteudos.push({serie:serieConteudo.value,disc:discConteudo.value,texto:textoConteudo.value,arquivo:reader.result,nome:file.name});
-localStorage.setItem("conteudos",JSON.stringify(conteudos));
-alert("Conteúdo salvo!");
-}
-if(file) reader.readAsDataURL(file);
-}
-
-function carregarConteudos(){
-let lista = JSON.parse(localStorage.getItem("conteudos")||"[]");
-listaConteudos.innerHTML="";
-lista.forEach(c=>{
-listaConteudos.innerHTML+=`<div class="card"><h3>${c.disc} - ${c.serie}</h3><p>${c.texto}</p><a href="${c.arquivo}" target="_blank">📂 Abrir ${c.nome}</a></div>`;
-});
-}
-
-function salvarQuestao(){
-let qs = JSON.parse(localStorage.getItem("questoes")||"[]");
-qs.push({
-tipo:tipoQuestao.value,
-serie:serieQuestao.value,
-disc:discQuestao.value,
-pergunta:pergunta.value,
-alts:[a0.value,a1.value,a2.value,a3.value],
-correta:document.querySelector('input[name="correta"]:checked').value
-});
-localStorage.setItem("questoes",JSON.stringify(qs));
-alert("Questão salva!");
-}
-
-function carregarQuestoes(tipo){
-let qs = JSON.parse(localStorage.getItem("questoes")||"[]").filter(q=>q.tipo===tipo);
-let div = tipo==="atividade"?listaAtividades:listaSimulados;
-div.innerHTML="";
-qs.forEach((q,i)=>{
-div.innerHTML+=`<div class="card"><p><b>${q.pergunta}</b></p>
-${q.alts.map((a,j)=>`<div class="alt"><input type="radio" name="q${i}" value="${j}"> ${a}</div>`).join('')}
-<button onclick="corrigir(${i},${q.correta})">Responder</button></div>`;
-});
-}
-
-function corrigir(i,c){
-let marcada=document.querySelector(`input[name="q${i}"]:checked`);
-if(!marcada) return alert("Marque uma alternativa");
-if(marcada.value==c){alert("Resposta correta!");}
-else alert("Resposta incorreta!");
-}
-</script>
-
-</body>
-</html>
+<h1>PAULA EDUCA
