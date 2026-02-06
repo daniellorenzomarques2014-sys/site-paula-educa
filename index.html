@@ -12,7 +12,8 @@
 body{
 margin:0;
 font-family:'Montserrat',sans-serif;
-background:linear-gradient(rgba(0,40,30,0.85), rgba(0,40,30,0.85)),
+background:
+linear-gradient(rgba(0,40,30,0.85), rgba(0,40,30,0.85)),
 url('fundo-amazonico.jpg.png') no-repeat center center fixed;
 background-size:cover;
 }
@@ -24,16 +25,23 @@ align-items:center;
 gap:20px;
 padding:20px 30px;
 color:white;
-background:linear-gradient(90deg,#0b3d2e,#145a32,#0b3d2e);
-border-bottom:6px solid #c62828;
+background:repeating-linear-gradient(45deg,#0b3d2e,#0b3d2e 10px,#145a32 10px,#145a32 20px);
+border-bottom:8px solid #c62828;
 box-shadow:0 4px 15px rgba(0,0,0,0.5);
 }
 .logo{
-height:120px;
-background:white;
-padding:5px;
-border-radius:8px;
+height:130px;
+object-fit:contain;
 }
+
+/* TÍTULO */
+header h1{
+margin:0;
+font-size:38px;
+font-weight:900;
+letter-spacing:3px
+}
+header p{margin:0;opacity:0.9}
 
 /* MENU */
 nav{
@@ -65,7 +73,7 @@ box-shadow:0 6px 18px rgba(0,0,0,0.25)
 .admin-btn{
 position:fixed;
 right:15px;
-top:90px;
+top:80px;
 background:#bf360c;
 color:white;
 padding:10px 14px;
@@ -81,7 +89,6 @@ margin:6px 0;
 border-radius:6px;
 border:1px solid #bbb
 }
-
 button{
 padding:8px 14px;
 margin-top:8px;
@@ -100,13 +107,15 @@ border-radius:8px;
 margin-bottom:15px
 }
 
+/* BOLINHAS ALTERNATIVAS */
 .alternativa{
 display:flex;
 align-items:center;
-gap:5px;
-margin:2px 0;
+gap:6px;
+margin:4px 0;
 cursor:pointer
 }
+.alternativa input{margin:0}
 
 footer{
 text-align:center;
@@ -115,9 +124,13 @@ background:#3e2723;
 color:white;
 margin-top:40px
 }
-
 label{font-weight:600;margin-top:8px;display:block}
-.small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
+.small-btn{
+background:#777;
+margin-left:5px;
+padding:4px 8px;
+font-size:12px
+}
 </style>
 </head>
 <body>
@@ -142,13 +155,11 @@ label{font-weight:600;margin-top:8px;display:block}
 
 <div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
 
-<!-- INÍCIO (APENAS APRESENTAÇÃO) -->
 <div class="container" id="inicio">
-<h2>Apresentação da Escola</h2>
-<div id="conteudoInicio"></div>
+<h2>Bem-vindo à Plataforma PAULA EDUCA</h2>
+<div id="inicioConteudo"></div>
 </div>
 
-<!-- CONTEÚDOS -->
 <div class="container hidden" id="conteudos">
 <h2>Conteúdos</h2>
 <label>Série</label><select id="filtroSerieConteudo"></select>
@@ -157,7 +168,6 @@ label{font-weight:600;margin-top:8px;display:block}
 <div id="listaConteudos"></div>
 </div>
 
-<!-- ATIVIDADES -->
 <div class="container hidden" id="atividades">
 <h2>Atividades</h2>
 <label>Série</label><select id="filtroSerieAtividade"></select>
@@ -166,7 +176,6 @@ label{font-weight:600;margin-top:8px;display:block}
 <div id="listaAtividades"></div>
 </div>
 
-<!-- SIMULADOS -->
 <div class="container hidden" id="simulados">
 <h2>Simulados</h2>
 <label>Série</label><select id="filtroSerieSimulado"></select>
@@ -179,7 +188,6 @@ label{font-weight:600;margin-top:8px;display:block}
 <div class="container hidden" id="saeb"><h2>Avaliação SAEB</h2></div>
 <div class="container hidden" id="resultados"><h2>Resultados</h2></div>
 
-<!-- PAINEL PROFESSOR -->
 <div class="container hidden" id="adminPanel">
 <h2>Painel do Professor</h2>
 
@@ -218,6 +226,9 @@ label{font-weight:600;margin-top:8px;display:block}
 <option value="D">Correta D</option>
 </select>
 <button onclick="salvarQuestao()">Salvar Questão</button>
+
+<h3>Questões Cadastradas</h3>
+<div id="listaAdminQuestoes"></div>
 </div>
 
 <footer>Portal Educacional © 2026</footer>
@@ -235,10 +246,8 @@ let s=document.getElementById(id);
 s.innerHTML="<option value=''>Selecionar</option>";
 lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`);
 }
-
 ["filtroSerieConteudo","filtroSerieAtividade","filtroSerieSimulado","serieConteudo","serieQuestao"]
 .forEach(id=>preencherSelect(id,series));
-
 ["filtroDisciplinaConteudo","filtroDisciplinaAtividade","filtroDisciplinaSimulado","disciplinaConteudo","disciplinaQuestao"]
 .forEach(id=>preencherSelect(id,disciplinas));
 
@@ -248,94 +257,35 @@ let questoes=JSON.parse(localStorage.getItem("questoes")||"[]");
 function showSection(id){
 document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
 document.getElementById(id).classList.remove("hidden");
-if(id==="inicio") carregarInicio();
 }
 
 function abrirAdmin(){
-if(prompt("Senha do administrador:")==="1234") showSection("adminPanel");
+if(prompt("Senha do administrador:")==="1234"){showSection("adminPanel");listarAdminQuestoes();}
 else alert("Senha incorreta");
 }
 
-/* INÍCIO */
 function salvarInicio(){
-let texto=textoInicio.value;
-let reader=new FileReader();
-let arquivos=[...midiaInicio.files];
+localStorage.setItem("textoInicio",textoInicio.value);
 let midias=[];
-if(arquivos.length===0){
-localStorage.setItem("inicioTexto",texto);
-localStorage.setItem("inicioMidia","[]");
-carregarInicio();
-return;
-}
-let count=0;
-arquivos.forEach(file=>{
-let r=new FileReader();
-r.onload=e=>{
-midias.push(e.target.result);
-count++;
-if(count===arquivos.length){
-localStorage.setItem("inicioTexto",texto);
-localStorage.setItem("inicioMidia",JSON.stringify(midias));
-carregarInicio();
-}
-};
-r.readAsDataURL(file);
-});
-}
-
-function carregarInicio(){
-conteudoInicio.innerHTML="<p>"+(localStorage.getItem("inicioTexto")||"")+"</p>";
-let midias=JSON.parse(localStorage.getItem("inicioMidia")||"[]");
-midias.forEach(m=>{
-if(m.includes("video")) conteudoInicio.innerHTML+=`<video src="${m}" controls width="300"></video>`;
-else conteudoInicio.innerHTML+=`<img src="${m}" width="300">`;
-});
-}
-
-/* CONTEÚDOS */
-function salvarConteudo(){
-let file=arquivoConteudo.files[0];
+for(let file of midiaInicio.files){
 let reader=new FileReader();
-reader.onload=function(){
-conteudos.push({titulo:tituloConteudo.value,serie:serieConteudo.value,disciplina:disciplinaConteudo.value,arquivo:reader.result});
-localStorage.setItem("conteudos",JSON.stringify(conteudos));
-alert("Conteúdo salvo!");
+reader.onload=e=>{
+midias.push(e.target.result);
+localStorage.setItem("midiasInicio",JSON.stringify(midias));
+carregarInicio();
 };
 reader.readAsDataURL(file);
 }
-
-function listarConteudos(){
-let serie=filtroSerieConteudo.value;
-let disc=filtroDisciplinaConteudo.value;
-listaConteudos.innerHTML="";
-conteudos.filter(c=>(!serie||c.serie===serie)&&(!disc||c.disciplina===disc))
-.forEach(c=>listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" download>Baixar</a></p>`);
 }
 
-/* QUESTÕES */
-function salvarQuestao(){
-questoes.push({tipo:tipoQuestao.value,serie:serieQuestao.value,disciplina:disciplinaQuestao.value,pergunta:pergunta.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});
-localStorage.setItem("questoes",JSON.stringify(questoes));
-alert("Questão salva!");
-}
-
-function listarQuestoes(tipo,elemento){
-let div=document.getElementById(elemento);
-div.innerHTML="";
-questoes.filter(q=>q.tipo===tipo)
-.forEach((q,i)=>{
-div.innerHTML+=`
-<div class="question">
-<p><b>${q.pergunta}</b></p>
-<label class="alternativa"><input type="radio" name="${tipo}${i}"> A) ${q.a}</label>
-<label class="alternativa"><input type="radio" name="${tipo}${i}"> B) ${q.b}</label>
-<label class="alternativa"><input type="radio" name="${tipo}${i}"> C) ${q.c}</label>
-<label class="alternativa"><input type="radio" name="${tipo}${i}"> D) ${q.d}</label>
-</div>`;
+function carregarInicio(){
+inicioConteudo.innerHTML="<p>"+(localStorage.getItem("textoInicio")||"")+"</p>";
+let midias=JSON.parse(localStorage.getItem("midiasInicio")||"[]");
+midias.forEach(m=>{
+if(m.includes("video")) inicioConteudo.innerHTML+=`<video src="${m}" controls width="300"></video>`;
+else inicioConteudo.innerHTML+=`<img src="${m}" width="300">`;
 });
 }
-
 carregarInicio();
 </script>
 
