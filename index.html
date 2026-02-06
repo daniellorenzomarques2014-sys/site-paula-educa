@@ -17,8 +17,6 @@ linear-gradient(rgba(0,40,30,0.85), rgba(0,40,30,0.85)),
 url('fundo-amazonico.jpg.png') no-repeat center center fixed;
 background-size:cover;
 }
-
-/* CABEÇALHO */
 header{
 display:flex;
 align-items:center;
@@ -29,108 +27,39 @@ background:repeating-linear-gradient(45deg,#0b3d2e,#0b3d2e 10px,#145a32 10px,#14
 border-bottom:8px solid #c62828;
 box-shadow:0 4px 15px rgba(0,0,0,0.5);
 }
-.logo{
-height:130px;
-object-fit:contain;
-}
-
-/* TÍTULO */
-header h1{
-margin:0;
-font-size:38px;
-font-weight:900;
-letter-spacing:3px
-}
+.logo{height:130px;object-fit:contain}
+header h1{margin:0;font-size:38px;font-weight:900;letter-spacing:3px}
 header p{margin:0;opacity:0.9}
-
-/* MENU */
 nav{
 background:linear-gradient(90deg,#3e2723,#5d4037,#3e2723);
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
+display:flex;justify-content:center;flex-wrap:wrap;
 }
 nav a{
-color:white;
-padding:14px 22px;
-text-decoration:none;
-font-weight:700;
-cursor:pointer;
+color:white;padding:14px 22px;text-decoration:none;font-weight:700;cursor:pointer;
 }
 nav a:hover{background:#8d6e63}
-
-/* CONTEÚDO */
 .container{
-max-width:1100px;
-margin:25px auto;
-padding:20px;
-background:white;
-border-radius:10px;
-box-shadow:0 6px 18px rgba(0,0,0,0.25)
+max-width:1100px;margin:25px auto;padding:20px;background:white;
+border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.25)
 }
 .hidden{display:none}
-
 .admin-btn{
-position:fixed;
-right:15px;
-top:80px;
-background:#bf360c;
-color:white;
-padding:10px 14px;
-border-radius:6px;
-cursor:pointer;
-font-weight:bold
+position:fixed;right:15px;top:80px;background:#bf360c;color:white;
+padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:bold
 }
-
 input,select,textarea{
-width:100%;
-padding:8px;
-margin:6px 0;
-border-radius:6px;
-border:1px solid #bbb
+width:100%;padding:8px;margin:6px 0;border-radius:6px;border:1px solid #bbb
 }
 button{
-padding:8px 14px;
-margin-top:8px;
-border:none;
-border-radius:6px;
-background:#2e7d32;
-color:white;
-cursor:pointer;
-font-weight:700
+padding:8px 14px;margin-top:8px;border:none;border-radius:6px;
+background:#2e7d32;color:white;cursor:pointer;font-weight:700
 }
-
-.question{
-border:1px solid #ddd;
-padding:12px;
-border-radius:8px;
-margin-bottom:15px
-}
-
-/* BOLINHAS ALTERNATIVAS */
-.alternativa{
-display:flex;
-align-items:center;
-gap:6px;
-margin:4px 0;
-cursor:pointer
-}
+.question{border:1px solid #ddd;padding:12px;border-radius:8px;margin-bottom:15px}
+.alternativa{display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer}
 .alternativa input{margin:0}
-
-footer{
-text-align:center;
-padding:15px;
-background:#3e2723;
-color:white;
-margin-top:40px
-}
+footer{text-align:center;padding:15px;background:#3e2723;color:white;margin-top:40px}
 label{font-weight:600;margin-top:8px;display:block}
-.small-btn{
-background:#777;
-margin-left:5px;
-padding:4px 8px;
-font-size:12px
-}
+.small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
 </style>
 </head>
 <body>
@@ -155,10 +84,7 @@ font-size:12px
 
 <div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
 
-<div class="container" id="inicio">
-<h2>Bem-vindo à Plataforma PAULA EDUCA</h2>
-<div id="inicioConteudo"></div>
-</div>
+<div class="container" id="inicio"><h2>Bem-vindo à Plataforma PAULA EDUCA</h2></div>
 
 <div class="container hidden" id="conteudos">
 <h2>Conteúdos</h2>
@@ -184,21 +110,28 @@ font-size:12px
 <div id="listaSimulados"></div>
 </div>
 
-<div class="container hidden" id="ade"><h2>Avaliação ADE</h2></div>
-<div class="container hidden" id="saeb"><h2>Avaliação SAEB</h2></div>
+<div class="container hidden" id="ade">
+<h2>Avaliação ADE</h2>
+<label>Série</label><select id="filtroSerieAde"></select>
+<label>Disciplina</label><select id="filtroDisciplinaAde"></select>
+<button onclick="listarQuestoes('ade','listaAde')">Carregar</button>
+<div id="listaAde"></div>
+</div>
+
+<div class="container hidden" id="saeb">
+<h2>Avaliação SAEB</h2>
+<label>Série</label><select id="filtroSerieSaeb"></select>
+<label>Disciplina</label><select id="filtroDisciplinaSaeb"></select>
+<button onclick="listarQuestoes('saeb','listaSaeb')">Carregar</button>
+<div id="listaSaeb"></div>
+</div>
+
 <div class="container hidden" id="resultados"><h2>Resultados</h2></div>
 
 <div class="container hidden" id="adminPanel">
 <h2>Painel do Professor</h2>
 
-<h3>Editar Apresentação da Guia Início</h3>
-<textarea id="textoInicio" placeholder="Digite o histórico da escola..."></textarea>
-<input type="file" id="midiaInicio" multiple>
-<button onclick="salvarInicio()">Salvar Apresentação</button>
-
-<hr>
-
-<h3>Cadastrar Conteúdo</h3>
+<h3>Cadastrar Conteúdo (SEM QUESTÕES)</h3>
 <input type="text" id="tituloConteudo" placeholder="Título">
 <label>Série</label><select id="serieConteudo"></select>
 <label>Disciplina</label><select id="disciplinaConteudo"></select>
@@ -211,6 +144,8 @@ font-size:12px
 <select id="tipoQuestao">
 <option value="atividade">Atividade</option>
 <option value="simulado">Simulado</option>
+<option value="ade">ADE</option>
+<option value="saeb">SAEB</option>
 </select>
 <label>Série</label><select id="serieQuestao"></select>
 <label>Disciplina</label><select id="disciplinaQuestao"></select>
@@ -234,59 +169,29 @@ font-size:12px
 <footer>Portal Educacional © 2026</footer>
 
 <script>
-const series=[
-"Educação Infantil - 1º Período","Educação Infantil - 2º Período",
-"1º Ano","2º Ano","3º Ano","4º Ano","5º Ano",
-"6º Ano","7º Ano","8º Ano","9º Ano"
-];
+const series=["Educação Infantil - 1º Período","Educação Infantil - 2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
 const disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Ciências","Religião","Artes","Língua Inglesa","Educação Física"];
 
-function preencherSelect(id,lista){
-let s=document.getElementById(id);
-s.innerHTML="<option value=''>Selecionar</option>";
-lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`);
-}
-["filtroSerieConteudo","filtroSerieAtividade","filtroSerieSimulado","serieConteudo","serieQuestao"]
-.forEach(id=>preencherSelect(id,series));
-["filtroDisciplinaConteudo","filtroDisciplinaAtividade","filtroDisciplinaSimulado","disciplinaConteudo","disciplinaQuestao"]
-.forEach(id=>preencherSelect(id,disciplinas));
+function preencher(id,lista){let s=document.getElementById(id);s.innerHTML="<option value=''>Selecionar</option>";lista.forEach(v=>s.innerHTML+=`<option>${v}</option>`);}
+["filtroSerieConteudo","filtroSerieAtividade","filtroSerieSimulado","filtroSerieAde","filtroSerieSaeb","serieConteudo","serieQuestao"].forEach(id=>preencher(id,series));
+["filtroDisciplinaConteudo","filtroDisciplinaAtividade","filtroDisciplinaSimulado","filtroDisciplinaAde","filtroDisciplinaSaeb","disciplinaConteudo","disciplinaQuestao"].forEach(id=>preencher(id,disciplinas));
 
 let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]");
 let questoes=JSON.parse(localStorage.getItem("questoes")||"[]");
 
-function showSection(id){
-document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
-document.getElementById(id).classList.remove("hidden");
-}
+function showSection(id){document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");}
+function abrirAdmin(){if(prompt("Senha do administrador:")==="1234"){showSection("adminPanel");listarAdminQuestoes();}else alert("Senha incorreta");}
 
-function abrirAdmin(){
-if(prompt("Senha do administrador:")==="1234"){showSection("adminPanel");listarAdminQuestoes();}
-else alert("Senha incorreta");
-}
+function salvarConteudo(){let file=arquivoConteudo.files[0];let reader=new FileReader();reader.onload=e=>{conteudos.push({titulo:tituloConteudo.value,serie:serieConteudo.value,disciplina:disciplinaConteudo.value,arquivo:e.target.result});localStorage.setItem("conteudos",JSON.stringify(conteudos));alert("Conteúdo salvo!");};reader.readAsDataURL(file);}
 
-function salvarInicio(){
-localStorage.setItem("textoInicio",textoInicio.value);
-let midias=[];
-for(let file of midiaInicio.files){
-let reader=new FileReader();
-reader.onload=e=>{
-midias.push(e.target.result);
-localStorage.setItem("midiasInicio",JSON.stringify(midias));
-carregarInicio();
-};
-reader.readAsDataURL(file);
-}
-}
+function listarConteudos(){let s=filtroSerieConteudo.value,d=filtroDisciplinaConteudo.value;listaConteudos.innerHTML="";conteudos.filter(c=>(!s||c.serie===s)&&(!d||c.disciplina===d)).forEach(c=>listaConteudos.innerHTML+=`<p><b>${c.titulo}</b> - <a href="${c.arquivo}" download>Baixar</a></p>`);}
 
-function carregarInicio(){
-inicioConteudo.innerHTML="<p>"+(localStorage.getItem("textoInicio")||"")+"</p>";
-let midias=JSON.parse(localStorage.getItem("midiasInicio")||"[]");
-midias.forEach(m=>{
-if(m.includes("video")) inicioConteudo.innerHTML+=`<video src="${m}" controls width="300"></video>`;
-else inicioConteudo.innerHTML+=`<img src="${m}" width="300">`;
-});
-}
-carregarInicio();
+function salvarQuestao(){questoes.push({tipo:tipoQuestao.value,serie:serieQuestao.value,disciplina:disciplinaQuestao.value,pergunta:pergunta.value,a:a.value,b:b.value,c:c.value,d:d.value,correta:correta.value});localStorage.setItem("questoes",JSON.stringify(questoes));alert("Questão salva!");listarAdminQuestoes();}
+
+function listarQuestoes(tipo,elemento){let serie=document.getElementById("filtroSerie"+tipo.charAt(0).toUpperCase()+tipo.slice(1)).value;let disc=document.getElementById("filtroDisciplina"+tipo.charAt(0).toUpperCase()+tipo.slice(1)).value;let div=document.getElementById(elemento);div.innerHTML="";questoes.filter(q=>q.tipo===tipo&&(!serie||q.serie===serie)&&(!disc||q.disciplina===disc)).forEach((q,i)=>{div.innerHTML+=`<div class="question"><p><b>${q.pergunta}</b></p><label class="alternativa"><input type="radio" name="${tipo}${i}"> A) ${q.a}</label><label class="alternativa"><input type="radio" name="${tipo}${i}"> B) ${q.b}</label><label class="alternativa"><input type="radio" name="${tipo}${i}"> C) ${q.c}</label><label class="alternativa"><input type="radio" name="${tipo}${i}"> D) ${q.d}</label></div>`;});}
+
+function listarAdminQuestoes(){listaAdminQuestoes.innerHTML="";questoes.forEach((q,i)=>{listaAdminQuestoes.innerHTML+=`${q.tipo.toUpperCase()} - ${q.pergunta}<button class="small-btn" onclick="excluirQuestao(${i})">🗑</button><br>`;});}
+function excluirQuestao(i){questoes.splice(i,1);localStorage.setItem("questoes",JSON.stringify(questoes));listarAdminQuestoes();}
 </script>
 
 </body>
