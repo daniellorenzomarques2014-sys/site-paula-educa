@@ -13,15 +13,14 @@ body{
 margin:0;
 font-family:'Montserrat',sans-serif;
 
-/* FUNDO GERAL AMAZÔNICO */
+/* FUNDO AMAZÔNICO GERAL */
 background:
-linear-gradient(rgba(0,40,30,0.88), rgba(0,40,30,0.88)),
-url('fundo-amazonico.jpg') no-repeat center center fixed;
-
+linear-gradient(rgba(0,45,35,0.88), rgba(0,45,35,0.88)),
+url('fundo-amazonia.jpg') no-repeat center center fixed;
 background-size:cover;
 }
 
-/* CABEÇALHO COM FLORESTA + TRIBAL */
+/* CABEÇALHO */
 header{
 display:flex;
 align-items:center;
@@ -29,17 +28,16 @@ gap:20px;
 padding:20px 30px;
 color:white;
 
-/* CAMADAS DO FUNDO */
+/* CENÁRIO AMAZÔNICO NO TOPO */
 background:
-linear-gradient(rgba(0,60,40,0.85), rgba(0,40,30,0.85)),
-url('fundo-amazonico.jpg') center/cover,
-url('textura-tribal.png');
+linear-gradient(rgba(0,70,50,0.75), rgba(0,50,35,0.85)),
+url('fundo-amazonia.jpg') center/cover;
 
 border-bottom:8px solid #c62828;
-box-shadow:0 4px 20px rgba(0,0,0,0.6);
+box-shadow:0 4px 25px rgba(0,0,0,0.6);
 }
 
-/* LOGO — NUNCA ALTERA */
+/* LOGOTIPO — NÃO ALTERA */
 .logo{
 height:130px;
 background:transparent !important;
@@ -59,7 +57,7 @@ opacity:0.95;
 font-weight:600;
 }
 
-/* MENU TRIBAL */
+/* MENU */
 nav{
 background:linear-gradient(90deg,#3e2723,#5d4037,#3e2723);
 display:flex;
@@ -91,6 +89,7 @@ box-shadow:0 6px 18px rgba(0,0,0,0.25)
 }
 .hidden{display:none}
 
+/* BOTÃO ADMIN */
 .admin-btn{
 position:fixed;
 right:15px;
@@ -103,59 +102,12 @@ cursor:pointer;
 font-weight:bold
 }
 
-input,select,textarea{
-width:100%;
-padding:8px;
-margin:6px 0;
-border-radius:6px;
-border:1px solid #bbb
-}
-
-button{
-padding:8px 14px;
-margin-top:8px;
-border:none;
-border-radius:6px;
-background:#2e7d32;
-color:white;
-cursor:pointer;
-font-weight:700
-}
-
-.question{
-border:1px solid #ddd;
-padding:12px;
-border-radius:8px;
-margin-bottom:15px
-}
-
-.alternativa{
-display:flex;
-align-items:center;
-gap:5px;
-margin:2px 0;
-cursor:pointer
-}
-
 footer{
 text-align:center;
 padding:15px;
 background:#3e2723;
 color:white;
 margin-top:40px
-}
-
-label{
-font-weight:600;
-margin-top:8px;
-display:block
-}
-
-.small-btn{
-background:#777;
-margin-left:5px;
-padding:4px 8px;
-font-size:12px
 }
 </style>
 </head>
@@ -183,14 +135,14 @@ font-size:12px
 
 <div class="container" id="inicio">
 <h2>Bem-vindo à Plataforma PAULA EDUCA</h2>
-<div id="inicioConteudo"></div>
+<p>Espaço de aprendizagem digital da escola.</p>
 </div>
 
-<div class="container hidden" id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
-<div class="container hidden" id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></div>
-<div class="container hidden" id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></div>
-<div class="container hidden" id="ade"><h2>Avaliação ADE</h2><div id="listaAde"></div></div>
-<div class="container hidden" id="saeb"><h2>Avaliação SAEB</h2><div id="listaSaeb"></div></div>
+<div class="container hidden" id="conteudos"><h2>Conteúdos</h2></div>
+<div class="container hidden" id="atividades"><h2>Atividades</h2></div>
+<div class="container hidden" id="simulados"><h2>Simulados</h2></div>
+<div class="container hidden" id="ade"><h2>Avaliação ADE</h2></div>
+<div class="container hidden" id="saeb"><h2>Avaliação SAEB</h2></div>
 <div class="container hidden" id="resultados"><h2>Resultados</h2></div>
 
 <footer>Portal Educacional © 2026</footer>
@@ -200,6 +152,8 @@ function showSection(id){
 document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
 document.getElementById(id).classList.remove("hidden");
 }
+
 function abrirAdmin(){
-if(prompt("Senha do administrador:")==="1234"){
-alert("Painel do professor permanece igual,
+let senha = prompt("Senha do administrador:");
+if(senha==="1234"){
+alert("Painel
