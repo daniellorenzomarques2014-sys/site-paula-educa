@@ -3,162 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal Educacional Paula Aliomar</title>
+<title>PAULA EDUCA</title>
+
+<link rel="icon" type="image/png" href="logo-escola.png">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 
 <style>
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f7}
-header{display:flex;align-items:center;gap:15px;padding:15px 25px;
-background:linear-gradient(90deg,#0d47a1,#1565c0);color:white}
-.logo{height:80px}
-nav{background:#1976d2;display:flex;justify-content:center;flex-wrap:wrap;align-items:center}
-nav a{color:white;padding:14px 16px;text-decoration:none;font-weight:bold;cursor:pointer}
-nav a:hover{background:#0d47a1}
-.admin-top{margin-left:auto;margin-right:10px;background:#0d47a1;padding:8px 12px;border-radius:6px;cursor:pointer}
+body{
+margin:0;
+font-family:'Montserrat',sans-serif;
+background:
+linear-gradient(rgba(0,45,35,0.88), rgba(0,45,35,0.88)),
+url('fundo-amazonia.jpg') no-repeat center center fixed;
+background-size:cover;
+}
 
-.container{max-width:1100px;margin:30px auto;padding:20px;background:white;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
-.hidden{display:none}
-h2{text-align:center;color:#0d47a1}
+/* CABEÇALHO */
+header{
+display:flex;
+align-items:center;
+gap:20px;
+padding:20px 30px;
+color:white;
+background:
+linear-gradient(rgba(0,70,50,0.75), rgba(0,50,35,0.85)),
+url('fundo-amazonia.jpg') center/cover;
 
-button{padding:8px 12px;margin-top:10px;border:none;border-radius:5px;background:#1976d2;color:white;cursor:pointer}
-button:hover{background:#0d47a1}
-input, textarea, select{width:100%;padding:6px;margin:5px 0}
+border-bottom:8px solid #ff9800; /* TARJA LARANJA */
+box-shadow:0 4px 25px rgba(0,0,0,0.6);
+}
 
-.question{border:1px solid #ccc;border-radius:5px;padding:12px;margin-bottom:15px}
-.alt{display:flex;align-items:center;margin:6px 0}
-.alt input{margin-right:8px}
+.logo{
+height:130px;
+background:transparent !important;
+}
 
-footer{text-align:center;padding:15px;background:#0d47a1;color:white;margin-top:40px}
-.file-link{display:block;margin:5px 0;color:#1565c0;font-weight:bold;cursor:pointer}
+header h1{
+margin:0;
+font-size:40px;
+font-weight:900;
+letter-spacing:4px;
+text-shadow:2px 2px 6px rgba(0,0,0,0.7);
+}
 
-.admin-panel{display:none;position:fixed;top:0;right:0;width:350px;height:100%;background:white;
-box-shadow:-2px 0 10px rgba(0,0,0,0.2);overflow:auto;padding:15px}
-.admin-panel h3{color:#0d47a1;text-align:center}
-.small-btn{background:#777;margin:2px 0}
+header p{
+margin:0;
+opacity:0.95;
+font-weight:600;
+}
+
+/* MENU */
+nav{
+background:linear-gradient(90deg,#3e2723,#5d4037,#3e2723);
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+border-bottom:4px solid #ff9800;
+}
+nav a{
+color:white;
+padding:14px 22px;
+text-decoration:none;
+font-weight:700;
+cursor:pointer;
+transition:0.3s;
+}
+nav a:hover{
+background:#8d6e63;
+transform:scale(1.05);
+}
+
+/* CONTEÚDO */
+.container{
+max-width:1100px;
+margin:25px auto;
+padding:20px;
+background:white;
+border-radius:10px;
+box-shadow:0 6px 18px rgba(0,0,0,0.25);
+display:none;
+}
+.container.active{
+display:block;
+}
+
+.admin-btn{
+position:fixed;
+right:15px;
+top:80px;
+background:#bf360c;
+color:white;
+padding:10px 14px;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+z-index:1000;
+}
+
+footer{
+text-align:center;
+padding:15px;
+background:#3e2723;
+color:white;
+margin-top:40px;
+}
 </style>
 </head>
 <body>
 
 <header>
-<img src="LOGO_DA_ESCOLA.png" class="logo">
-<h1>Escola Municipal Professora Paula Aliomar Ribeiro Beltrão</h1>
+<img src="logo-escola.png" class="logo">
+<div>
+<h1>PAULA EDUCA</h1>
+<p>Ensino • Qualidade • Cultura</p>
+</div>
 </header>
 
 <nav>
-<a onclick="showSection('inicio')">Início</a>
-<a onclick="showSection('conteudos')">Conteúdos</a>
-<a onclick="showSection('atividades')">Atividades</a>
-<a onclick="showSection('simulados')">Simulados</a>
-<a onclick="showSection('ade')">ADE</a>
-<a onclick="showSection('saeb')">SAEB</a>
-<a onclick="showSection('resultados')">Resultados</a>
-<div class="admin-top" onclick="loginAdmin()">ADMINISTRADOR</div>
+<a onclick="showSection('inicio')">🏠 Início</a>
+<a onclick="showSection('conteudos')">📚 Conteúdos</a>
+<a onclick="showSection('atividades')">📝 Atividades</a>
+<a onclick="showSection('simulados')">🎯 Simulados</a>
+<a onclick="showSection('ade')">📊 ADE</a>
+<a onclick="showSection('saeb')">📈 SAEB</a>
+<a onclick="showSection('resultados')">🏆 Resultados</a>
 </nav>
 
-<div id="inicio" class="container">
-<h2>Bem-vindo ao Portal Educacional</h2>
-<p style="text-align:center">Ambiente digital de aprendizagem da escola</p>
+<div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
+
+<div class="container active" id="inicio">
+<h2>Bem-vindo à Plataforma PAULA EDUCA</h2>
+<p>Espaço de aprendizagem digital da escola.</p>
 </div>
 
-<div id="conteudos" class="container hidden"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
-<div id="atividades" class="container hidden"><h2>Atividades</h2><div id="listaAtividades"></div></div>
-<div id="simulados" class="container hidden"><h2>Simulados</h2><div id="listaSimulados"></div></div>
-<div id="ade" class="container hidden"><h2>Avaliações ADE</h2><div id="listaADE"></div></div>
-<div id="saeb" class="container hidden"><h2>Avaliações SAEB</h2><div id="listaSAEB"></div></div>
-
-<div id="resultados" class="container hidden">
-<h2>Resultados</h2>
-<div id="listaResultados"></div>
-<button onclick="window.print()">🖨 Gerar PDF</button>
-</div>
-
-<div class="admin-panel" id="adminPanel">
-<h3>Painel do Professor</h3>
-
-<h4>Cadastrar Conteúdo</h4>
-<input id="contTitulo" placeholder="Título">
-<textarea id="contTexto" placeholder="Texto"></textarea>
-<input type="file" id="contArquivo">
-<button onclick="salvarConteudo()">Salvar Conteúdo</button>
-
-<hr>
-
-<h4>Cadastrar Questão</h4>
-<select id="qTipo">
-<option>Atividade</option>
-<option>Simulado</option>
-<option>ADE</option>
-<option>SAEB</option>
-</select>
-<textarea id="qPergunta" placeholder="Pergunta"></textarea>
-<input type="file" id="qImagem">
-<input id="aA" placeholder="Alternativa A">
-<input id="aB" placeholder="Alternativa B">
-<input id="aC" placeholder="Alternativa C">
-<input id="aD" placeholder="Alternativa D">
-<select id="qCorreta">
-<option value="A">Correta A</option>
-<option value="B">Correta B</option>
-<option value="C">Correta C</option>
-<option value="D">Correta D</option>
-</select>
-<button onclick="salvarQuestao()">Salvar Questão</button>
-
-<button class="small-btn" onclick="fecharAdmin()">Fechar</button>
-</div>
+<div class="container" id="conteudos"><h2>Conteúdos</h2></div>
+<div class="container" id="atividades"><h2>Atividades</h2></div>
+<div class="container" id="simulados"><h2>Simulados</h2></div>
+<div class="container" id="ade"><h2>Avaliação ADE</h2></div>
+<div class="container" id="saeb"><h2>Avaliação SAEB</h2></div>
+<div class="container" id="resultados"><h2>Resultados</h2></div>
 
 <footer>Portal Educacional © 2026</footer>
 
 <script>
-let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]");
-let questoes=JSON.parse(localStorage.getItem("questoes")||"[]");
-
 function showSection(id){
-document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
-document.getElementById(id).classList.remove("hidden");
-if(id==="conteudos") carregarConteudos();
-if(id==="atividades") carregarQuestoes("Atividade","listaAtividades");
-if(id==="simulados") carregarQuestoes("Simulado","listaSimulados");
-if(id==="ade") carregarQuestoes("ADE","listaADE");
-if(id==="saeb") carregarQuestoes("SAEB","listaSAEB");
-}
-
-function loginAdmin(){if(prompt("Senha do administrador")==="professor123")adminPanel.style.display="block";else alert("Senha incorreta")}
-function fecharAdmin(){adminPanel.style.display="none"}
-
-function salvarConteudo(){
-let file=contArquivo.files[0];let reader=new FileReader();
-reader.onload=function(){
-conteudos.push({titulo:contTitulo.value,texto:contTexto.value,arquivo:reader.result,nome:file?file.name:""});
-localStorage.setItem("conteudos",JSON.stringify(conteudos));alert("Conteúdo salvo!")};
-if(file)reader.readAsDataURL(file);else reader.onload()
-}
-
-function carregarConteudos(){
-listaConteudos.innerHTML="";
-conteudos.forEach(c=>{listaConteudos.innerHTML+=`<div class='question'><b>${c.titulo}</b><p>${c.texto}</p>
-${c.arquivo?`<a class='file-link' href='${c.arquivo}' target='_blank'>📂 Abrir ${c.nome}</a>`:""}</div>`})
-}
-
-function salvarQuestao(){
-let reader=new FileReader();let file=qImagem.files[0];
-reader.onload=function(){
-questoes.push({tipo:qTipo.value,pergunta:qPergunta.value,img:reader.result,A:aA.value,B:aB.value,C:aC.value,D:aD.value,correta:qCorreta.value});
-localStorage.setItem("questoes",JSON.stringify(questoes));alert("Questão salva!")};
-if(file)reader.readAsDataURL(file);else reader.onload()
-}
-
-function carregarQuestoes(tipo,divId){
-let area=document.getElementById(divId);area.innerHTML="";
-questoes.filter(q=>q.tipo===tipo).forEach((q,i)=>{
-area.innerHTML+=`<div class='question'><p><b>${i+1}. ${q.pergunta}</b></p>
-${q.img?`<img src='${q.img}' width='150'>`:""}
-<div class='alt'><input type='radio' name='q${tipo}${i}'> A) ${q.A}</div>
-<div class='alt'><input type='radio' name='q${tipo}${i}'> B) ${q.B}</div>
-<div class='alt'><input type='radio' name='q${tipo}${i}'> C) ${q.C}</div>
-<div class='alt'><input type='radio' name='q${tipo}${i}'> D) ${q.D}</div>
-</div>`})
-}
-</script>
-
-</body>
-</html>
+document.querySelectorAll(".container
