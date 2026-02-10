@@ -13,7 +13,7 @@ body{
 margin:0;
 font-family:'Montserrat',sans-serif;
 background:
-linear-gradient(rgba(0,45,35,0.88), rgba(0,45,35,0.88)),
+linear-gradient(rgba(0,50,35,0.88), rgba(0,50,35,0.88)),
 url('fundo-amazonia.jpg') no-repeat center center fixed;
 background-size:cover;
 }
@@ -26,10 +26,9 @@ gap:20px;
 padding:20px 30px;
 color:white;
 background:
-linear-gradient(rgba(0,70,50,0.75), rgba(0,50,35,0.85)),
+linear-gradient(rgba(0,70,50,0.7), rgba(0,40,30,0.85)),
 url('fundo-amazonia.jpg') center/cover;
-
-border-bottom:8px solid #ff9800; /* TARJA LARANJA */
+border-bottom:8px solid #ff9800;
 box-shadow:0 4px 25px rgba(0,0,0,0.6);
 }
 
@@ -46,11 +45,7 @@ letter-spacing:4px;
 text-shadow:2px 2px 6px rgba(0,0,0,0.7);
 }
 
-header p{
-margin:0;
-opacity:0.95;
-font-weight:600;
-}
+header p{margin:0;font-weight:600}
 
 /* MENU */
 nav{
@@ -66,12 +61,8 @@ padding:14px 22px;
 text-decoration:none;
 font-weight:700;
 cursor:pointer;
-transition:0.3s;
 }
-nav a:hover{
-background:#8d6e63;
-transform:scale(1.05);
-}
+nav a:hover{background:#8d6e63}
 
 /* CONTEÚDO */
 .container{
@@ -83,9 +74,7 @@ border-radius:10px;
 box-shadow:0 6px 18px rgba(0,0,0,0.25);
 display:none;
 }
-.container.active{
-display:block;
-}
+.container.active{display:block}
 
 .admin-btn{
 position:fixed;
@@ -100,13 +89,18 @@ font-weight:bold;
 z-index:1000;
 }
 
-footer{
-text-align:center;
-padding:15px;
-background:#3e2723;
-color:white;
-margin-top:40px;
+input,select,textarea{
+width:100%;padding:8px;margin:6px 0;border-radius:6px;border:1px solid #bbb
 }
+button{
+padding:8px 14px;margin-top:8px;border:none;border-radius:6px;
+background:#2e7d32;color:white;cursor:pointer;font-weight:700
+}
+.small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
+
+.question{border:1px solid #ddd;padding:10px;border-radius:8px;margin-bottom:10px}
+
+footer{text-align:center;padding:15px;background:#3e2723;color:white;margin-top:40px}
 </style>
 </head>
 <body>
@@ -129,22 +123,4 @@ margin-top:40px;
 <a onclick="showSection('resultados')">🏆 Resultados</a>
 </nav>
 
-<div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
-
-<div class="container active" id="inicio">
-<h2>Bem-vindo à Plataforma PAULA EDUCA</h2>
-<p>Espaço de aprendizagem digital da escola.</p>
-</div>
-
-<div class="container" id="conteudos"><h2>Conteúdos</h2></div>
-<div class="container" id="atividades"><h2>Atividades</h2></div>
-<div class="container" id="simulados"><h2>Simulados</h2></div>
-<div class="container" id="ade"><h2>Avaliação ADE</h2></div>
-<div class="container" id="saeb"><h2>Avaliação SAEB</h2></div>
-<div class="container" id="resultados"><h2>Resultados</h2></div>
-
-<footer>Portal Educacional © 2026</footer>
-
-<script>
-function showSection(id){
-document.querySelectorAll(".container
+<div class="admin-btn" onclick="
