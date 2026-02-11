@@ -1,169 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAULA EDUCA</title>
+
+<link rel="icon" href="logo-escola.png">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+font-family:'Montserrat',sans-serif;
+background:linear-gradient(rgba(0,40,30,0.85), rgba(0,40,30,0.85)), url('fundo.jpg') no-repeat center center fixed;
+background-size:cover;
+}
+
+header{
+display:flex;
+align-items:center;
+gap:20px;
+padding:20px 30px;
+color:white;
+background:linear-gradient(90deg,#0b3d2e,#145a32);
+border-bottom:8px solid orange;
+}
+
+.logo{
+height:120px;
+background:transparent;
+}
+
+nav{
+background:#3e2723;
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+nav a{
+color:white;
+padding:14px 22px;
+text-decoration:none;
+font-weight:700;
+cursor:pointer;
+}
+
+nav a:hover{background:#8d6e63}
+
+.container{
+max-width:1100px;
+margin:25px auto;
+padding:20px;
+background:white;
+border-radius:10px;
+box-shadow:0 6px 18px rgba(0,0,0,0.25);
+display:none;
+}
+
+.container.active{display:block}
+
+.admin-btn{
+position:fixed;
+right:15px;
+top:80px;
+background:#bf360c;
+color:white;
+padding:10px 14px;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+}
+
+input,select,textarea{
+width:100%;
+padding:8px;
+margin:6px 0;
+border-radius:6px;
+border:1px solid #bbb;
+}
+
+button{
+padding:8px 14px;
+margin-top:8px;
+border:none;
+border-radius:6px;
+background:#2e7d32;
+color:white;
+cursor:pointer;
+font-weight:700;
+}
+
+.question{
+border:1px solid #ddd;
+padding:12px;
+border-radius:8px;
+margin-bottom:15px;
+}
+.small-btn{background:#777;margin-left:5px;padding:4px 8px;font-size:12px}
+</style>
+</head>
+
+<body>
+
+<header>
+<img src="logo-escola.png" class="logo">
+<div>
+<h1>PAULA EDUCA</h1>
+<p>Ensino • Qualidade • Cultura</p>
+</div>
+</header>
+
+<nav>
+<a onclick="showSection('inicio')">🏠 Início</a>
+<a onclick="showSection('conteudos')">📚 Conteúdos</a>
+<a onclick="showSection('atividades')">📝 Atividades</a>
+<a onclick="showSection('simulados')">🎯 Simulados</a>
+<a onclick="showSection('ade')">📊 ADE</a>
+<a onclick="showSection('saeb')">📈 SAEB</a>
+</nav>
+
+<div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
+
+<div class="container active" id="inicio"><div id="inicioConteudo"></div></div>
+<div class="container" id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
+<div class="container" id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></div>
+<div class="container" id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></div>
+<div class="container" id="ade"><h2>ADE</h2><div id="listaAde"></div></div>
+<div class="container" id="saeb"><h2>SAEB</h2><div id="listaSaeb"></div></div>
+
+<div class="container" id="adminPanel">
+<h2>Painel do Professor</h2>
+
+<h3>Editar Início</h3>
+<textarea id="inicioTexto" placeholder="Histórico da escola"></textarea>
+<input type="file" id="inicioMidia" multiple>
+<button onclick="salvarInicio()">Salvar Início</button>
+
+<hr>
+
+<h3>Cadastrar Conteúdo</h3>
+<input type="text" id="contTitulo" placeholder="Título">
+<textarea id="contDesc" placeholder="Descrição"></textarea>
+<button onclick="salvarConteudo()">Salvar Conteúdo</button>
+
+<hr>
+
+<h3>Cadastrar Questão</h3>
+<select id="qTipo"><option>Atividade</option><option>Simulado</option><option>ADE</option><option>SAEB</option></select>
+<input type="text" id="qPergunta" placeholder="Pergunta">
+<input type="text" id="aA" placeholder="Alternativa A">
+<input type="text" id="aB" placeholder="Alternativa B">
+<input type="text" id="aC" placeholder="Alternativa C">
+<input type="text" id="aD" placeholder="Alternativa D">
+<select id="qCorreta"><option>A</option><option>B</option><option>C</option><option>D</option></select>
+<button onclick="salvarQuestao()">Salvar Questão</button>
+
+<hr>
+<div id="adminLista"></div>
+</div>
+
 <script>
-const series=["1º Período","2º Período","1º Ano","2º Ano","3º Ano","4º Ano","5º Ano","6º Ano","7º Ano","8º Ano","9º Ano"];
-const disciplinas=["Língua Portuguesa","Matemática","História","Geografia","Artes","Religião","Ciências","Língua Inglesa","Educação Física"];
-
-series.forEach(s=>{contSerie.innerHTML+=`<option>${s}</option>`;qSerie.innerHTML+=`<option>${s}</option>`})
-disciplinas.forEach(d=>{contDisc.innerHTML+=`<option>${d}</option>`;qDisc.innerHTML+=`<option>${d}</option>`})
-
 function showSection(id){
-document.querySelectorAll(".container").forEach(c=>c.classList.remove("active"))
-document.getElementById(id).classList.add("active")
-carregarTudo()
+document.querySelectorAll(".container").forEach(c=>c.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+carregarTudo();
 }
 
-function loginAdmin(){
-let senha=prompt("Senha do administrador:")
-if(senha==="1234"){showSection("adminPanel");listarAdmin()}else{alert("Senha incorreta")}
+function abrirAdmin(){
+if(prompt("Senha do administrador:")==="1234"){
+showSection("adminPanel");
+listarAdmin();
+}else alert("Senha incorreta");
 }
 
-/* ---------- INÍCIO ---------- */
 function salvarInicio(){
-localStorage.setItem("inicioTexto",inicioTexto.value)
-let midias=[]
+localStorage.setItem("inicioTexto",inicioTexto.value);
+let midias=[];
 for(let f of inicioMidia.files){midias.push(URL.createObjectURL(f))}
-localStorage.setItem("inicioMidia",JSON.stringify(midias))
-carregarInicio()
+localStorage.setItem("inicioMidia",JSON.stringify(midias));
+carregarInicio();
 }
+
 function carregarInicio(){
-inicioConteudo.innerHTML="<p>"+(localStorage.getItem("inicioTexto")||"")+"</p>"
-let midias=JSON.parse(localStorage.getItem("inicioMidia")||"[]")
+inicioConteudo.innerHTML="<p>"+(localStorage.getItem("inicioTexto")||"")+"</p>";
+let midias=JSON.parse(localStorage.getItem("inicioMidia")||"[]");
 midias.forEach(m=>{
-if(m.includes("video")) inicioConteudo.innerHTML+=`<video src="${m}" controls width="300"></video>`
-else inicioConteudo.innerHTML+=`<img src="${m}" width="300">`
-})
+if(m.includes("video")) inicioConteudo.innerHTML+=`<video src="${m}" controls width="300"></video>`;
+else inicioConteudo.innerHTML+=`<img src="${m}" width="300">`;
+});
 }
 
-/* ---------- CONTEÚDOS ---------- */
 function salvarConteudo(){
-let lista=JSON.parse(localStorage.getItem("conteudos")||"[]")
-lista.push({titulo:contTitulo.value,serie:contSerie.value,disc:contDisc.value,desc:contDesc.value})
-localStorage.setItem("conteudos",JSON.stringify(lista))
-alert("Conteúdo salvo")
-listarAdmin()
-carregarTudo()
+let c=JSON.parse(localStorage.getItem("conteudos")||"[]");
+c.push({titulo:contTitulo.value,desc:contDesc.value});
+localStorage.setItem("conteudos",JSON.stringify(c));
+listarAdmin();carregarTudo();
 }
 
-function editarConteudo(i){
-let lista=JSON.parse(localStorage.getItem("conteudos")||"[]")
-let c=lista[i]
-contTitulo.value=c.titulo
-contSerie.value=c.serie
-contDisc.value=c.disc
-contDesc.value=c.desc
-lista.splice(i,1)
-localStorage.setItem("conteudos",JSON.stringify(lista))
-listarAdmin()
+function salvarQuestao(){
+let q=JSON.parse(localStorage.getItem("questoes")||"[]");
+q.push({tipo:qTipo.value,pergunta:qPergunta.value,A:aA.value,B:aB.value,C:aC.value,D:aD.value,correta:qCorreta.value});
+localStorage.setItem("questoes",JSON.stringify(q));
+listarAdmin();carregarTudo();
+}
+
+function listarAdmin(){
+let area=adminLista;
+let c=JSON.parse(localStorage.getItem("conteudos")||"[]");
+let q=JSON.parse(localStorage.getItem("questoes")||"[]");
+
+area.innerHTML="<h3>Conteúdos</h3>";
+c.forEach((i,idx)=>area.innerHTML+=`${i.titulo} <button class='small-btn' onclick='excluirConteudo(${idx})'>🗑</button><br>`);
+
+area.innerHTML+="<h3>Questões</h3>";
+q.forEach((i,idx)=>area.innerHTML+=`${i.tipo} - ${i.pergunta} <button class='small-btn' onclick='excluirQuestao(${idx})'>🗑</button><br>`);
 }
 
 function excluirConteudo(i){
-let lista=JSON.parse(localStorage.getItem("conteudos")||"[]")
-lista.splice(i,1)
-localStorage.setItem("conteudos",JSON.stringify(lista))
-listarAdmin()
-carregarTudo()
-}
-
-/* ---------- QUESTÕES ---------- */
-function salvarQuestao(){
-let lista=JSON.parse(localStorage.getItem("questoes")||"[]")
-lista.push({tipo:qTipo.value,serie:qSerie.value,disc:qDisc.value,pergunta:qPergunta.value,A:aA.value,B:aB.value,C:aC.value,D:aD.value,correta:qCorreta.value})
-localStorage.setItem("questoes",JSON.stringify(lista))
-alert("Questão salva")
-listarAdmin()
-carregarTudo()
-}
-
-function editarQuestao(i){
-let lista=JSON.parse(localStorage.getItem("questoes")||"[]")
-let q=lista[i]
-qTipo.value=q.tipo
-qSerie.value=q.serie
-qDisc.value=q.disc
-qPergunta.value=q.pergunta
-aA.value=q.A
-aB.value=q.B
-aC.value=q.C
-aD.value=q.D
-qCorreta.value=q.correta
-lista.splice(i,1)
-localStorage.setItem("questoes",JSON.stringify(lista))
-listarAdmin()
+let c=JSON.parse(localStorage.getItem("conteudos")||"[]");
+c.splice(i,1);
+localStorage.setItem("conteudos",JSON.stringify(c));
+listarAdmin();carregarTudo();
 }
 
 function excluirQuestao(i){
-let lista=JSON.parse(localStorage.getItem("questoes")||"[]")
-lista.splice(i,1)
-localStorage.setItem("questoes",JSON.stringify(lista))
-listarAdmin()
-carregarTudo()
+let q=JSON.parse(localStorage.getItem("questoes")||"[]");
+q.splice(i,1);
+localStorage.setItem("questoes",JSON.stringify(q));
+listarAdmin();carregarTudo();
 }
 
-/* ---------- LISTAS NO SITE ---------- */
 function carregarTudo(){
-carregarInicio()
-let c=JSON.parse(localStorage.getItem("conteudos")||"[]")
-listaConteudos.innerHTML=""
-c.forEach(i=>listaConteudos.innerHTML+=`<div class='question'><b>${i.titulo}</b><br>${i.serie} - ${i.disc}<br>${i.desc}</div>`)
+carregarInicio();
+let c=JSON.parse(localStorage.getItem("conteudos")||"[]");
+listaConteudos.innerHTML="";
+c.forEach(i=>listaConteudos.innerHTML+=`<div class='question'><b>${i.titulo}</b><br>${i.desc}</div>`);
 
-let q=JSON.parse(localStorage.getItem("questoes")||"[]")
-listaAtividades.innerHTML="";listaSimulados.innerHTML="";listaAde.innerHTML="";listaSaeb.innerHTML=""
+let q=JSON.parse(localStorage.getItem("questoes")||"[]");
+listaAtividades.innerHTML="";listaSimulados.innerHTML="";listaAde.innerHTML="";listaSaeb.innerHTML="";
 q.forEach(i=>{
-let bloco=`<div class='question'><b>${i.pergunta}</b><br>A) ${i.A}<br>B) ${i.B}<br>C) ${i.C}<br>D) ${i.D}</div>`
-if(i.tipo==="Atividade") listaAtividades.innerHTML+=bloco
-if(i.tipo==="Simulado") listaSimulados.innerHTML+=bloco
-if(i.tipo==="ADE") listaAde.innerHTML+=bloco
-if(i.tipo==="SAEB") listaSaeb.innerHTML+=bloco
-})
+let bloco=`<div class='question'><b>${i.pergunta}</b><br>A) ${i.A}<br>B) ${i.B}<br>C) ${i.C}<br>D) ${i.D}</div>`;
+if(i.tipo==="Atividade") listaAtividades.innerHTML+=bloco;
+if(i.tipo==="Simulado") listaSimulados.innerHTML+=bloco;
+if(i.tipo==="ADE") listaAde.innerHTML+=bloco;
+if(i.tipo==="SAEB") listaSaeb.innerHTML+=bloco;
+});
 }
 
-/* ---------- LISTAGEM ADMIN ---------- */
-function listarAdmin(){
-let area=document.getElementById("adminLista")
-if(!area){
-area=document.createElement("div")
-area.id="adminLista"
-adminPanel.appendChild(area)
-}
-
-let c=JSON.parse(localStorage.getItem("conteudos")||"[]")
-let q=JSON.parse(localStorage.getItem("questoes")||"[]")
-
-area.innerHTML="<h3>Conteúdos Cadastrados</h3>"
-c.forEach((i,idx)=>{
-area.innerHTML+=`${i.titulo} (${i.serie}) 
-<button class='small-btn' onclick='editarConteudo(${idx})'>✏️</button>
-<button class='small-btn' onclick='excluirConteudo(${idx})'>🗑️</button><br>`
-})
-
-area.innerHTML+="<h3>Questões Cadastradas</h3>"
-q.forEach((i,idx)=>{
-area.innerHTML+=`${i.tipo} - ${i.pergunta} 
-<button class='small-btn' onclick='editarQuestao(${idx})'>✏️</button>
-<button class='small-btn' onclick='excluirQuestao(${idx})'>🗑️</button><br>`
-})
-}
-
-/* ---------- BACKUP ---------- */
-function backupDados(){
-let dados={inicioTexto:localStorage.getItem("inicioTexto"),inicioMidia:localStorage.getItem("inicioMidia"),conteudos:localStorage.getItem("conteudos"),questoes:localStorage.getItem("questoes")}
-let blob=new Blob([JSON.stringify(dados)],{type:"application/json"})
-let a=document.createElement("a")
-a.href=URL.createObjectURL(blob)
-a.download="backup_paula_educa.json"
-a.click()
-}
-
-function restaurarBackup(e){
-let file=e.target.files[0]
-let reader=new FileReader()
-reader.onload=function(){
-let dados=JSON.parse(reader.result)
-for(let k in dados)localStorage.setItem(k,dados[k])
-carregarTudo();listarAdmin()
-alert("Backup restaurado")
-}
-reader.readAsText(file)
-}
-
-carregarTudo()
+carregarTudo();
 </script>
+
+</body>
+</html>
