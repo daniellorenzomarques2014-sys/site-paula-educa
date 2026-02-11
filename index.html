@@ -28,7 +28,6 @@ border-bottom:8px solid orange;
 
 .logo{
 height:120px;
-background:transparent;
 }
 
 nav{
@@ -40,7 +39,7 @@ flex-wrap:wrap;
 
 nav a{
 color:white;
-padding:14px 22px;
+padding:14px 20px;
 text-decoration:none;
 font-weight:700;
 cursor:pointer;
@@ -104,152 +103,4 @@ margin-bottom:15px;
 <body>
 
 <header>
-<img src="logo-escola.png" class="logo">
-<div>
-<h1>PAULA EDUCA</h1>
-<p>Ensino • Qualidade • Cultura</p>
-</div>
-</header>
-
-<nav>
-<a onclick="showSection('inicio')">🏠 Início</a>
-<a onclick="showSection('conteudos')">📚 Conteúdos</a>
-<a onclick="showSection('atividades')">📝 Atividades</a>
-<a onclick="showSection('simulados')">🎯 Simulados</a>
-<a onclick="showSection('ade')">📊 ADE</a>
-<a onclick="showSection('saeb')">📈 SAEB</a>
-</nav>
-
-<div class="admin-btn" onclick="abrirAdmin()">ADMIN</div>
-
-<div class="container active" id="inicio"><div id="inicioConteudo"></div></div>
-<div class="container" id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></div>
-<div class="container" id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></div>
-<div class="container" id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></div>
-<div class="container" id="ade"><h2>ADE</h2><div id="listaAde"></div></div>
-<div class="container" id="saeb"><h2>SAEB</h2><div id="listaSaeb"></div></div>
-
-<div class="container" id="adminPanel">
-<h2>Painel do Professor</h2>
-
-<h3>Editar Início</h3>
-<textarea id="inicioTexto" placeholder="Histórico da escola"></textarea>
-<input type="file" id="inicioMidia" multiple>
-<button onclick="salvarInicio()">Salvar Início</button>
-
-<hr>
-
-<h3>Cadastrar Conteúdo</h3>
-<input type="text" id="contTitulo" placeholder="Título">
-<textarea id="contDesc" placeholder="Descrição"></textarea>
-<button onclick="salvarConteudo()">Salvar Conteúdo</button>
-
-<hr>
-
-<h3>Cadastrar Questão</h3>
-<select id="qTipo"><option>Atividade</option><option>Simulado</option><option>ADE</option><option>SAEB</option></select>
-<input type="text" id="qPergunta" placeholder="Pergunta">
-<input type="text" id="aA" placeholder="Alternativa A">
-<input type="text" id="aB" placeholder="Alternativa B">
-<input type="text" id="aC" placeholder="Alternativa C">
-<input type="text" id="aD" placeholder="Alternativa D">
-<select id="qCorreta"><option>A</option><option>B</option><option>C</option><option>D</option></select>
-<button onclick="salvarQuestao()">Salvar Questão</button>
-
-<hr>
-<div id="adminLista"></div>
-</div>
-
-<script>
-function showSection(id){
-document.querySelectorAll(".container").forEach(c=>c.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-carregarTudo();
-}
-
-function abrirAdmin(){
-if(prompt("Senha do administrador:")==="1234"){
-showSection("adminPanel");
-listarAdmin();
-}else alert("Senha incorreta");
-}
-
-function salvarInicio(){
-localStorage.setItem("inicioTexto",inicioTexto.value);
-let midias=[];
-for(let f of inicioMidia.files){midias.push(URL.createObjectURL(f))}
-localStorage.setItem("inicioMidia",JSON.stringify(midias));
-carregarInicio();
-}
-
-function carregarInicio(){
-inicioConteudo.innerHTML="<p>"+(localStorage.getItem("inicioTexto")||"")+"</p>";
-let midias=JSON.parse(localStorage.getItem("inicioMidia")||"[]");
-midias.forEach(m=>{
-if(m.includes("video")) inicioConteudo.innerHTML+=`<video src="${m}" controls width="300"></video>`;
-else inicioConteudo.innerHTML+=`<img src="${m}" width="300">`;
-});
-}
-
-function salvarConteudo(){
-let c=JSON.parse(localStorage.getItem("conteudos")||"[]");
-c.push({titulo:contTitulo.value,desc:contDesc.value});
-localStorage.setItem("conteudos",JSON.stringify(c));
-listarAdmin();carregarTudo();
-}
-
-function salvarQuestao(){
-let q=JSON.parse(localStorage.getItem("questoes")||"[]");
-q.push({tipo:qTipo.value,pergunta:qPergunta.value,A:aA.value,B:aB.value,C:aC.value,D:aD.value,correta:qCorreta.value});
-localStorage.setItem("questoes",JSON.stringify(q));
-listarAdmin();carregarTudo();
-}
-
-function listarAdmin(){
-let area=adminLista;
-let c=JSON.parse(localStorage.getItem("conteudos")||"[]");
-let q=JSON.parse(localStorage.getItem("questoes")||"[]");
-
-area.innerHTML="<h3>Conteúdos</h3>";
-c.forEach((i,idx)=>area.innerHTML+=`${i.titulo} <button class='small-btn' onclick='excluirConteudo(${idx})'>🗑</button><br>`);
-
-area.innerHTML+="<h3>Questões</h3>";
-q.forEach((i,idx)=>area.innerHTML+=`${i.tipo} - ${i.pergunta} <button class='small-btn' onclick='excluirQuestao(${idx})'>🗑</button><br>`);
-}
-
-function excluirConteudo(i){
-let c=JSON.parse(localStorage.getItem("conteudos")||"[]");
-c.splice(i,1);
-localStorage.setItem("conteudos",JSON.stringify(c));
-listarAdmin();carregarTudo();
-}
-
-function excluirQuestao(i){
-let q=JSON.parse(localStorage.getItem("questoes")||"[]");
-q.splice(i,1);
-localStorage.setItem("questoes",JSON.stringify(q));
-listarAdmin();carregarTudo();
-}
-
-function carregarTudo(){
-carregarInicio();
-let c=JSON.parse(localStorage.getItem("conteudos")||"[]");
-listaConteudos.innerHTML="";
-c.forEach(i=>listaConteudos.innerHTML+=`<div class='question'><b>${i.titulo}</b><br>${i.desc}</div>`);
-
-let q=JSON.parse(localStorage.getItem("questoes")||"[]");
-listaAtividades.innerHTML="";listaSimulados.innerHTML="";listaAde.innerHTML="";listaSaeb.innerHTML="";
-q.forEach(i=>{
-let bloco=`<div class='question'><b>${i.pergunta}</b><br>A) ${i.A}<br>B) ${i.B}<br>C) ${i.C}<br>D) ${i.D}</div>`;
-if(i.tipo==="Atividade") listaAtividades.innerHTML+=bloco;
-if(i.tipo==="Simulado") listaSimulados.innerHTML+=bloco;
-if(i.tipo==="ADE") listaAde.innerHTML+=bloco;
-if(i.tipo==="SAEB") listaSaeb.innerHTML+=bloco;
-});
-}
-
-carregarTudo();
-</script>
-
-</body>
-</html>
+<img src="logo-escola.png" class
