@@ -3,16 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PAULA EDUCA 4.0</title>
-
-<link rel="icon" href="logo-escola.png">
+<title>PAULA EDUCA</title>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-background:url('fundo-amazonico.png') center/cover fixed;
+background:#0b3d2e;
 color:white;
 }
 
@@ -20,12 +18,14 @@ header{
 display:flex;
 align-items:center;
 gap:20px;
-background:#063c2c;
 padding:15px;
-border-bottom:5px solid orange;
+background:#063c2c;
+border-bottom:4px solid orange;
 }
 
-header img{height:80px;}
+header img{
+height:70px;
+}
 
 nav{
 background:#0f5c42;
@@ -40,32 +40,36 @@ color:white;
 padding:8px 12px;
 margin:4px;
 cursor:pointer;
-border-radius:6px;
+border-radius:5px;
 }
 
 section{
 display:none;
 padding:20px;
-background:rgba(0,0,0,0.5);
-margin:20px;
-border-radius:10px;
 }
 
-section.active{display:block;}
+section.active{
+display:block;
+}
 
 .card{
 background:#124734;
 padding:12px;
 margin:10px 0;
-border-radius:8px;
+border-radius:6px;
 }
 
 .admin{
 position:fixed;
-top:20px;
-right:20px;
+top:15px;
+right:15px;
 font-size:26px;
 cursor:pointer;
+}
+
+input,select{
+padding:6px;
+margin:4px;
 }
 
 </style>
@@ -74,199 +78,153 @@ cursor:pointer;
 <body>
 
 <header>
+
 <img src="logo-escola.png">
-<h1>PAULA EDUCA 4.0</h1>
+<h2>PAULA EDUCA</h2>
+
 </header>
 
 <nav>
 
-<button onclick="mostrar('biblioteca')">📚 Biblioteca</button>
-<button onclick="mostrar('provas')">📝 Provas</button>
-<button onclick="mostrar('ranking')">🏆 Ranking</button>
-<button onclick="mostrar('pedagogico')">📊 Painel Pedagógico</button>
+<button onclick="abrir('inicio')">Início</button>
+<button onclick="abrir('conteudos')">Conteúdos</button>
+<button onclick="abrir('atividades')">Atividades</button>
+<button onclick="abrir('simulados')">Simulados</button>
+<button onclick="abrir('ade')">ADE</button>
+<button onclick="abrir('saeb')">SAEB</button>
+<button onclick="abrir('projetos')">Projetos</button>
+<button onclick="abrir('eventos')">Eventos</button>
+<button onclick="abrir('resultados')">Resultados</button>
 
 </nav>
 
 <div class="admin" onclick="login()">⚙</div>
 
-<section id="biblioteca" class="active">
-<h2>Biblioteca Digital</h2>
-<div id="listaArquivos"></div>
+<section id="inicio" class="active">
+<h2>Bem-vindo ao PAULA EDUCA</h2>
+<p>Ambiente digital de aprendizagem.</p>
 </section>
 
-<section id="provas">
-<h2>Provas Online</h2>
-<div id="prova"></div>
-<button onclick="corrigir()">Corrigir</button>
-</section>
-
-<section id="ranking">
-<h2>Ranking de Alunos</h2>
-<div id="rankingLista"></div>
-</section>
-
-<section id="pedagogico">
-<h2>Painel Pedagógico</h2>
-<div id="painel"></div>
-</section>
+<section id="conteudos"><h2>Conteúdos</h2><div id="lista_conteudos"></div></section>
+<section id="atividades"><h2>Atividades</h2><div id="lista_atividades"></div></section>
+<section id="simulados"><h2>Simulados</h2><div id="lista_simulados"></div></section>
+<section id="ade"><h2>ADE</h2><div id="lista_ade"></div></section>
+<section id="saeb"><h2>SAEB</h2><div id="lista_saeb"></div></section>
+<section id="projetos"><h2>Projetos</h2><div id="lista_projetos"></div></section>
+<section id="eventos"><h2>Eventos</h2><div id="lista_eventos"></div></section>
+<section id="resultados"><h2>Resultados</h2><div id="lista_resultados"></div></section>
 
 <section id="admin">
 
 <h2>Painel do Professor</h2>
 
-<h3>Biblioteca Digital</h3>
+<input id="titulo" placeholder="Título">
 
-<input id="tituloArquivo" placeholder="Título">
-
-<input id="nomeArquivo" placeholder="Nome do arquivo (ex: aula1.pdf)">
-
-<button onclick="cadastrarArquivo()">Cadastrar</button>
-
-<div id="adminArquivos"></div>
-
-<hr>
-
-<h3>Cadastrar Questão</h3>
-
-<input id="pergunta" placeholder="Pergunta">
-
-<input id="a" placeholder="A">
-<input id="b" placeholder="B">
-<input id="c" placeholder="C">
-<input id="d" placeholder="D">
-
-<select id="correta">
-<option>A</option>
-<option>B</option>
-<option>C</option>
-<option>D</option>
+<select id="tipo">
+<option value="conteudos">Conteúdos</option>
+<option value="atividades">Atividades</option>
+<option value="simulados">Simulados</option>
+<option value="ade">ADE</option>
+<option value="saeb">SAEB</option>
+<option value="projetos">Projetos</option>
+<option value="eventos">Eventos</option>
+<option value="resultados">Resultados</option>
 </select>
 
-<button onclick="cadastrarQuestao()">Salvar Questão</button>
+<input id="arquivo" placeholder="Arquivo ou link (ex: aula1.pdf)">
+
+<button onclick="salvar()">Cadastrar</button>
+
+<h3>Itens cadastrados</h3>
+<div id="lista_admin"></div>
 
 </section>
 
 <script>
 
-/* navegação */
+let dados=JSON.parse(localStorage.getItem("dados"))||[]
 
-function mostrar(id){
+function abrir(id){
 
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
 
 document.getElementById(id).classList.add("active")
 
-}
+carregar()
 
-/* login */
+}
 
 function login(){
 
-if(prompt("Senha professor")=="1234"){
+let senha=prompt("Senha do professor")
 
-mostrar("admin")
+if(senha=="1234"){
 
-}
-
-}
-
-/* biblioteca */
-
-let arquivos=JSON.parse(localStorage.getItem("arquivos"))||[]
-
-function cadastrarArquivo(){
-
-let titulo=document.getElementById("tituloArquivo").value
-let nome=document.getElementById("nomeArquivo").value
-
-arquivos.push({titulo,nome})
-
-localStorage.setItem("arquivos",JSON.stringify(arquivos))
-
-carregarArquivos()
+abrir("admin")
 
 }
 
-function carregarArquivos(){
+}
 
-let lista=document.getElementById("listaArquivos")
-let admin=document.getElementById("adminArquivos")
+function salvar(){
 
-lista.innerHTML=""
-admin.innerHTML=""
+let titulo=document.getElementById("titulo").value
+let tipo=document.getElementById("tipo").value
+let arquivo=document.getElementById("arquivo").value
 
-arquivos.forEach((a,i)=>{
+dados.push({titulo,tipo,arquivo})
 
-lista.innerHTML+=`
+localStorage.setItem("dados",JSON.stringify(dados))
+
+carregar()
+
+}
+
+function remover(i){
+
+dados.splice(i,1)
+
+localStorage.setItem("dados",JSON.stringify(dados))
+
+carregar()
+
+}
+
+function carregar(){
+
+document.querySelectorAll("[id^=lista_]").forEach(l=>l.innerHTML="")
+
+document.getElementById("lista_admin").innerHTML=""
+
+dados.forEach((d,i)=>{
+
+let bloco=`
+
 <div class="card">
-<b>${a.titulo}</b><br>
-<a href="arquivos/${a.nome}" target="_blank">Visualizar</a> |
-<a href="arquivos/${a.nome}" download>Baixar</a>
+
+<b>${d.titulo}</b><br>
+
+<a href="arquivos/${d.arquivo}" target="_blank">Visualizar</a>
+
+|
+
+<a href="arquivos/${d.arquivo}" download>Baixar</a>
+
 </div>
+
 `
 
-admin.innerHTML+=`
-<div class="card">
-${a.titulo}
-<button onclick="removerArquivo(${i})">Excluir</button>
-</div>
-`
+let destino=document.getElementById("lista_"+d.tipo)
 
-})
+if(destino) destino.innerHTML+=bloco
 
-}
-
-function removerArquivo(i){
-
-arquivos.splice(i,1)
-
-localStorage.setItem("arquivos",JSON.stringify(arquivos))
-
-carregarArquivos()
-
-}
-
-/* provas */
-
-let questoes=JSON.parse(localStorage.getItem("questoes"))||[]
-
-function cadastrarQuestao(){
-
-questoes.push({
-
-pergunta:pergunta.value,
-a:a.value,
-b:b.value,
-c:c.value,
-d:d.value,
-correta:correta.value
-
-})
-
-localStorage.setItem("questoes",JSON.stringify(questoes))
-
-mostrarProva()
-
-}
-
-function mostrarProva(){
-
-let div=document.getElementById("prova")
-
-div.innerHTML=""
-
-questoes.forEach((q,i)=>{
-
-div.innerHTML+=`
+document.getElementById("lista_admin").innerHTML+=`
 
 <div class="card">
 
-<b>${q.pergunta}</b><br>
+${d.titulo} (${d.tipo})
 
-<label><input type="radio" name="q${i}" value="A"> ${q.a}</label><br>
-<label><input type="radio" name="q${i}" value="B"> ${q.b}</label><br>
-<label><input type="radio" name="q${i}" value="C"> ${q.c}</label><br>
-<label><input type="radio" name="q${i}" value="D"> ${q.d}</label>
+<button onclick="remover(${i})">Remover</button>
 
 </div>
 
@@ -276,101 +234,7 @@ div.innerHTML+=`
 
 }
 
-function corrigir(){
-
-let pontos=0
-
-questoes.forEach((q,i)=>{
-
-let resp=document.querySelector(`input[name=q${i}]:checked`)
-
-if(resp && resp.value==q.correta){
-
-pontos++
-
-}
-
-})
-
-alert("Pontuação: "+pontos)
-
-salvarRanking(pontos)
-
-}
-
-/* ranking */
-
-let ranking=JSON.parse(localStorage.getItem("ranking"))||[]
-
-function salvarRanking(pontos){
-
-let nome=prompt("Nome do aluno")
-
-ranking.push({nome,pontos})
-
-localStorage.setItem("ranking",JSON.stringify(ranking))
-
-mostrarRanking()
-
-}
-
-function mostrarRanking(){
-
-let lista=document.getElementById("rankingLista")
-
-lista.innerHTML=""
-
-ranking.sort((a,b)=>b.pontos-a.pontos)
-
-ranking.forEach(r=>{
-
-lista.innerHTML+=`
-
-<div class="card">
-
-${r.nome} - ${r.pontos} pontos
-
-</div>
-
-`
-
-})
-
-}
-
-/* painel pedagógico */
-
-function painelPedagogico(){
-
-let total=ranking.length
-
-let media=0
-
-ranking.forEach(r=>media+=r.pontos)
-
-media=total?media/total:0
-
-document.getElementById("painel").innerHTML=`
-
-<div class="card">
-
-Total de alunos avaliados: ${total}<br>
-
-Média geral: ${media.toFixed(2)}
-
-</div>
-
-`
-
-}
-
-carregarArquivos()
-
-mostrarProva()
-
-mostrarRanking()
-
-painelPedagogico()
+carregar()
 
 </script>
 
