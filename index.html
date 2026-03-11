@@ -41,7 +41,6 @@ padding:8px 12px;
 margin:4px;
 cursor:pointer;
 border-radius:5px;
-font-size:15px;
 }
 
 section{
@@ -79,50 +78,45 @@ margin:4px;
 <body>
 
 <header>
+
 <img src="logo-escola.png">
 <h2>PAULA EDUCA</h2>
+
 </header>
 
 <nav>
 
-<button onclick="abrir('inicio')">🏠 Início</button>
-<button onclick="abrir('conteudos')">📚 Conteúdos</button>
-<button onclick="abrir('atividades')">📝 Atividades</button>
-<button onclick="abrir('simulados')">🎯 Simulados</button>
-<button onclick="abrir('ade')">📊 ADE</button>
-<button onclick="abrir('saeb')">📈 SAEB</button>
-<button onclick="abrir('projetos')">🧩 Projetos</button>
-<button onclick="abrir('eventos')">🎉 Eventos</button>
-<button onclick="abrir('resultados')">🏆 Resultados</button>
+<button onclick="abrir('inicio')">Início</button>
+<button onclick="abrir('conteudos')">Conteúdos</button>
+<button onclick="abrir('atividades')">Atividades</button>
+<button onclick="abrir('simulados')">Simulados</button>
+<button onclick="abrir('ade')">ADE</button>
+<button onclick="abrir('saeb')">SAEB</button>
+<button onclick="abrir('projetos')">Projetos</button>
+<button onclick="abrir('eventos')">Eventos</button>
+<button onclick="abrir('resultados')">Resultados</button>
 
 </nav>
 
 <div class="admin" onclick="login()">⚙</div>
 
 <section id="inicio" class="active">
-<h2>🏠 Bem-vindo ao PAULA EDUCA</h2>
+<h2>Bem-vindo ao PAULA EDUCA</h2>
 <p>Ambiente digital de aprendizagem.</p>
 </section>
 
-<section id="conteudos"><h2>📚 Conteúdos</h2><div id="lista_conteudos"></div></section>
-
-<section id="atividades"><h2>📝 Atividades</h2><div id="lista_atividades"></div></section>
-
-<section id="simulados"><h2>🎯 Simulados</h2><div id="lista_simulados"></div></section>
-
-<section id="ade"><h2>📊 ADE</h2><div id="lista_ade"></div></section>
-
-<section id="saeb"><h2>📈 SAEB</h2><div id="lista_saeb"></div></section>
-
-<section id="projetos"><h2>🧩 Projetos</h2><div id="lista_projetos"></div></section>
-
-<section id="eventos"><h2>🎉 Eventos</h2><div id="lista_eventos"></div></section>
-
-<section id="resultados"><h2>🏆 Resultados</h2><div id="lista_resultados"></div></section>
+<section id="conteudos"><h2>Conteúdos</h2><div id="lista_conteudos"></div></section>
+<section id="atividades"><h2>Atividades</h2><div id="lista_atividades"></div></section>
+<section id="simulados"><h2>Simulados</h2><div id="lista_simulados"></div></section>
+<section id="ade"><h2>ADE</h2><div id="lista_ade"></div></section>
+<section id="saeb"><h2>SAEB</h2><div id="lista_saeb"></div></section>
+<section id="projetos"><h2>Projetos</h2><div id="lista_projetos"></div></section>
+<section id="eventos"><h2>Eventos</h2><div id="lista_eventos"></div></section>
+<section id="resultados"><h2>Resultados</h2><div id="lista_resultados"></div></section>
 
 <section id="admin">
 
-<h2>⚙ Painel do Professor</h2>
+<h2>Painel do Professor</h2>
 
 <input id="titulo" placeholder="Título">
 
@@ -137,12 +131,11 @@ margin:4px;
 <option value="resultados">Resultados</option>
 </select>
 
-<input id="arquivo" placeholder="Nome do arquivo (ex: aula1.pdf)">
+<input id="arquivo" placeholder="Arquivo ou link (ex: aula1.pdf)">
 
 <button onclick="salvar()">Cadastrar</button>
 
 <h3>Itens cadastrados</h3>
-
 <div id="lista_admin"></div>
 
 </section>
