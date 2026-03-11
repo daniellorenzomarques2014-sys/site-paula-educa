@@ -8,6 +8,10 @@
 
 <title>PAULA EDUCA</title>
 
+<!-- FAVICON -->
+<link rel="icon" type="image/png" href="logo-escola.png">
+<link rel="shortcut icon" href="logo-escola.png">
+
 <style>
 
 body{
@@ -153,19 +157,12 @@ font-weight:bold;
 </section>
 
 <section id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></section>
-
 <section id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></section>
-
 <section id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></section>
-
 <section id="ade"><h2>ADE</h2><div id="listaAde"></div></section>
-
 <section id="saeb"><h2>SAEB</h2><div id="listaSaeb"></div></section>
-
 <section id="projetos"><h2>Projetos</h2><div id="listaProjetos"></div></section>
-
 <section id="eventos"><h2>Eventos</h2><div id="listaEventos"></div></section>
-
 <section id="resultados"><h2>Resultados</h2><div id="listaResultados"></div></section>
 
 <section id="admin">
@@ -188,12 +185,10 @@ font-weight:bold;
 </select>
 
 <input id="titulo" placeholder="Título">
-
 <input id="serie" placeholder="Série">
-
 <input id="disciplina" placeholder="Disciplina">
 
-<label>Quantidade de questões (para atividades)</label>
+<label>Quantidade de questões</label>
 
 <select id="qtd">
 
@@ -204,7 +199,7 @@ font-weight:bold;
 
 </select>
 
-<input id="link" placeholder="Link do material (PDF, vídeo, etc)">
+<input id="link" placeholder="Link do material (PDF, vídeo etc)">
 
 <button class="salvar" onclick="salvar()">Salvar</button>
 
@@ -221,7 +216,6 @@ let dados = JSON.parse(localStorage.getItem("paulaeduca")) || []
 function abrir(id){
 
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
-
 document.getElementById(id).classList.add("active")
 
 carregar()
@@ -233,13 +227,9 @@ function login(){
 let senha = prompt("Senha do professor")
 
 if(senha=="1234"){
-
 abrir("admin")
-
 }else{
-
 alert("Senha incorreta")
-
 }
 
 }
@@ -254,11 +244,8 @@ let qtd = document.getElementById("qtd").value
 let link = document.getElementById("link").value
 
 if(titulo==""){
-
 alert("Digite o título")
-
 return
-
 }
 
 dados.push({tipo,titulo,serie,disciplina,qtd,link})
@@ -287,15 +274,15 @@ carregar()
 
 function carregar(){
 
-document.getElementById("listaConteudos").innerHTML=""
-document.getElementById("listaAtividades").innerHTML=""
-document.getElementById("listaSimulados").innerHTML=""
-document.getElementById("listaAde").innerHTML=""
-document.getElementById("listaSaeb").innerHTML=""
-document.getElementById("listaProjetos").innerHTML=""
-document.getElementById("listaEventos").innerHTML=""
-document.getElementById("listaResultados").innerHTML=""
-document.getElementById("adminLista").innerHTML=""
+listaConteudos.innerHTML=""
+listaAtividades.innerHTML=""
+listaSimulados.innerHTML=""
+listaAde.innerHTML=""
+listaSaeb.innerHTML=""
+listaProjetos.innerHTML=""
+listaEventos.innerHTML=""
+listaResultados.innerHTML=""
+adminLista.innerHTML=""
 
 dados.forEach((d,i)=>{
 
@@ -303,27 +290,23 @@ let bloco = `
 <div class="card">
 
 <b>${d.titulo}</b><br>
-
 ${d.serie} - ${d.disciplina}<br>
-
 ${d.qtd ? "Questões: "+d.qtd+"<br>" : ""}
-
 <a href="${d.link}" target="_blank">Abrir material</a>
 
 </div>
 `
 
-if(d.tipo=="Conteúdos") listaConteudos.innerHTML += bloco
-if(d.tipo=="Atividades") listaAtividades.innerHTML += bloco
-if(d.tipo=="Simulados") listaSimulados.innerHTML += bloco
-if(d.tipo=="ADE") listaAde.innerHTML += bloco
-if(d.tipo=="SAEB") listaSaeb.innerHTML += bloco
-if(d.tipo=="Projetos") listaProjetos.innerHTML += bloco
-if(d.tipo=="Eventos") listaEventos.innerHTML += bloco
-if(d.tipo=="Resultados") listaResultados.innerHTML += bloco
+if(d.tipo=="Conteúdos") listaConteudos.innerHTML+=bloco
+if(d.tipo=="Atividades") listaAtividades.innerHTML+=bloco
+if(d.tipo=="Simulados") listaSimulados.innerHTML+=bloco
+if(d.tipo=="ADE") listaAde.innerHTML+=bloco
+if(d.tipo=="SAEB") listaSaeb.innerHTML+=bloco
+if(d.tipo=="Projetos") listaProjetos.innerHTML+=bloco
+if(d.tipo=="Eventos") listaEventos.innerHTML+=bloco
+if(d.tipo=="Resultados") listaResultados.innerHTML+=bloco
 
-adminLista.innerHTML += `
-
+adminLista.innerHTML+=`
 <div class="card">
 
 ${d.titulo} (${d.tipo})
