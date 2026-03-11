@@ -21,9 +21,21 @@ header{
 display:flex;
 align-items:center;
 gap:20px;
-padding:15px;
+padding:15px 25px;
 background:#063c2c;
-border-bottom:5px solid orange;
+border-bottom:6px solid orange;
+}
+
+.logo{
+height:90px;
+width:auto;
+object-fit:contain;
+}
+
+header h1{
+margin:0;
+font-size:30px;
+font-weight:bold;
 }
 
 nav{
@@ -42,6 +54,11 @@ color:white;
 padding:8px 12px;
 cursor:pointer;
 border-radius:6px;
+font-weight:bold;
+}
+
+nav button:hover{
+background:#27ae60;
 }
 
 section{
@@ -63,32 +80,41 @@ cursor:pointer;
 
 .card{
 background:#124734;
-padding:10px;
+padding:12px;
 margin:10px 0;
 border-radius:6px;
 }
 
 input,select{
-padding:6px;
+padding:8px;
 margin:5px 0;
 width:100%;
+border-radius:5px;
+border:none;
 }
 
 button.salvar{
 background:orange;
 border:none;
-padding:8px;
+padding:10px;
 font-weight:bold;
 cursor:pointer;
+border-radius:6px;
 }
 
 .remover{
 background:#c62828;
 border:none;
 color:white;
-padding:5px 8px;
+padding:6px 10px;
 margin-left:10px;
 cursor:pointer;
+border-radius:5px;
+}
+
+a{
+color:#f1c40f;
+font-weight:bold;
 }
 
 </style>
@@ -99,7 +125,9 @@ cursor:pointer;
 
 <header>
 
-<h2>PAULA EDUCA</h2>
+<img src="logo-escola.png" class="logo">
+
+<h1>PAULA EDUCA</h1>
 
 </header>
 
@@ -120,23 +148,31 @@ cursor:pointer;
 <div class="admin" onclick="login()">⚙</div>
 
 <section id="inicio" class="active">
-
 <h2>Bem-vindo ao PAULA EDUCA</h2>
-
+<p>Plataforma educacional da escola.</p>
 </section>
 
 <section id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></section>
+
 <section id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></section>
+
 <section id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></section>
+
 <section id="ade"><h2>ADE</h2><div id="listaAde"></div></section>
+
 <section id="saeb"><h2>SAEB</h2><div id="listaSaeb"></div></section>
+
 <section id="projetos"><h2>Projetos</h2><div id="listaProjetos"></div></section>
+
 <section id="eventos"><h2>Eventos</h2><div id="listaEventos"></div></section>
+
 <section id="resultados"><h2>Resultados</h2><div id="listaResultados"></div></section>
 
 <section id="admin">
 
 <h2>Painel do Professor</h2>
+
+<label>Tipo de material</label>
 
 <select id="tipo">
 
@@ -157,9 +193,11 @@ cursor:pointer;
 
 <input id="disciplina" placeholder="Disciplina">
 
-<select id="qtdQuestoes">
+<label>Quantidade de questões (para atividades)</label>
 
-<option value="">Quantidade de questões</option>
+<select id="qtd">
+
+<option value="">Nenhuma</option>
 <option>10</option>
 <option>20</option>
 <option>50</option>
@@ -178,7 +216,7 @@ cursor:pointer;
 
 <script>
 
-let dados=JSON.parse(localStorage.getItem("paulaeduca"))||[]
+let dados = JSON.parse(localStorage.getItem("paulaeduca")) || []
 
 function abrir(id){
 
@@ -192,9 +230,15 @@ carregar()
 
 function login(){
 
-if(prompt("Senha do professor")=="1234"){
+let senha = prompt("Senha do professor")
+
+if(senha=="1234"){
 
 abrir("admin")
+
+}else{
+
+alert("Senha incorreta")
 
 }
 
@@ -202,16 +246,30 @@ abrir("admin")
 
 function salvar(){
 
-let tipo=document.getElementById("tipo").value
-let titulo=document.getElementById("titulo").value
-let serie=document.getElementById("serie").value
-let disciplina=document.getElementById("disciplina").value
-let qtd=document.getElementById("qtdQuestoes").value
-let link=document.getElementById("link").value
+let tipo = document.getElementById("tipo").value
+let titulo = document.getElementById("titulo").value
+let serie = document.getElementById("serie").value
+let disciplina = document.getElementById("disciplina").value
+let qtd = document.getElementById("qtd").value
+let link = document.getElementById("link").value
+
+if(titulo==""){
+
+alert("Digite o título")
+
+return
+
+}
 
 dados.push({tipo,titulo,serie,disciplina,qtd,link})
 
 localStorage.setItem("paulaeduca",JSON.stringify(dados))
+
+document.getElementById("titulo").value=""
+document.getElementById("serie").value=""
+document.getElementById("disciplina").value=""
+document.getElementById("qtd").value=""
+document.getElementById("link").value=""
 
 carregar()
 
@@ -229,38 +287,42 @@ carregar()
 
 function carregar(){
 
-document.querySelectorAll("[id^=lista]").forEach(e=>e.innerHTML="")
-
+document.getElementById("listaConteudos").innerHTML=""
+document.getElementById("listaAtividades").innerHTML=""
+document.getElementById("listaSimulados").innerHTML=""
+document.getElementById("listaAde").innerHTML=""
+document.getElementById("listaSaeb").innerHTML=""
+document.getElementById("listaProjetos").innerHTML=""
+document.getElementById("listaEventos").innerHTML=""
+document.getElementById("listaResultados").innerHTML=""
 document.getElementById("adminLista").innerHTML=""
 
 dados.forEach((d,i)=>{
 
-let bloco=`
-
+let bloco = `
 <div class="card">
 
 <b>${d.titulo}</b><br>
 
 ${d.serie} - ${d.disciplina}<br>
 
-${d.qtd?`Questões: ${d.qtd}<br>`:""}
+${d.qtd ? "Questões: "+d.qtd+"<br>" : ""}
 
 <a href="${d.link}" target="_blank">Abrir material</a>
 
 </div>
-
 `
 
-if(d.tipo=="Conteúdos") listaConteudos.innerHTML+=bloco
-if(d.tipo=="Atividades") listaAtividades.innerHTML+=bloco
-if(d.tipo=="Simulados") listaSimulados.innerHTML+=bloco
-if(d.tipo=="ADE") listaAde.innerHTML+=bloco
-if(d.tipo=="SAEB") listaSaeb.innerHTML+=bloco
-if(d.tipo=="Projetos") listaProjetos.innerHTML+=bloco
-if(d.tipo=="Eventos") listaEventos.innerHTML+=bloco
-if(d.tipo=="Resultados") listaResultados.innerHTML+=bloco
+if(d.tipo=="Conteúdos") listaConteudos.innerHTML += bloco
+if(d.tipo=="Atividades") listaAtividades.innerHTML += bloco
+if(d.tipo=="Simulados") listaSimulados.innerHTML += bloco
+if(d.tipo=="ADE") listaAde.innerHTML += bloco
+if(d.tipo=="SAEB") listaSaeb.innerHTML += bloco
+if(d.tipo=="Projetos") listaProjetos.innerHTML += bloco
+if(d.tipo=="Eventos") listaEventos.innerHTML += bloco
+if(d.tipo=="Resultados") listaResultados.innerHTML += bloco
 
-adminLista.innerHTML+=`
+adminLista.innerHTML += `
 
 <div class="card">
 
@@ -269,7 +331,6 @@ ${d.titulo} (${d.tipo})
 <button class="remover" onclick="remover(${i})">Remover</button>
 
 </div>
-
 `
 
 })
