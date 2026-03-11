@@ -8,7 +8,7 @@
 
 <title>PAULA EDUCA</title>
 
-<link rel="icon" type="image/png" href="logo-escola.png">
+<link rel="icon" href="logo-escola.png">
 
 <style>
 
@@ -32,11 +32,6 @@ border-bottom:6px solid orange;
 height:90px;
 }
 
-header h1{
-margin:0;
-font-size:30px;
-}
-
 nav{
 display:flex;
 flex-wrap:wrap;
@@ -56,10 +51,6 @@ border-radius:6px;
 font-weight:bold;
 }
 
-nav button:hover{
-background:#27ae60;
-}
-
 section{
 display:none;
 padding:20px;
@@ -67,14 +58,6 @@ padding:20px;
 
 section.active{
 display:block;
-}
-
-.admin{
-position:fixed;
-top:20px;
-right:20px;
-font-size:26px;
-cursor:pointer;
 }
 
 .card{
@@ -85,34 +68,29 @@ border-radius:6px;
 }
 
 input,select{
+width:100%;
 padding:8px;
 margin:5px 0;
-width:100%;
-border-radius:5px;
-border:none;
-}
-
-button.salvar{
-background:orange;
-border:none;
-padding:10px;
-font-weight:bold;
-cursor:pointer;
 border-radius:6px;
-}
-
-.remover{
-background:#c62828;
 border:none;
-color:white;
-padding:6px 10px;
-cursor:pointer;
-border-radius:5px;
 }
 
-a{
-color:#f1c40f;
-font-weight:bold;
+button{
+padding:8px 12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.salvar{background:orange}
+.remover{background:red;color:white}
+
+.admin{
+position:fixed;
+top:20px;
+right:20px;
+font-size:24px;
+cursor:pointer;
 }
 
 </style>
@@ -149,14 +127,14 @@ font-weight:bold;
 <h2>Bem-vindo ao PAULA EDUCA</h2>
 </section>
 
-<section id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></section>
-<section id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></section>
-<section id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></section>
-<section id="ade"><h2>ADE</h2><div id="listaAde"></div></section>
-<section id="saeb"><h2>SAEB</h2><div id="listaSaeb"></div></section>
-<section id="projetos"><h2>Projetos</h2><div id="listaProjetos"></div></section>
-<section id="eventos"><h2>Eventos</h2><div id="listaEventos"></div></section>
-<section id="resultados"><h2>Resultados</h2><div id="listaResultados"></div></section>
+<section id="conteudos"><h2>Conteúdos</h2><div id="conteudosLista"></div></section>
+<section id="atividades"><h2>Atividades</h2><div id="atividadesLista"></div></section>
+<section id="simulados"><h2>Simulados</h2><div id="simuladosLista"></div></section>
+<section id="ade"><h2>ADE</h2><div id="adeLista"></div></section>
+<section id="saeb"><h2>SAEB</h2><div id="saebLista"></div></section>
+<section id="projetos"><h2>Projetos</h2><div id="projetosLista"></div></section>
+<section id="eventos"><h2>Eventos</h2><div id="eventosLista"></div></section>
+<section id="resultados"><h2>Resultados</h2><div id="resultadosLista"></div></section>
 
 <section id="admin">
 
@@ -182,25 +160,15 @@ font-weight:bold;
 <input id="disciplina" placeholder="Disciplina">
 
 <select id="qtd">
-
 <option value="">Quantidade de questões</option>
 <option>10</option>
 <option>20</option>
 <option>50</option>
-
 </select>
-
-<label>Upload do arquivo</label>
 
 <input type="file" id="arquivo">
 
-<label>Ou link externo</label>
-
-<input id="link" placeholder="Link do material">
-
 <button class="salvar" onclick="salvar()">Salvar</button>
-
-<h3>Materiais cadastrados</h3>
 
 <div id="adminLista"></div>
 
@@ -208,132 +176,134 @@ font-weight:bold;
 
 <script>
 
-let dados = JSON.parse(localStorage.getItem("paulaeduca")) || []
+let db
+
+let request=indexedDB.open("PAULAEDUCA",1)
+
+request.onupgradeneeded=e=>{
+db=e.target.result
+db.createObjectStore("materiais",{keyPath:"id",autoIncrement:true})
+}
+
+request.onsuccess=e=>{
+db=e.target.result
+carregar()
+}
 
 function abrir(id){
-
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
 document.getElementById(id).classList.add("active")
-
-carregar()
-
 }
 
 function login(){
 
-let senha = prompt("Senha do professor")
-
-if(senha=="1234"){
+if(prompt("Senha professor")=="1234"){
 abrir("admin")
-}else{
-alert("Senha incorreta")
 }
 
 }
 
 function salvar(){
 
-let tipo = tipo.value
-let titulo = document.getElementById("titulo").value
-let serie = document.getElementById("serie").value
-let disciplina = document.getElementById("disciplina").value
-let qtd = document.getElementById("qtd").value
-let link = document.getElementById("link").value
+let tipo=document.getElementById("tipo").value
+let titulo=document.getElementById("titulo").value
+let serie=document.getElementById("serie").value
+let disciplina=document.getElementById("disciplina").value
+let qtd=document.getElementById("qtd").value
 
-let arquivoInput = document.getElementById("arquivo")
+let arquivo=document.getElementById("arquivo").files[0]
 
-if(arquivoInput.files.length>0){
-
-let reader = new FileReader()
+let reader=new FileReader()
 
 reader.onload=function(){
 
-dados.push({tipo,titulo,serie,disciplina,qtd,arquivo:reader.result})
+let tx=db.transaction("materiais","readwrite")
+let store=tx.objectStore("materiais")
 
-localStorage.setItem("paulaeduca",JSON.stringify(dados))
+store.add({
+tipo,titulo,serie,disciplina,qtd,arquivo:reader.result
+})
 
-carregar()
-
-}
-
-reader.readAsDataURL(arquivoInput.files[0])
-
-}else{
-
-dados.push({tipo,titulo,serie,disciplina,qtd,link})
-
-localStorage.setItem("paulaeduca",JSON.stringify(dados))
-
-carregar()
+tx.oncomplete=carregar
 
 }
 
+reader.readAsDataURL(arquivo)
+
 }
 
-function remover(i){
+function remover(id){
 
-dados.splice(i,1)
+let tx=db.transaction("materiais","readwrite")
 
-localStorage.setItem("paulaeduca",JSON.stringify(dados))
+tx.objectStore("materiais").delete(id)
 
-carregar()
+tx.oncomplete=carregar
 
 }
 
 function carregar(){
 
-listaConteudos.innerHTML=""
-listaAtividades.innerHTML=""
-listaSimulados.innerHTML=""
-listaAde.innerHTML=""
-listaSaeb.innerHTML=""
-listaProjetos.innerHTML=""
-listaEventos.innerHTML=""
-listaResultados.innerHTML=""
+let listas={
+Conteúdos:conteudosLista,
+Atividades:atividadesLista,
+Simulados:simuladosLista,
+ADE:adeLista,
+SAEB:saebLista,
+Projetos:projetosLista,
+Eventos:eventosLista,
+Resultados:resultadosLista
+}
+
+Object.values(listas).forEach(l=>l.innerHTML="")
+
 adminLista.innerHTML=""
 
-dados.forEach((d,i)=>{
+let tx=db.transaction("materiais","readonly")
 
-let linkMaterial = d.arquivo ? d.arquivo : d.link
+let store=tx.objectStore("materiais")
 
-let bloco = `
+store.openCursor().onsuccess=e=>{
+
+let cursor=e.target.result
+
+if(cursor){
+
+let m=cursor.value
+
+let bloco=`
 <div class="card">
 
-<b>${d.titulo}</b><br>
+<b>${m.titulo}</b><br>
 
-${d.serie} - ${d.disciplina}<br>
+${m.serie} - ${m.disciplina}<br>
 
-${d.qtd ? "Questões: "+d.qtd+"<br>" : ""}
-
-<a href="${linkMaterial}" target="_blank">Abrir material</a>
+<a href="${m.arquivo}" target="_blank">Abrir arquivo</a>
 
 </div>
 `
 
-if(d.tipo=="Conteúdos") listaConteudos.innerHTML+=bloco
-if(d.tipo=="Atividades") listaAtividades.innerHTML+=bloco
-if(d.tipo=="Simulados") listaSimulados.innerHTML+=bloco
-if(d.tipo=="ADE") listaAde.innerHTML+=bloco
-if(d.tipo=="SAEB") listaSaeb.innerHTML+=bloco
-if(d.tipo=="Projetos") listaProjetos.innerHTML+=bloco
-if(d.tipo=="Eventos") listaEventos.innerHTML+=bloco
-if(d.tipo=="Resultados") listaResultados.innerHTML+=bloco
+listas[m.tipo].innerHTML+=bloco
 
 adminLista.innerHTML+=`
+
 <div class="card">
 
-${d.titulo} (${d.tipo})
+${m.titulo}
 
-<button class="remover" onclick="remover(${i})">Remover</button>
+<button class="remover" onclick="remover(${cursor.key})">Remover</button>
 
 </div>
+
 `
 
-})
+cursor.continue()
 
 }
 
-carregar()
+}
+
+}
 
 </script>
 
