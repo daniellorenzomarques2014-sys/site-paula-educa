@@ -1,45 +1,65 @@
 <script>
 
-/* =========================
+/* ======================
 MOSTRAR SEÇÕES
-========================= */
+====================== */
 
 function mostrar(id){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+
+document.querySelectorAll("section").forEach(sec=>{
+sec.classList.remove("active");
+});
+
 document.getElementById(id).classList.add("active");
+
 carregarTudo();
+
 }
 
-/* =========================
+/* ======================
 LOGIN PROFESSOR
-========================= */
+====================== */
 
 function login(){
-if(prompt("Senha do professor:")=="1234"){
-mostrar('admin');
-carregarTudo();
-}
-else alert("Senha incorreta");
+
+let senha=prompt("Senha do professor:");
+
+if(senha==="1234"){
+
+mostrar("admin");
+
+}else{
+
+alert("Senha incorreta");
+
 }
 
-/* =========================
+}
+
+/* ======================
 BANCO DE DADOS
-========================= */
+====================== */
 
-let conteudos=JSON.parse(localStorage.getItem("conteudos")||"[]");
-let questoes=JSON.parse(localStorage.getItem("questoes")||"[]");
+let conteudos = JSON.parse(localStorage.getItem("conteudos")) || [];
+let questoes = JSON.parse(localStorage.getItem("questoes")) || [];
 
-/* =========================
+/* ======================
 SALVAR CONTEÚDO
-========================= */
+====================== */
 
 function salvarConteudo(){
 
+let titulo=document.getElementById("tituloConteudo").value;
+let serie=document.getElementById("serieConteudo").value;
+let disciplina=document.getElementById("disciplinaConteudo").value;
 let file=document.getElementById("pdfConteudo").files[0];
 
-if(!file){
-alert("Selecione um PDF.");
+if(!titulo || !serie || !disciplina || !file){
+
+alert("Preencha todos os campos.");
+
 return;
+
 }
 
 let reader=new FileReader();
@@ -48,9 +68,9 @@ reader.onload=function(){
 
 conteudos.push({
 
-titulo:tituloConteudo.value,
-serie:serieConteudo.value,
-disciplina:disciplinaConteudo.value,
+titulo:titulo,
+serie:serie,
+disciplina:disciplina,
 pdf:reader.result
 
 });
@@ -67,9 +87,9 @@ reader.readAsDataURL(file);
 
 }
 
-/* =========================
+/* ======================
 REMOVER CONTEÚDO
-========================= */
+====================== */
 
 function removerConteudo(i){
 
@@ -85,18 +105,21 @@ carregarTudo();
 
 }
 
-/* =========================
+/* ======================
 CARREGAR CONTEÚDOS
-========================= */
+====================== */
 
 function carregarConteudos(){
 
-listaConteudos.innerHTML="";
-adminConteudos.innerHTML="";
+let lista=document.getElementById("listaConteudos");
+let adminLista=document.getElementById("adminConteudos");
+
+lista.innerHTML="";
+adminLista.innerHTML="";
 
 conteudos.forEach((c,i)=>{
 
-listaConteudos.innerHTML+=`
+lista.innerHTML+=`
 <div class="card">
 <b>${c.titulo}</b><br>
 ${c.serie} - ${c.disciplina}<br>
@@ -104,7 +127,7 @@ ${c.serie} - ${c.disciplina}<br>
 </div>
 `;
 
-adminConteudos.innerHTML+=`
+adminLista.innerHTML+=`
 <div class="card">
 ${c.titulo}
 <button class="small-btn" onclick="removerConteudo(${i})">Excluir</button>
@@ -115,48 +138,40 @@ ${c.titulo}
 
 }
 
-/* =========================
+/* ======================
 SALVAR QUESTÃO
-========================= */
+====================== */
 
 function salvarQuestao(){
 
+let tipo=document.getElementById("tipoQuestao").value;
+let serie=document.getElementById("serieQuestao").value;
+let disciplina=document.getElementById("disciplinaQuestao").value;
+let pergunta=document.getElementById("pergunta").value;
+
+let a=document.getElementById("a").value;
+let b=document.getElementById("b").value;
+let c=document.getElementById("c").value;
+let d=document.getElementById("d").value;
+
+let correta=document.getElementById("correta").value;
+
 let img=document.getElementById("imagemPergunta").files[0];
 
-if(img){
-
-let reader=new FileReader();
-
-reader.onload=function(){
-
-registrarQuestao(reader.result);
-
-};
-
-reader.readAsDataURL(img);
-
-}else{
-
-registrarQuestao("");
-
-}
-
-}
-
-function registrarQuestao(imagem){
+function registrar(imagem){
 
 questoes.push({
 
-tipo:tipoQuestao.value,
-serie:serieQuestao.value,
-disciplina:disciplinaQuestao.value,
-pergunta:pergunta.value,
+tipo:tipo,
+serie:serie,
+disciplina:disciplina,
+pergunta:pergunta,
 img:imagem,
-a:a.value,
-b:b.value,
-c:c.value,
-d:d.value,
-correta:correta.value
+a:a,
+b:b,
+c:c,
+d:d,
+correta:correta
 
 });
 
@@ -168,13 +183,33 @@ carregarTudo();
 
 }
 
-/* =========================
+if(img){
+
+let reader=new FileReader();
+
+reader.onload=function(){
+
+registrar(reader.result);
+
+};
+
+reader.readAsDataURL(img);
+
+}else{
+
+registrar("");
+
+}
+
+}
+
+/* ======================
 REMOVER QUESTÃO
-========================= */
+====================== */
 
 function removerQuestao(i){
 
-if(confirm("Deseja excluir esta questão?")){
+if(confirm("Excluir questão?")){
 
 questoes.splice(i,1);
 
@@ -186,45 +221,50 @@ carregarTudo();
 
 }
 
-/* =========================
+/* ======================
 CARREGAR QUESTÕES
-========================= */
+====================== */
 
 function carregarQuestoes(){
 
-listaAtividades.innerHTML="";
-listaSimulados.innerHTML="";
-listaAde.innerHTML="";
-listaSaeb.innerHTML="";
-adminQuestoes.innerHTML="";
+let atividades=document.getElementById("listaAtividades");
+let simulados=document.getElementById("listaSimulados");
+let ade=document.getElementById("listaAde");
+let saeb=document.getElementById("listaSaeb");
+let admin=document.getElementById("adminQuestoes");
+
+atividades.innerHTML="";
+simulados.innerHTML="";
+ade.innerHTML="";
+saeb.innerHTML="";
+admin.innerHTML="";
 
 questoes.forEach((q,i)=>{
 
 let bloco=`
 <div class="card">
+
 <b>${q.pergunta}</b><br>
 
 ${q.img?`<img src="${q.img}" width="200"><br>`:""}
 
-<label><input type="radio" name="q${i}"> A) ${q.a}</label><br>
-<label><input type="radio" name="q${i}"> B) ${q.b}</label><br>
-<label><input type="radio" name="q${i}"> C) ${q.c}</label><br>
-<label><input type="radio" name="q${i}"> D) ${q.d}</label>
+A) ${q.a}<br>
+B) ${q.b}<br>
+C) ${q.c}<br>
+D) ${q.d}
 
 </div>
 `;
 
-if(q.tipo=="Atividade") listaAtividades.innerHTML+=bloco;
+if(q.tipo==="Atividade") atividades.innerHTML+=bloco;
 
-if(q.tipo=="Simulado") listaSimulados.innerHTML+=bloco;
+if(q.tipo==="Simulado") simulados.innerHTML+=bloco;
 
-if(q.tipo=="ADE") listaAde.innerHTML+=bloco;
+if(q.tipo==="ADE") ade.innerHTML+=bloco;
 
-if(q.tipo=="SAEB") listaSaeb.innerHTML+=bloco;
+if(q.tipo==="SAEB") saeb.innerHTML+=bloco;
 
-/* ADMIN */
-
-adminQuestoes.innerHTML+=`
+admin.innerHTML+=`
 <div class="card">
 ${q.pergunta}
 <button class="small-btn" onclick="removerQuestao(${i})">Excluir</button>
@@ -235,9 +275,9 @@ ${q.pergunta}
 
 }
 
-/* =========================
-CARREGAR TUDO
-========================= */
+/* ======================
+CARREGAR SISTEMA
+====================== */
 
 function carregarTudo(){
 
@@ -246,8 +286,12 @@ carregarQuestoes();
 
 }
 
-/* INICIAR SISTEMA */
+/* INICIAR */
+
+document.addEventListener("DOMContentLoaded",function(){
 
 carregarTudo();
+
+});
 
 </script>
