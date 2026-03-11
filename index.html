@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PAULA EDUCA</title>
 
+<link rel="icon" href="logo-escola.png">
+
 <style>
 
 body{
@@ -18,13 +20,13 @@ header{
 display:flex;
 align-items:center;
 gap:20px;
-padding:15px;
+padding:20px;
 background:#063c2c;
-border-bottom:4px solid orange;
+border-bottom:5px solid orange;
 }
 
 header img{
-height:70px;
+height:80px;
 }
 
 nav{
@@ -34,14 +36,12 @@ text-align:center;
 }
 
 nav button{
+padding:8px 12px;
+margin:3px;
 background:#1e8449;
 border:none;
 color:white;
-padding:8px 12px;
-margin:4px;
 cursor:pointer;
-border-radius:5px;
-font-size:15px;
 }
 
 section{
@@ -55,22 +55,17 @@ display:block;
 
 .card{
 background:#124734;
-padding:12px;
+padding:10px;
 margin:10px 0;
 border-radius:6px;
 }
 
 .admin{
 position:fixed;
-top:15px;
-right:15px;
-font-size:26px;
+top:20px;
+right:20px;
+font-size:24px;
 cursor:pointer;
-}
-
-input,select{
-padding:6px;
-margin:4px;
 }
 
 </style>
@@ -79,95 +74,107 @@ margin:4px;
 <body>
 
 <header>
+
 <img src="logo-escola.png">
-<h2>PAULA EDUCA</h2>
+
+<h1>PAULA EDUCA</h1>
+
 </header>
 
 <nav>
 
-<button onclick="abrir('inicio')">🏠 Início</button>
-<button onclick="abrir('conteudos')">📚 Conteúdos</button>
-<button onclick="abrir('atividades')">📝 Atividades</button>
-<button onclick="abrir('simulados')">🎯 Simulados</button>
-<button onclick="abrir('ade')">📊 ADE</button>
-<button onclick="abrir('saeb')">📈 SAEB</button>
-<button onclick="abrir('projetos')">🧩 Projetos</button>
-<button onclick="abrir('eventos')">🎉 Eventos</button>
-<button onclick="abrir('resultados')">🏆 Resultados</button>
+<button onclick="mostrar('conteudos')">Conteúdos</button>
+<button onclick="mostrar('atividades')">Atividades</button>
+<button onclick="mostrar('simulados')">Simulados</button>
+<button onclick="mostrar('ade')">ADE</button>
+<button onclick="mostrar('saeb')">SAEB</button>
+<button onclick="mostrar('projetos')">Projetos</button>
+<button onclick="mostrar('eventos')">Eventos</button>
 
 </nav>
 
 <div class="admin" onclick="login()">⚙</div>
 
-<section id="inicio" class="active">
-<h2>🏠 Bem-vindo ao PAULA EDUCA</h2>
-<p>Ambiente digital de aprendizagem.</p>
+<section id="conteudos" class="active">
+<h2>Conteúdos</h2>
+<div id="listaConteudos"></div>
 </section>
 
-<section id="conteudos"><h2>📚 Conteúdos</h2><div id="lista_conteudos"></div></section>
+<section id="atividades">
+<h2>Atividades</h2>
+<div id="listaAtividades"></div>
+</section>
 
-<section id="atividades"><h2>📝 Atividades</h2><div id="lista_atividades"></div></section>
+<section id="simulados">
+<h2>Simulados</h2>
+<div id="listaSimulados"></div>
+</section>
 
-<section id="simulados"><h2>🎯 Simulados</h2><div id="lista_simulados"></div></section>
+<section id="ade">
+<h2>ADE</h2>
+<div id="listaAde"></div>
+</section>
 
-<section id="ade"><h2>📊 ADE</h2><div id="lista_ade"></div></section>
+<section id="saeb">
+<h2>SAEB</h2>
+<div id="listaSaeb"></div>
+</section>
 
-<section id="saeb"><h2>📈 SAEB</h2><div id="lista_saeb"></div></section>
+<section id="projetos">
+<h2>Projetos</h2>
+<div id="listaProjetos"></div>
+</section>
 
-<section id="projetos"><h2>🧩 Projetos</h2><div id="lista_projetos"></div></section>
-
-<section id="eventos"><h2>🎉 Eventos</h2><div id="lista_eventos"></div></section>
-
-<section id="resultados"><h2>🏆 Resultados</h2><div id="lista_resultados"></div></section>
+<section id="eventos">
+<h2>Eventos</h2>
+<div id="listaEventos"></div>
+</section>
 
 <section id="admin">
 
-<h2>⚙ Painel do Professor</h2>
+<h2>Painel do Professor</h2>
 
 <input id="titulo" placeholder="Título">
 
 <select id="tipo">
-<option value="conteudos">Conteúdos</option>
-<option value="atividades">Atividades</option>
-<option value="simulados">Simulados</option>
-<option value="ade">ADE</option>
-<option value="saeb">SAEB</option>
-<option value="projetos">Projetos</option>
-<option value="eventos">Eventos</option>
-<option value="resultados">Resultados</option>
+
+<option>conteudos</option>
+<option>atividades</option>
+<option>simulados</option>
+<option>ade</option>
+<option>saeb</option>
+<option>projetos</option>
+<option>eventos</option>
+
 </select>
 
 <input id="arquivo" placeholder="Nome do arquivo (ex: aula1.pdf)">
 
 <button onclick="salvar()">Cadastrar</button>
 
-<h3>Itens cadastrados</h3>
-
-<div id="lista_admin"></div>
+<div id="listaAdmin"></div>
 
 </section>
 
 <script>
 
-let dados=JSON.parse(localStorage.getItem("dados"))||[]
+let dados=JSON.parse(localStorage.getItem("dados"))||[];
 
-function abrir(id){
+function mostrar(id){
 
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 
-document.getElementById(id).classList.add("active")
+document.getElementById(id).classList.add("active");
 
-carregar()
+carregar();
 
 }
 
 function login(){
 
-let senha=prompt("Senha do professor")
+if(prompt("Senha professor")=="1234"){
 
-if(senha=="1234"){
-
-abrir("admin")
+mostrar("admin");
 
 }
 
@@ -175,33 +182,49 @@ abrir("admin")
 
 function salvar(){
 
-let titulo=document.getElementById("titulo").value
-let tipo=document.getElementById("tipo").value
-let arquivo=document.getElementById("arquivo").value
+let titulo=document.getElementById("titulo").value;
 
-dados.push({titulo,tipo,arquivo})
+let tipo=document.getElementById("tipo").value;
 
-localStorage.setItem("dados",JSON.stringify(dados))
+let arquivo=document.getElementById("arquivo").value;
 
-carregar()
+dados.push({
+
+titulo:titulo,
+tipo:tipo,
+arquivo:arquivo
+
+});
+
+localStorage.setItem("dados",JSON.stringify(dados));
+
+carregar();
 
 }
 
 function remover(i){
 
-dados.splice(i,1)
+dados.splice(i,1);
 
-localStorage.setItem("dados",JSON.stringify(dados))
+localStorage.setItem("dados",JSON.stringify(dados));
 
-carregar()
+carregar();
 
 }
 
 function carregar(){
 
-document.querySelectorAll("[id^=lista_]").forEach(l=>l.innerHTML="")
+let tipos=["conteudos","atividades","simulados","ade","saeb","projetos","eventos"];
 
-document.getElementById("lista_admin").innerHTML=""
+tipos.forEach(t=>{
+
+let lista=document.getElementById("lista"+t.charAt(0).toUpperCase()+t.slice(1));
+
+if(lista) lista.innerHTML="";
+
+});
+
+document.getElementById("listaAdmin").innerHTML="";
 
 dados.forEach((d,i)=>{
 
@@ -219,29 +242,29 @@ let bloco=`
 
 </div>
 
-`
+`;
 
-let destino=document.getElementById("lista_"+d.tipo)
+let destino=document.getElementById("lista"+d.tipo.charAt(0).toUpperCase()+d.tipo.slice(1));
 
-if(destino) destino.innerHTML+=bloco
+if(destino) destino.innerHTML+=bloco;
 
-document.getElementById("lista_admin").innerHTML+=`
+document.getElementById("listaAdmin").innerHTML+=`
 
 <div class="card">
 
-${d.titulo} (${d.tipo})
+${d.titulo}
 
-<button onclick="remover(${i})">Remover</button>
+<button onclick="remover(${i})">Excluir</button>
 
 </div>
 
-`
+`;
 
-})
+});
 
 }
 
-carregar()
+carregar();
 
 </script>
 
