@@ -9,7 +9,8 @@
 
 <title>PAULA EDUCA</title>
 
-<link rel="icon" type="image/png" href="logo-escola.png">
+<link rel="icon" type="image/png" href="./logo-escola.png">
+<link rel="shortcut icon" href="./logo-escola.png">
 
 <style>
 
@@ -69,7 +70,6 @@ background:#124734;
 padding:15px;
 margin:10px 0;
 border-radius:8px;
-box-shadow:0 4px 10px rgba(0,0,0,0.4);
 }
 
 input,select{
@@ -89,19 +89,16 @@ cursor:pointer;
 
 .salvar{
 background:orange;
-font-weight:bold;
 }
 
 .remover{
 background:red;
 color:white;
-margin-top:10px;
 }
 
 .abrir{
 background:#27ae60;
 color:white;
-margin-top:10px;
 }
 
 .admin{
@@ -201,7 +198,6 @@ z-index:9999;
 <script>
 
 let db
-
 let request=indexedDB.open("PAULAEDUCA",1)
 
 request.onupgradeneeded=e=>{
@@ -215,18 +211,14 @@ carregar()
 }
 
 function abrir(id){
-
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
 document.getElementById(id).classList.add("active")
-
 }
 
 function login(){
-
 if(prompt("Senha professor")=="1234"){
 abrir("admin")
 }
-
 }
 
 function salvar(){
@@ -243,11 +235,15 @@ alert("Digite um título")
 return
 }
 
+let reader=new FileReader()
+
+reader.onload=function(){
+
 let tx=db.transaction("materiais","readwrite")
 let store=tx.objectStore("materiais")
 
 store.add({
-tipo,titulo,serie,disciplina,qtd,arquivo
+tipo,titulo,serie,disciplina,qtd,arquivo:reader.result
 })
 
 tx.oncomplete=function(){
@@ -257,14 +253,20 @@ carregar()
 
 }
 
-function limpar(){
+if(arquivo){
+reader.readAsDataURL(arquivo)
+}else{
+reader.onload()
+}
 
+}
+
+function limpar(){
 titulo.value=""
 serie.value=""
 disciplina.value=""
 qtd.value=""
 arquivo.value=""
-
 }
 
 function remover(id){
@@ -274,30 +276,6 @@ if(confirm("Remover material?")){
 let tx=db.transaction("materiais","readwrite")
 tx.objectStore("materiais").delete(id)
 tx.oncomplete=carregar
-
-}
-
-}
-
-function abrirArquivo(id){
-
-let tx=db.transaction("materiais","readonly")
-let store=tx.objectStore("materiais")
-
-let req=store.get(id)
-
-req.onsuccess=function(){
-
-let arquivo=req.result.arquivo
-
-if(!arquivo){
-alert("Arquivo não encontrado")
-return
-}
-
-let url=URL.createObjectURL(arquivo)
-
-window.open(url)
 
 }
 
@@ -340,7 +318,12 @@ let bloco=`
 
 ${m.qtd?`<p>Questões: ${m.qtd}</p>`:""}
 
-${m.arquivo?`<button class="abrir" onclick="abrirArquivo(${cursor.key})">Abrir arquivo</button>`:""}
+${m.arquivo?`
+
+<a class="abrir" href="${m.arquivo}" target="_blank">Abrir</a>
+<a class="abrir" href="${m.arquivo}" download>Baixar</a>
+
+`:""}
 
 </div>
 
