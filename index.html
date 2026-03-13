@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -14,7 +15,7 @@
 
 body{
 margin:0;
-font-family:Arial;
+font-family:Arial, Helvetica, sans-serif;
 background:#0b3d2e;
 color:white;
 }
@@ -103,10 +104,19 @@ margin-top:8px;
 
 .admin{
 position:fixed;
-top:20px;
-right:20px;
-font-size:24px;
+top:15px;
+right:15px;
+font-size:28px;
 cursor:pointer;
+background:#1e8449;
+width:45px;
+height:45px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+box-shadow:0 0 10px rgba(0,0,0,0.6);
+z-index:9999;
 }
 
 a{
@@ -183,12 +193,10 @@ text-decoration:none;
 <input id="disciplina" placeholder="Disciplina">
 
 <select id="qtd">
-
 <option value="">Quantidade de questões</option>
 <option>10</option>
 <option>20</option>
 <option>50</option>
-
 </select>
 
 <input type="file" id="arquivo">
@@ -255,7 +263,6 @@ let arquivo=document.getElementById("arquivo").files[0]
 if(!titulo){
 
 alert("Digite um título")
-
 return
 
 }
@@ -267,20 +274,17 @@ let tx=db.transaction("materiais","readwrite")
 let store=tx.objectStore("materiais")
 
 store.add({
-
 tipo,
 titulo,
 serie,
 disciplina,
 qtd,
 arquivo:dadoArquivo
-
 })
 
 tx.oncomplete=function(){
 
 limpar()
-
 carregar()
 
 }
@@ -404,3 +408,4 @@ cursor.continue()
 
 </body>
 </html>
+```
