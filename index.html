@@ -15,7 +15,7 @@
 
 body{
 margin:0;
-font-family:Arial, Helvetica, sans-serif;
+font-family:Arial;
 background:#0b3d2e;
 color:white;
 }
@@ -55,10 +55,6 @@ border-radius:6px;
 font-weight:bold;
 }
 
-nav button:hover{
-background:#27ae60;
-}
-
 section{
 display:none;
 padding:20px;
@@ -73,7 +69,7 @@ background:#124734;
 padding:15px;
 margin:10px 0;
 border-radius:8px;
-box-shadow:0 4px 8px rgba(0,0,0,0.3);
+box-shadow:0 4px 8px rgba(0,0,0,0.4);
 }
 
 input,select{
@@ -84,13 +80,6 @@ border-radius:6px;
 border:none;
 }
 
-button{
-padding:8px 12px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-}
-
 .salvar{
 background:orange;
 font-weight:bold;
@@ -99,7 +88,13 @@ font-weight:bold;
 .remover{
 background:red;
 color:white;
-margin-top:8px;
+margin-top:10px;
+}
+
+.abrir{
+background:#27ae60;
+color:white;
+margin-top:10px;
 }
 
 .admin{
@@ -115,14 +110,7 @@ display:flex;
 align-items:center;
 justify-content:center;
 border-radius:50%;
-box-shadow:0 0 10px rgba(0,0,0,0.6);
 z-index:9999;
-}
-
-a{
-color:orange;
-font-weight:bold;
-text-decoration:none;
 }
 
 </style>
@@ -134,7 +122,6 @@ text-decoration:none;
 <header>
 
 <img src="logo-escola.png" class="logo">
-
 <h1>PAULA EDUCA</h1>
 
 </header>
@@ -157,7 +144,6 @@ text-decoration:none;
 
 <section id="inicio" class="active">
 <h2>Bem-vindo ao PAULA EDUCA</h2>
-<p>Plataforma educacional da escola.</p>
 </section>
 
 <section id="conteudos"><h2>Conteúdos</h2><div id="conteudosLista"></div></section>
@@ -187,9 +173,7 @@ text-decoration:none;
 </select>
 
 <input id="titulo" placeholder="Título">
-
 <input id="serie" placeholder="Série">
-
 <input id="disciplina" placeholder="Disciplina">
 
 <select id="qtd">
@@ -214,25 +198,18 @@ let db
 let request=indexedDB.open("PAULAEDUCA",1)
 
 request.onupgradeneeded=e=>{
-
 db=e.target.result
-
 db.createObjectStore("materiais",{keyPath:"id",autoIncrement:true})
-
 }
 
 request.onsuccess=e=>{
-
 db=e.target.result
-
 carregar()
-
 }
 
 function abrir(id){
 
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
-
 document.getElementById(id).classList.add("active")
 
 }
@@ -240,53 +217,44 @@ document.getElementById(id).classList.add("active")
 function login(){
 
 if(prompt("Senha professor")=="1234"){
-
 abrir("admin")
-
 }else{
-
 alert("Senha incorreta")
-
 }
 
 }
 
 function salvar(){
 
-let tipo=document.getElementById("tipo").value
-let titulo=document.getElementById("titulo").value
-let serie=document.getElementById("serie").value
-let disciplina=document.getElementById("disciplina").value
-let qtd=document.getElementById("qtd").value
+let tipo=tipo.value
+let tituloInput=document.getElementById("titulo")
+let serieInput=document.getElementById("serie")
+let disciplinaInput=document.getElementById("disciplina")
+let qtdInput=document.getElementById("qtd")
 let arquivo=document.getElementById("arquivo").files[0]
 
-if(!titulo){
-
+if(!tituloInput.value){
 alert("Digite um título")
 return
-
 }
 
-function gravar(dadoArquivo){
+function gravar(dado){
 
 let tx=db.transaction("materiais","readwrite")
-
 let store=tx.objectStore("materiais")
 
 store.add({
-tipo,
-titulo,
-serie,
-disciplina,
-qtd,
-arquivo:dadoArquivo
+tipo:tipo,
+titulo:tituloInput.value,
+serie:serieInput.value,
+disciplina:disciplinaInput.value,
+qtd:qtdInput.value,
+arquivo:dado
 })
 
 tx.oncomplete=function(){
-
 limpar()
 carregar()
-
 }
 
 }
@@ -296,9 +264,7 @@ if(arquivo){
 let reader=new FileReader()
 
 reader.onload=function(){
-
 gravar(reader.result)
-
 }
 
 reader.readAsDataURL(arquivo)
@@ -313,32 +279,35 @@ gravar("")
 
 function limpar(){
 
-document.getElementById("titulo").value=""
-document.getElementById("serie").value=""
-document.getElementById("disciplina").value=""
-document.getElementById("qtd").value=""
-document.getElementById("arquivo").value=""
+titulo.value=""
+serie.value=""
+disciplina.value=""
+qtd.value=""
+arquivo.value=""
 
 }
 
 function remover(id){
 
-if(confirm("Deseja remover este material?")){
+if(confirm("Remover material?")){
 
 let tx=db.transaction("materiais","readwrite")
-
 tx.objectStore("materiais").delete(id)
-
 tx.oncomplete=carregar
 
 }
 
 }
 
+function abrirArquivo(dado){
+
+window.open(dado,"_blank")
+
+}
+
 function carregar(){
 
 let listas={
-
 Conteúdos:conteudosLista,
 Atividades:atividadesLista,
 Simulados:simuladosLista,
@@ -347,15 +316,12 @@ SAEB:saebLista,
 Projetos:projetosLista,
 Eventos:eventosLista,
 Resultados:resultadosLista
-
 }
 
 Object.values(listas).forEach(l=>l.innerHTML="")
-
 adminLista.innerHTML=""
 
 let tx=db.transaction("materiais","readonly")
-
 let store=tx.objectStore("materiais")
 
 store.openCursor().onsuccess=e=>{
@@ -367,19 +333,17 @@ if(cursor){
 let m=cursor.value
 
 let bloco=`
-
 <div class="card">
 
 <h3>${m.titulo}</h3>
 
 <p>${m.serie} - ${m.disciplina}</p>
 
-${m.qtd ? `<p>Questões: ${m.qtd}</p>`:""}
+${m.qtd?`<p>Questões: ${m.qtd}</p>`:""}
 
-${m.arquivo ? `<a href="${m.arquivo}" target="_blank">Abrir arquivo</a>`:""}
+${m.arquivo?`<button class="abrir" onclick="abrirArquivo('${m.arquivo}')">Abrir arquivo</button>`:""}
 
 </div>
-
 `
 
 listas[m.tipo].innerHTML+=bloco
