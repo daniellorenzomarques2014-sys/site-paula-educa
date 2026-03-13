@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -9,11 +8,8 @@
 
 <title>PAULA EDUCA</title>
 
-<link rel="icon" type="image/png" href="favicon.png?v=2">
+<link rel="icon" type="image/png" href="favicon.png">
 
-<meta name="theme-color" content="#0b3d2e">
-
-</head>
 <style>
 
 body{
@@ -29,10 +25,7 @@ align-items:center;
 gap:20px;
 padding:15px 25px;
 background:#063c2c;
-border-bottom:5px solid orange;
-position:sticky;
-top:0;
-z-index:1000;
+border-bottom:6px solid orange;
 }
 
 .logo{
@@ -69,15 +62,15 @@ display:block;
 
 .card{
 background:#124734;
-padding:15px;
+padding:12px;
 margin:10px 0;
-border-radius:8px;
+border-radius:6px;
 }
 
 input,select{
 width:100%;
 padding:8px;
-margin:6px 0;
+margin:5px 0;
 border-radius:6px;
 border:none;
 }
@@ -89,40 +82,28 @@ border-radius:6px;
 cursor:pointer;
 }
 
-.salvar{
-background:orange;
-font-weight:bold;
-}
+.salvar{background:orange}
 
 .remover{
 background:red;
 color:white;
 }
 
-.abrir{
-display:inline-block;
-background:#27ae60;
-color:white;
-padding:8px 12px;
-border-radius:6px;
-text-decoration:none;
-margin-top:8px;
-}
-
 .admin{
 position:fixed;
-top:15px;
-right:15px;
+top:20px;
+right:20px;
 font-size:26px;
 cursor:pointer;
 background:#1e8449;
-width:45px;
-height:45px;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:50%;
-z-index:9999;
+padding:8px 12px;
+border-radius:8px;
+}
+
+.arquivoBtn{
+background:orange;
+color:black;
+font-weight:bold;
 }
 
 </style>
@@ -134,6 +115,7 @@ z-index:9999;
 <header>
 
 <img src="logo-escola.png" class="logo">
+
 <h1>PAULA EDUCA</h1>
 
 </header>
@@ -156,6 +138,7 @@ z-index:9999;
 
 <section id="inicio" class="active">
 <h2>Bem-vindo ao PAULA EDUCA</h2>
+<p>Plataforma educacional para conteúdos, atividades e simulados.</p>
 </section>
 
 <section id="conteudos"><h2>Conteúdos</h2><div id="conteudosLista"></div></section>
@@ -172,7 +155,6 @@ z-index:9999;
 <h2>Painel do Professor</h2>
 
 <select id="tipo">
-
 <option>Conteúdos</option>
 <option>Atividades</option>
 <option>Simulados</option>
@@ -181,11 +163,12 @@ z-index:9999;
 <option>Projetos</option>
 <option>Eventos</option>
 <option>Resultados</option>
-
 </select>
 
 <input id="titulo" placeholder="Título">
+
 <input id="serie" placeholder="Série">
+
 <input id="disciplina" placeholder="Disciplina">
 
 <select id="qtd">
@@ -199,6 +182,8 @@ z-index:9999;
 
 <button class="salvar" onclick="salvar()">Salvar</button>
 
+<h3>Materiais cadastrados</h3>
+
 <div id="adminLista"></div>
 
 </section>
@@ -206,6 +191,7 @@ z-index:9999;
 <script>
 
 let db
+
 let request=indexedDB.open("PAULAEDUCA",1)
 
 request.onupgradeneeded=e=>{
@@ -224,24 +210,30 @@ document.getElementById(id).classList.add("active")
 }
 
 function login(){
-if(prompt("Senha professor")=="1234"){
+let senha=prompt("Digite a senha do professor")
+if(senha==="1234"){
 abrir("admin")
+}else{
+alert("Senha incorreta")
 }
 }
 
 function salvar(){
 
-let tipo=tipo.value
-let titulo=titulo.value
-let serie=serie.value
-let disciplina=disciplina.value
-let qtd=qtd.value
-let arquivo=document.getElementById("arquivo").files[0]
+let tipo=document.getElementById("tipo").value
+let titulo=document.getElementById("titulo").value
+let serie=document.getElementById("serie").value
+let disciplina=document.getElementById("disciplina").value
+let qtd=document.getElementById("qtd").value
 
-if(!titulo){
-alert("Digite um título")
+let arquivoInput=document.getElementById("arquivo")
+
+if(arquivoInput.files.length===0){
+alert("Selecione um arquivo")
 return
 }
+
+let arquivo=arquivoInput.files[0]
 
 let reader=new FileReader()
 
@@ -257,82 +249,60 @@ serie,
 disciplina,
 qtd,
 arquivo:reader.result,
-tipoArquivo:arquivo ? arquivo.type : ""
+nomeArquivo:arquivo.name,
+tipoArquivo:arquivo.type
 })
 
-tx.oncomplete=function(){
-limpar()
+tx.oncomplete=()=>{
+alert("Material salvo com sucesso")
 carregar()
 }
 
 }
 
-if(arquivo){
 reader.readAsDataURL(arquivo)
-}else{
-reader.onload()
-}
 
-}
-
-function limpar(){
-titulo.value=""
-serie.value=""
-disciplina.value=""
-qtd.value=""
-arquivo.value=""
 }
 
 function remover(id){
 
-if(confirm("Remover material?")){
-
 let tx=db.transaction("materiais","readwrite")
+
 tx.objectStore("materiais").delete(id)
+
 tx.oncomplete=carregar
 
 }
 
-}
+function icone(tipo){
 
-function identificarArquivo(m){
+if(tipo.includes("pdf")) return "📄 Abrir PDF"
 
-if(!m.tipoArquivo) return ""
+if(tipo.includes("image")) return "🖼 Visualizar Imagem"
 
-if(m.tipoArquivo.includes("pdf")){
-return `<a class="abrir" href="${m.arquivo}" target="_blank">📄 Abrir PDF</a>`
-}
+if(tipo.includes("video")) return "🎥 Assistir Vídeo"
 
-if(m.tipoArquivo.includes("image")){
-return `<a class="abrir" href="${m.arquivo}" target="_blank">🖼 Visualizar imagem</a>`
-}
+if(tipo.includes("word")||tipo.includes("officedocument")) return "📊 Abrir Documento"
 
-if(m.tipoArquivo.includes("video")){
-return `<a class="abrir" href="${m.arquivo}" target="_blank">🎥 Assistir vídeo</a>`
-}
-
-if(m.tipoArquivo.includes("word") || m.tipoArquivo.includes("powerpoint")){
-return `<a class="abrir" href="${m.arquivo}" target="_blank">📊 Abrir documento</a>`
-}
-
-return `<a class="abrir" href="${m.arquivo}" target="_blank">📁 Abrir arquivo</a>`
+return "📁 Abrir Arquivo"
 
 }
 
 function carregar(){
 
 let listas={
-Conteúdos:conteudosLista,
-Atividades:atividadesLista,
-Simulados:simuladosLista,
-ADE:adeLista,
-SAEB:saebLista,
-Projetos:projetosLista,
-Eventos:eventosLista,
-Resultados:resultadosLista
+Conteúdos:document.getElementById("conteudosLista"),
+Atividades:document.getElementById("atividadesLista"),
+Simulados:document.getElementById("simuladosLista"),
+ADE:document.getElementById("adeLista"),
+SAEB:document.getElementById("saebLista"),
+Projetos:document.getElementById("projetosLista"),
+Eventos:document.getElementById("eventosLista"),
+Resultados:document.getElementById("resultadosLista")
 }
 
 Object.values(listas).forEach(l=>l.innerHTML="")
+
 adminLista.innerHTML=""
 
 let tx=db.transaction("materiais","readonly")
@@ -346,20 +316,14 @@ if(cursor){
 
 let m=cursor.value
 
+let botao=`<a class="arquivoBtn" href="${m.arquivo}" download="${m.nomeArquivo}" target="_blank">${icone(m.tipoArquivo)}</a>`
+
 let bloco=`
-
 <div class="card">
-
-<h3>${m.titulo}</h3>
-
-<p>${m.serie} - ${m.disciplina}</p>
-
-${m.qtd ? `<p>Questões: ${m.qtd}</p>` : ""}
-
-${identificarArquivo(m)}
-
+<b>${m.titulo}</b><br>
+${m.serie} - ${m.disciplina}<br>
+${botao}
 </div>
-
 `
 
 listas[m.tipo].innerHTML+=bloco
@@ -388,4 +352,3 @@ cursor.continue()
 
 </body>
 </html>
-```
