@@ -9,8 +9,8 @@
 
 <title>PAULA EDUCA</title>
 
-<link rel="icon" type="image/png" href="./logo-escola.png">
-<link rel="shortcut icon" href="./logo-escola.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="shortcut icon" href="favicon.png">
 
 <style>
 
@@ -27,7 +27,7 @@ align-items:center;
 gap:20px;
 padding:15px 25px;
 background:#063c2c;
-border-bottom:6px solid orange;
+border-bottom:5px solid orange;
 position:sticky;
 top:0;
 z-index:1000;
@@ -89,6 +89,7 @@ cursor:pointer;
 
 .salvar{
 background:orange;
+font-weight:bold;
 }
 
 .remover{
@@ -97,8 +98,13 @@ color:white;
 }
 
 .abrir{
+display:inline-block;
 background:#27ae60;
 color:white;
+padding:8px 12px;
+border-radius:6px;
+text-decoration:none;
+margin-top:8px;
 }
 
 .admin{
@@ -243,7 +249,14 @@ let tx=db.transaction("materiais","readwrite")
 let store=tx.objectStore("materiais")
 
 store.add({
-tipo,titulo,serie,disciplina,qtd,arquivo:reader.result
+tipo,
+titulo,
+serie,
+disciplina,
+qtd,
+arquivo:reader.result,
+nomeArquivo:arquivo ? arquivo.name : "",
+tipoArquivo:arquivo ? arquivo.type : ""
 })
 
 tx.oncomplete=function(){
@@ -278,6 +291,35 @@ tx.objectStore("materiais").delete(id)
 tx.oncomplete=carregar
 
 }
+
+}
+
+function identificarArquivo(m){
+
+if(!m.tipoArquivo) return ""
+
+if(m.tipoArquivo.includes("pdf")){
+return `<a class="abrir" href="${m.arquivo}" target="_blank">📄 Abrir PDF</a>`
+}
+
+if(m.tipoArquivo.includes("image")){
+return `<a class="abrir" href="${m.arquivo}" target="_blank">🖼 Visualizar imagem</a>`
+}
+
+if(m.tipoArquivo.includes("video")){
+return `<a class="abrir" href="${m.arquivo}" target="_blank">🎥 Assistir vídeo</a>`
+}
+
+if(
+m.tipoArquivo.includes("word") ||
+m.tipoArquivo.includes("powerpoint") ||
+m.tipoArquivo.includes("presentation") ||
+m.tipoArquivo.includes("officedocument")
+){
+return `<a class="abrir" href="${m.arquivo}" target="_blank">📊 Abrir documento</a>`
+}
+
+return `<a class="abrir" href="${m.arquivo}" target="_blank">📁 Abrir arquivo</a>`
 
 }
 
@@ -316,14 +358,9 @@ let bloco=`
 
 <p>${m.serie} - ${m.disciplina}</p>
 
-${m.qtd?`<p>Questões: ${m.qtd}</p>`:""}
+${m.qtd ? `<p>Questões: ${m.qtd}</p>` : ""}
 
-${m.arquivo?`
-
-<a class="abrir" href="${m.arquivo}" target="_blank">Abrir</a>
-<a class="abrir" href="${m.arquivo}" download>Baixar</a>
-
-`:""}
+${identificarArquivo(m)}
 
 </div>
 
