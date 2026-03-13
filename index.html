@@ -9,7 +9,7 @@
 
 <title>PAULA EDUCA</title>
 
-<link rel="icon" href="logo-escola.png">
+<link rel="icon" type="image/png" href="logo-escola.png">
 
 <style>
 
@@ -69,7 +69,7 @@ background:#124734;
 padding:15px;
 margin:10px 0;
 border-radius:8px;
-box-shadow:0 4px 8px rgba(0,0,0,0.4);
+box-shadow:0 4px 10px rgba(0,0,0,0.4);
 }
 
 input,select{
@@ -78,6 +78,13 @@ padding:8px;
 margin:6px 0;
 border-radius:6px;
 border:none;
+}
+
+button{
+padding:8px 12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
 }
 
 .salvar{
@@ -218,8 +225,6 @@ function login(){
 
 if(prompt("Senha professor")=="1234"){
 abrir("admin")
-}else{
-alert("Senha incorreta")
 }
 
 }
@@ -227,52 +232,27 @@ alert("Senha incorreta")
 function salvar(){
 
 let tipo=tipo.value
-let tituloInput=document.getElementById("titulo")
-let serieInput=document.getElementById("serie")
-let disciplinaInput=document.getElementById("disciplina")
-let qtdInput=document.getElementById("qtd")
+let titulo=titulo.value
+let serie=serie.value
+let disciplina=disciplina.value
+let qtd=qtd.value
 let arquivo=document.getElementById("arquivo").files[0]
 
-if(!tituloInput.value){
+if(!titulo){
 alert("Digite um título")
 return
 }
-
-function gravar(dado){
 
 let tx=db.transaction("materiais","readwrite")
 let store=tx.objectStore("materiais")
 
 store.add({
-tipo:tipo,
-titulo:tituloInput.value,
-serie:serieInput.value,
-disciplina:disciplinaInput.value,
-qtd:qtdInput.value,
-arquivo:dado
+tipo,titulo,serie,disciplina,qtd,arquivo
 })
 
 tx.oncomplete=function(){
 limpar()
 carregar()
-}
-
-}
-
-if(arquivo){
-
-let reader=new FileReader()
-
-reader.onload=function(){
-gravar(reader.result)
-}
-
-reader.readAsDataURL(arquivo)
-
-}else{
-
-gravar("")
-
 }
 
 }
@@ -299,9 +279,27 @@ tx.oncomplete=carregar
 
 }
 
-function abrirArquivo(dado){
+function abrirArquivo(id){
 
-window.open(dado,"_blank")
+let tx=db.transaction("materiais","readonly")
+let store=tx.objectStore("materiais")
+
+let req=store.get(id)
+
+req.onsuccess=function(){
+
+let arquivo=req.result.arquivo
+
+if(!arquivo){
+alert("Arquivo não encontrado")
+return
+}
+
+let url=URL.createObjectURL(arquivo)
+
+window.open(url)
+
+}
 
 }
 
@@ -333,6 +331,7 @@ if(cursor){
 let m=cursor.value
 
 let bloco=`
+
 <div class="card">
 
 <h3>${m.titulo}</h3>
@@ -341,9 +340,10 @@ let bloco=`
 
 ${m.qtd?`<p>Questões: ${m.qtd}</p>`:""}
 
-${m.arquivo?`<button class="abrir" onclick="abrirArquivo('${m.arquivo}')">Abrir arquivo</button>`:""}
+${m.arquivo?`<button class="abrir" onclick="abrirArquivo(${cursor.key})">Abrir arquivo</button>`:""}
 
 </div>
+
 `
 
 listas[m.tipo].innerHTML+=bloco
