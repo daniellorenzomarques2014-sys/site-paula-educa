@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 
 <head>
 
@@ -8,7 +8,7 @@
 
 <title>PAULA EDUCA</title>
 
-<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" href="logo-escola.png">
 
 <style>
 
@@ -25,7 +25,7 @@ align-items:center;
 gap:20px;
 padding:15px 25px;
 background:#063c2c;
-border-bottom:5px solid orange;
+border-bottom:6px solid orange;
 }
 
 .logo{
@@ -82,36 +82,230 @@ border-radius:6px;
 cursor:pointer;
 }
 
-.salvar{
-background:orange;
-font-weight:bold;
-}
-
-.remover{
-background:red;
-color:white;
-}
+.salvar{background:orange}
+.remover{background:red;color:white}
 
 .admin{
 position:fixed;
 top:20px;
 right:20px;
-font-size:26px;
+font-size:24px;
 cursor:pointer;
-background:#1e8449;
-padding:10px;
-border-radius:8px;
-}
-
-.arquivoBtn{
-background:orange;
-color:black;
-font-weight:bold;
-padding:6px 10px;
-border-radius:6px;
-text-decoration:none;
 }
 
 </style>
 
 </head>
+
+<body>
+
+<header>
+
+<img src="logo-escola.png" class="logo">
+
+<h1>PAULA EDUCA</h1>
+
+</header>
+
+<nav>
+
+<button onclick="abrir('inicio')">🏠 Início</button>
+<button onclick="abrir('conteudos')">📚 Conteúdos</button>
+<button onclick="abrir('atividades')">📝 Atividades</button>
+<button onclick="abrir('simulados')">🎯 Simulados</button>
+<button onclick="abrir('ade')">📊 ADE</button>
+<button onclick="abrir('saeb')">📈 SAEB</button>
+<button onclick="abrir('projetos')">🧩 Projetos</button>
+<button onclick="abrir('eventos')">🎉 Eventos</button>
+<button onclick="abrir('resultados')">🏆 Resultados</button>
+
+</nav>
+
+<div class="admin" onclick="login()">⚙</div>
+
+<section id="inicio" class="active">
+<h2>Bem-vindo ao PAULA EDUCA</h2>
+</section>
+
+<section id="conteudos"><h2>Conteúdos</h2><div id="conteudosLista"></div></section>
+<section id="atividades"><h2>Atividades</h2><div id="atividadesLista"></div></section>
+<section id="simulados"><h2>Simulados</h2><div id="simuladosLista"></div></section>
+<section id="ade"><h2>ADE</h2><div id="adeLista"></div></section>
+<section id="saeb"><h2>SAEB</h2><div id="saebLista"></div></section>
+<section id="projetos"><h2>Projetos</h2><div id="projetosLista"></div></section>
+<section id="eventos"><h2>Eventos</h2><div id="eventosLista"></div></section>
+<section id="resultados"><h2>Resultados</h2><div id="resultadosLista"></div></section>
+
+<section id="admin">
+
+<h2>Painel do Professor</h2>
+
+<select id="tipo">
+
+<option>Conteúdos</option>
+<option>Atividades</option>
+<option>Simulados</option>
+<option>ADE</option>
+<option>SAEB</option>
+<option>Projetos</option>
+<option>Eventos</option>
+<option>Resultados</option>
+
+</select>
+
+<input id="titulo" placeholder="Título">
+
+<input id="serie" placeholder="Série">
+
+<input id="disciplina" placeholder="Disciplina">
+
+<select id="qtd">
+<option value="">Quantidade de questões</option>
+<option>10</option>
+<option>20</option>
+<option>50</option>
+</select>
+
+<input type="file" id="arquivo">
+
+<button class="salvar" onclick="salvar()">Salvar</button>
+
+<div id="adminLista"></div>
+
+</section>
+
+<script>
+
+let db
+
+let request=indexedDB.open("PAULAEDUCA",1)
+
+request.onupgradeneeded=e=>{
+db=e.target.result
+db.createObjectStore("materiais",{keyPath:"id",autoIncrement:true})
+}
+
+request.onsuccess=e=>{
+db=e.target.result
+carregar()
+}
+
+function abrir(id){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
+document.getElementById(id).classList.add("active")
+}
+
+function login(){
+
+if(prompt("Senha professor")=="1234"){
+abrir("admin")
+}
+
+}
+
+function salvar(){
+
+let tipo=document.getElementById("tipo").value
+let titulo=document.getElementById("titulo").value
+let serie=document.getElementById("serie").value
+let disciplina=document.getElementById("disciplina").value
+let qtd=document.getElementById("qtd").value
+
+let arquivo=document.getElementById("arquivo").files[0]
+
+let reader=new FileReader()
+
+reader.onload=function(){
+
+let tx=db.transaction("materiais","readwrite")
+let store=tx.objectStore("materiais")
+
+store.add({
+tipo,titulo,serie,disciplina,qtd,arquivo:reader.result
+})
+
+tx.oncomplete=carregar
+
+}
+
+reader.readAsDataURL(arquivo)
+
+}
+
+function remover(id){
+
+let tx=db.transaction("materiais","readwrite")
+
+tx.objectStore("materiais").delete(id)
+
+tx.oncomplete=carregar
+
+}
+
+function carregar(){
+
+let listas={
+Conteúdos:conteudosLista,
+Atividades:atividadesLista,
+Simulados:simuladosLista,
+ADE:adeLista,
+SAEB:saebLista,
+Projetos:projetosLista,
+Eventos:eventosLista,
+Resultados:resultadosLista
+}
+
+Object.values(listas).forEach(l=>l.innerHTML="")
+
+adminLista.innerHTML=""
+
+let tx=db.transaction("materiais","readonly")
+
+let store=tx.objectStore("materiais")
+
+store.openCursor().onsuccess=e=>{
+
+let cursor=e.target.result
+
+if(cursor){
+
+let m=cursor.value
+
+let bloco=`
+<div class="card">
+
+<b>${m.titulo}</b><br>
+
+${m.serie} - ${m.disciplina}<br>
+
+<a href="${m.arquivo}" target="_blank">Abrir arquivo</a>
+
+</div>
+`
+
+listas[m.tipo].innerHTML+=bloco
+
+adminLista.innerHTML+=`
+
+<div class="card">
+
+${m.titulo}
+
+<button class="remover" onclick="remover(${cursor.key})">Remover</button>
+
+</div>
+
+`
+
+cursor.continue()
+
+}
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
