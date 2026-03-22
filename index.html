@@ -134,7 +134,7 @@ cursor:pointer;
 
 <h2>Painel do Professor</h2>
 
-<h3>Cadastrar Conteúdo</h3>
+<h3>Cadastrar Conteúdo (PDF)</h3>
 <input id="tituloConteudo" placeholder="Título">
 <input id="serieConteudo" placeholder="Série">
 <input id="disciplinaConteudo" placeholder="Disciplina">
@@ -145,7 +145,7 @@ cursor:pointer;
 
 <hr>
 
-<h3>Cadastrar Questão</h3>
+<h3>Cadastrar Questões</h3>
 
 <select id="tipoQuestao">
 <option>Atividade</option>
@@ -179,11 +179,13 @@ cursor:pointer;
 
 <script>
 
+// ===== NAVEGAÇÃO =====
 function mostrar(id){
 document.querySelectorAll("section").forEach(sec=>sec.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
+// ===== LOGIN =====
 function login(){
 if(prompt("Senha do professor:")=="1234"){
 mostrar("admin");
@@ -192,11 +194,11 @@ alert("Senha incorreta");
 }
 }
 
-// ===== DADOS =====
+// ===== BANCO LOCAL =====
 let conteudos = JSON.parse(localStorage.getItem("conteudos") || "[]");
 let questoes = JSON.parse(localStorage.getItem("questoes") || "[]");
 
-// ===== SALVAR CONTEÚDO =====
+// ===== SALVAR CONTEÚDO (TOTALMENTE SEPARADO) =====
 function salvarConteudo(){
 
 let titulo = tituloConteudo.value.trim();
@@ -205,7 +207,7 @@ let disciplina = disciplinaConteudo.value.trim();
 let file = pdfConteudo.files[0];
 
 if(!titulo || !serie || !disciplina || !file){
-alert("Preencha tudo!");
+alert("Preencha todos os campos!");
 return;
 }
 
@@ -221,8 +223,8 @@ pdf: e.target.result
 });
 
 localStorage.setItem("conteudos", JSON.stringify(conteudos));
-alert("Conteúdo salvo!");
 
+alert("Conteúdo salvo com sucesso!");
 carregar();
 
 };
@@ -230,7 +232,7 @@ carregar();
 reader.readAsDataURL(file);
 }
 
-// ===== SALVAR QUESTÃO =====
+// ===== SALVAR QUESTÃO (INDEPENDENTE) =====
 function salvarQuestao(){
 
 if(!pergunta.value.trim()){
@@ -251,25 +253,26 @@ correta: correta.value
 });
 
 localStorage.setItem("questoes", JSON.stringify(questoes));
-alert("Questão salva!");
 
+alert("Questão salva com sucesso!");
 carregar();
 }
 
-// ===== REMOVER =====
+// ===== REMOVER CONTEÚDO =====
 function removerConteudo(i){
 conteudos.splice(i,1);
 localStorage.setItem("conteudos", JSON.stringify(conteudos));
 carregar();
 }
 
+// ===== REMOVER QUESTÃO =====
 function removerQuestao(i){
 questoes.splice(i,1);
 localStorage.setItem("questoes", JSON.stringify(questoes));
 carregar();
 }
 
-// ===== CARREGAR =====
+// ===== CARREGAR DADOS =====
 function carregar(){
 
 listaConteudos.innerHTML="";
@@ -280,17 +283,15 @@ listaSaeb.innerHTML="";
 adminConteudos.innerHTML="";
 adminQuestoes.innerHTML="";
 
-// conteúdos
+// CONTEÚDOS
 conteudos.forEach((c,i)=>{
 
 listaConteudos.innerHTML+=`
 <div class="card">
 <b>${c.titulo}</b><br>
 ${c.serie} - ${c.disciplina}<br>
-
 <a href="${c.pdf}" target="_blank">📖 Ler PDF</a><br>
 <a href="${c.pdf}" download>📥 Baixar PDF</a>
-
 </div>`;
 
 adminConteudos.innerHTML+=`
@@ -300,7 +301,7 @@ ${c.titulo}
 </div>`;
 });
 
-// questões
+// QUESTÕES
 questoes.forEach((q,i)=>{
 
 let bloco = `<div class="card"><b>${q.pergunta}</b></div>`;
@@ -312,7 +313,7 @@ if(q.tipo=="SAEB") listaSaeb.innerHTML+=bloco;
 
 adminQuestoes.innerHTML+=`
 <div class="card">
-${q.pergunta}
+${q.pergunta} (${q.tipo})
 <button class="small-btn" onclick="removerQuestao(${i})">Excluir</button>
 </div>`;
 });
