@@ -97,7 +97,7 @@ padding:4px 8px;
 margin-left:5px;
 border:none;
 border-radius:4px;
-cursor:pointer
+cursor:pointer;
 }
 </style>
 </head>
@@ -140,6 +140,7 @@ cursor:pointer
 <input id="disciplinaConteudo" placeholder="Disciplina">
 <input type="file" id="pdfConteudo">
 <button class="salvar" onclick="salvarConteudo()">Salvar Conteúdo</button>
+
 <div id="adminConteudos"></div>
 
 <hr>
@@ -178,136 +179,139 @@ cursor:pointer
 
 <script>
 
-// ================= NAVEGAÇÃO =================
 function mostrar(id){
 document.querySelectorAll("section").forEach(sec=>sec.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-// ================= LOGIN =================
 function login(){
 if(prompt("Senha do professor:")=="1234"){
 mostrar("admin");
-carregarTudo();
 }else{
 alert("Senha incorreta");
 }
 }
 
-// ================= DADOS =================
+// ===== DADOS =====
 let conteudos = JSON.parse(localStorage.getItem("conteudos") || "[]");
 let questoes = JSON.parse(localStorage.getItem("questoes") || "[]");
 
-// ================= SALVAR CONTEÚDO =================
+// ===== SALVAR CONTEÚDO =====
 function salvarConteudo(){
 
-let titulo = document.getElementById("tituloConteudo").value.trim();
-let serie = document.getElementById("serieConteudo").value.trim();
-let disciplina = document.getElementById("disciplinaConteudo").value.trim();
-let fileInput = document.getElementById("pdfConteudo");
+let titulo = tituloConteudo.value.trim();
+let serie = serieConteudo.value.trim();
+let disciplina = disciplinaConteudo.value.trim();
+let file = pdfConteudo.files[0];
 
-if(!titulo || !serie || !disciplina || fileInput.files.length===0){
-alert("Preencha todos os campos!");
+if(!titulo || !serie || !disciplina || !file){
+alert("Preencha tudo!");
 return;
 }
 
 let reader = new FileReader();
 
-reader.onload = function(){
-conteudos.push({titulo,serie,disciplina,pdf:reader.result});
+reader.onload = function(e){
+
+conteudos.push({
+titulo,
+serie,
+disciplina,
+pdf: e.target.result
+});
+
 localStorage.setItem("conteudos", JSON.stringify(conteudos));
 alert("Conteúdo salvo!");
-carregarTudo();
+
+carregar();
+
 };
 
-reader.readAsDataURL(fileInput.files[0]);
+reader.readAsDataURL(file);
 }
 
-// ================= SALVAR QUESTÃO =================
+// ===== SALVAR QUESTÃO =====
 function salvarQuestao(){
 
-let pergunta = document.getElementById("pergunta").value.trim();
-
-if(!pergunta){
+if(!pergunta.value.trim()){
 alert("Digite a pergunta!");
 return;
 }
 
 questoes.push({
-tipo: document.getElementById("tipoQuestao").value,
-serie: document.getElementById("serieQuestao").value,
-disciplina: document.getElementById("disciplinaQuestao").value,
-pergunta: pergunta,
-a: document.getElementById("a").value,
-b: document.getElementById("b").value,
-c: document.getElementById("c").value,
-d: document.getElementById("d").value,
-correta: document.getElementById("correta").value
+tipo: tipoQuestao.value,
+serie: serieQuestao.value,
+disciplina: disciplinaQuestao.value,
+pergunta: pergunta.value,
+a: a.value,
+b: b.value,
+c: c.value,
+d: d.value,
+correta: correta.value
 });
 
 localStorage.setItem("questoes", JSON.stringify(questoes));
 alert("Questão salva!");
-carregarTudo();
+
+carregar();
 }
 
-// ================= REMOVER =================
+// ===== REMOVER =====
 function removerConteudo(i){
 conteudos.splice(i,1);
 localStorage.setItem("conteudos", JSON.stringify(conteudos));
-carregarTudo();
+carregar();
 }
 
 function removerQuestao(i){
 questoes.splice(i,1);
 localStorage.setItem("questoes", JSON.stringify(questoes));
-carregarTudo();
+carregar();
 }
 
-// ================= CARREGAR =================
-function carregarTudo(){
+// ===== CARREGAR =====
+function carregar(){
 
-let lc = document.getElementById("listaConteudos");
-let la = document.getElementById("listaAtividades");
-let ls = document.getElementById("listaSimulados");
-let lade = document.getElementById("listaAde");
-let lsaeb = document.getElementById("listaSaeb");
+listaConteudos.innerHTML="";
+listaAtividades.innerHTML="";
+listaSimulados.innerHTML="";
+listaAde.innerHTML="";
+listaSaeb.innerHTML="";
+adminConteudos.innerHTML="";
+adminQuestoes.innerHTML="";
 
-let ac = document.getElementById("adminConteudos");
-let aq = document.getElementById("adminQuestoes");
-
-lc.innerHTML="";
-la.innerHTML="";
-ls.innerHTML="";
-lade.innerHTML="";
-lsaeb.innerHTML="";
-ac.innerHTML="";
-aq.innerHTML="";
-
-// CONTEÚDOS
+// conteúdos
 conteudos.forEach((c,i)=>{
-lc.innerHTML+=`<div class="card">
+
+listaConteudos.innerHTML+=`
+<div class="card">
 <b>${c.titulo}</b><br>
 ${c.serie} - ${c.disciplina}<br>
-<a href="${c.pdf}" target="_blank">Ler</a> |
-<a href="${c.pdf}" download>Baixar</a>
+
+<a href="${c.pdf}" target="_blank">📖 Ler PDF</a><br>
+<a href="${c.pdf}" download>📥 Baixar PDF</a>
+
 </div>`;
 
-ac.innerHTML+=`<div class="card">
+adminConteudos.innerHTML+=`
+<div class="card">
 ${c.titulo}
 <button class="small-btn" onclick="removerConteudo(${i})">Excluir</button>
 </div>`;
 });
 
-// QUESTÕES
+// questões
 questoes.forEach((q,i)=>{
-let bloco=`<div class="card"><b>${q.pergunta}</b></div>`;
 
-if(q.tipo=="Atividade") la.innerHTML+=bloco;
-if(q.tipo=="Simulado") ls.innerHTML+=bloco;
-if(q.tipo=="ADE") lade.innerHTML+=bloco;
-if(q.tipo=="SAEB") lsaeb.innerHTML+=bloco;
+let bloco = `<div class="card"><b>${q.pergunta}</b></div>`;
 
-aq.innerHTML+=`<div class="card">
+if(q.tipo=="Atividade") listaAtividades.innerHTML+=bloco;
+if(q.tipo=="Simulado") listaSimulados.innerHTML+=bloco;
+if(q.tipo=="ADE") listaAde.innerHTML+=bloco;
+if(q.tipo=="SAEB") listaSaeb.innerHTML+=bloco;
+
+adminQuestoes.innerHTML+=`
+<div class="card">
 ${q.pergunta}
 <button class="small-btn" onclick="removerQuestao(${i})">Excluir</button>
 </div>`;
@@ -315,7 +319,7 @@ ${q.pergunta}
 
 }
 
-carregarTudo();
+carregar();
 
 </script>
 
