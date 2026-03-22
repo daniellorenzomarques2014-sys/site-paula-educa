@@ -1,7 +1,7 @@
 <script>
 
-// ===== ESPERA CARREGAR =====
-document.addEventListener("DOMContentLoaded", function(){
+// GARANTE QUE O HTML CARREGOU
+window.onload = function(){
 
 // ===== BANCO =====
 let conteudos = JSON.parse(localStorage.getItem("conteudos") || "[]");
@@ -10,7 +10,8 @@ let questoes = JSON.parse(localStorage.getItem("questoes") || "[]");
 // ===== NAVEGAÇÃO =====
 window.mostrar = function(id){
 document.querySelectorAll("section").forEach(sec=>sec.classList.remove("active"));
-document.getElementById(id).classList.add("active");
+let sec = document.getElementById(id);
+if(sec) sec.classList.add("active");
 }
 
 // ===== LOGIN =====
@@ -23,15 +24,17 @@ alert("Senha incorreta");
 }
 }
 
-// ===== SALVAR CONTEÚDO (INDEPENDENTE) =====
+// ===== SALVAR CONTEÚDO =====
 window.salvarConteudo = function(){
 
-let titulo = document.getElementById("tituloConteudo").value.trim();
-let serie = document.getElementById("serieConteudo").value.trim();
-let disciplina = document.getElementById("disciplinaConteudo").value.trim();
-let fileInput = document.getElementById("pdfConteudo");
+let titulo = document.getElementById("tituloConteudo");
+let serie = document.getElementById("serieConteudo");
+let disciplina = document.getElementById("disciplinaConteudo");
+let file = document.getElementById("pdfConteudo");
 
-if(!titulo || !serie || !disciplina || fileInput.files.length === 0){
+if(!titulo || !serie || !disciplina || !file) return;
+
+if(!titulo.value || !serie.value || !disciplina.value || file.files.length===0){
 alert("Preencha todos os campos!");
 return;
 }
@@ -41,28 +44,30 @@ let reader = new FileReader();
 reader.onload = function(e){
 
 conteudos.push({
-titulo,
-serie,
-disciplina,
+titulo: titulo.value,
+serie: serie.value,
+disciplina: disciplina.value,
 pdf: e.target.result
 });
 
 localStorage.setItem("conteudos", JSON.stringify(conteudos));
 
 alert("Conteúdo salvo!");
+
 carregarTudo();
 
 };
 
-reader.readAsDataURL(fileInput.files[0]);
+reader.readAsDataURL(file.files[0]);
+
 }
 
-// ===== SALVAR QUESTÃO (INDEPENDENTE) =====
+// ===== SALVAR QUESTÃO =====
 window.salvarQuestao = function(){
 
-let pergunta = document.getElementById("pergunta").value.trim();
+let pergunta = document.getElementById("pergunta");
 
-if(!pergunta){
+if(!pergunta || !pergunta.value){
 alert("Digite a pergunta!");
 return;
 }
@@ -71,7 +76,7 @@ questoes.push({
 tipo: document.getElementById("tipoQuestao").value,
 serie: document.getElementById("serieQuestao").value,
 disciplina: document.getElementById("disciplinaQuestao").value,
-pergunta: pergunta,
+pergunta: pergunta.value,
 a: document.getElementById("a").value,
 b: document.getElementById("b").value,
 c: document.getElementById("c").value,
@@ -82,25 +87,23 @@ correta: document.getElementById("correta").value
 localStorage.setItem("questoes", JSON.stringify(questoes));
 
 alert("Questão salva!");
+
 carregarTudo();
+
 }
 
 // ===== REMOVER CONTEÚDO =====
 window.removerConteudo = function(i){
-if(confirm("Remover conteúdo?")){
 conteudos.splice(i,1);
 localStorage.setItem("conteudos", JSON.stringify(conteudos));
 carregarTudo();
 }
-}
 
 // ===== REMOVER QUESTÃO =====
 window.removerQuestao = function(i){
-if(confirm("Remover questão?")){
 questoes.splice(i,1);
 localStorage.setItem("questoes", JSON.stringify(questoes));
 carregarTudo();
-}
 }
 
 // ===== CARREGAR =====
@@ -123,21 +126,21 @@ if(lsaeb) lsaeb.innerHTML="";
 if(ac) ac.innerHTML="";
 if(aq) aq.innerHTML="";
 
-// ===== CONTEÚDOS =====
+// CONTEÚDOS
 conteudos.forEach((c,i)=>{
 
 if(lc){
-lc.innerHTML+=`
+lc.innerHTML += `
 <div class="card">
 <b>${c.titulo}</b><br>
 ${c.serie} - ${c.disciplina}<br>
-<a href="${c.pdf}" target="_blank">📖 Ler PDF</a><br>
-<a href="${c.pdf}" download>📥 Baixar PDF</a>
+<a href="${c.pdf}" target="_blank">Abrir PDF</a><br>
+<a href="${c.pdf}" download>Baixar PDF</a>
 </div>`;
 }
 
 if(ac){
-ac.innerHTML+=`
+ac.innerHTML += `
 <div class="card">
 ${c.titulo}
 <button class="small-btn" onclick="removerConteudo(${i})">Excluir</button>
@@ -146,13 +149,10 @@ ${c.titulo}
 
 });
 
-// ===== QUESTÕES =====
+// QUESTÕES
 questoes.forEach((q,i)=>{
 
-let bloco = `
-<div class="card">
-<b>${q.pergunta}</b>
-</div>`;
+let bloco = `<div class="card"><b>${q.pergunta}</b></div>`;
 
 if(q.tipo=="Atividade" && la) la.innerHTML+=bloco;
 if(q.tipo=="Simulado" && ls) ls.innerHTML+=bloco;
@@ -160,7 +160,7 @@ if(q.tipo=="ADE" && lade) lade.innerHTML+=bloco;
 if(q.tipo=="SAEB" && lsaeb) lsaeb.innerHTML+=bloco;
 
 if(aq){
-aq.innerHTML+=`
+aq.innerHTML += `
 <div class="card">
 ${q.pergunta}
 <button class="small-btn" onclick="removerQuestao(${i})">Excluir</button>
@@ -171,9 +171,9 @@ ${q.pergunta}
 
 }
 
-// iniciar
+// INICIALIZA
 carregarTudo();
 
-});
+};
 
 </script>
