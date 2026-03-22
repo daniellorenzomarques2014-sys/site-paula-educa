@@ -5,100 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PAULA EDUCA</title>
 
-<link rel="icon" type="image/png" href="logo-escola.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" href="logo-escola.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-body{
-margin:0;
-font-family:'Poppins',sans-serif;
-background:url('fundo-amazonico.png') no-repeat center center fixed;
-background-size:cover;
-color:#fff;
-}
-
-header{
-background:rgba(0,60,40,0.85);
-display:flex;
-align-items:center;
-gap:20px;
-padding:15px 25px;
-border-bottom:6px solid orange;
-}
-
-header img{height:90px;}
-
-nav{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:8px;
-background:rgba(0,40,30,0.9);
-padding:10px;
-}
-
-nav button{
-background:#145a32;
-border:none;
-color:#fff;
-padding:8px 12px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-}
-
-section{
-display:none;
-padding:20px;
-background:rgba(0,0,0,0.55);
-margin:20px;
-border-radius:12px;
-}
-
-section.active{display:block;}
-
-.admin-btn{
-position:fixed;
-top:20px;
-right:20px;
-font-size:26px;
-cursor:pointer;
-}
-
-input,select,textarea{
-width:100%;
-padding:8px;
-margin:6px 0;
-border-radius:6px;
-border:none;
-}
-
-button.salvar{
-background:orange;
-color:#000;
-font-weight:bold;
-padding:8px 14px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-}
-
-.card{
-background:rgba(255,255,255,0.1);
-padding:12px;
-border-radius:8px;
-margin-top:10px;
-}
-
-.small-btn{
-background:#c62828;
-color:#fff;
-padding:4px 8px;
-margin-left:5px;
-border:none;
-border-radius:4px;
-cursor:pointer;
-}
+body{margin:0;font-family:Poppins;background:#0b3d2e;color:#fff}
+header{display:flex;align-items:center;gap:10px;padding:15px;background:#003c28}
+header img{height:60px}
+nav{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;background:#00291d;padding:10px}
+nav button{padding:8px;border:none;background:#145a32;color:#fff;cursor:pointer;border-radius:6px}
+section{display:none;padding:15px}
+section.active{display:block}
+.card{background:#ffffff20;padding:10px;margin-top:10px;border-radius:8px}
+button{cursor:pointer}
+.small-btn{background:red;color:#fff;border:none;padding:5px;margin-left:5px}
+.salvar{background:orange;color:#000;border:none;padding:8px}
+input,textarea,select{width:100%;margin:5px 0;padding:6px}
 </style>
 </head>
 
@@ -106,46 +28,42 @@ cursor:pointer;
 
 <header>
 <img src="logo-escola.png">
-<h1>PAULA EDUCA</h1>
+<h2>PAULA EDUCA</h2>
 </header>
 
 <nav>
-<button onclick="mostrar('inicio')">🏠 Início</button>
 <button onclick="mostrar('conteudos')">📚 Conteúdos</button>
 <button onclick="mostrar('atividades')">📝 Atividades</button>
 <button onclick="mostrar('simulados')">🎯 Simulados</button>
 <button onclick="mostrar('ade')">📊 ADE</button>
 <button onclick="mostrar('saeb')">📈 SAEB</button>
-<button onclick="mostrar('resultados')">🏆 Resultados</button>
+<button onclick="mostrar('admin')">⚙️ Admin</button>
 </nav>
 
-<div class="admin-btn" onclick="login()">⚙️</div>
+<section id="conteudos" class="active">
+<h3>Conteúdos</h3>
+<div id="listaConteudos"></div>
+</section>
 
-<section id="inicio" class="active"><h2>Bem-vindo ao PAULA EDUCA</h2></section>
-
-<section id="conteudos"><h2>Conteúdos</h2><div id="listaConteudos"></div></section>
-<section id="atividades"><h2>Atividades</h2><div id="listaAtividades"></div></section>
-<section id="simulados"><h2>Simulados</h2><div id="listaSimulados"></div></section>
-<section id="ade"><h2>ADE</h2><div id="listaAde"></div></section>
-<section id="saeb"><h2>SAEB</h2><div id="listaSaeb"></div></section>
-<section id="resultados"><h2>Resultados</h2></section>
+<section id="atividades"><h3>Atividades</h3><div id="listaAtividades"></div></section>
+<section id="simulados"><h3>Simulados</h3><div id="listaSimulados"></div></section>
+<section id="ade"><h3>ADE</h3><div id="listaAde"></div></section>
+<section id="saeb"><h3>SAEB</h3><div id="listaSaeb"></div></section>
 
 <section id="admin">
 
-<h2>Painel do Professor</h2>
-
-<h3>Cadastrar Conteúdo (PDF)</h3>
+<h3>Salvar Conteúdo (PDF)</h3>
 <input id="tituloConteudo" placeholder="Título">
 <input id="serieConteudo" placeholder="Série">
 <input id="disciplinaConteudo" placeholder="Disciplina">
 <input type="file" id="pdfConteudo">
-<button class="salvar" onclick="salvarConteudo()">Salvar Conteúdo</button>
+<button id="btnSalvarConteudo" class="salvar">Salvar Conteúdo</button>
 
 <div id="adminConteudos"></div>
 
 <hr>
 
-<h3>Cadastrar Questões</h3>
+<h3>Salvar Questão</h3>
 
 <select id="tipoQuestao">
 <option>Atividade</option>
@@ -154,15 +72,11 @@ cursor:pointer;
 <option>SAEB</option>
 </select>
 
-<input id="serieQuestao" placeholder="Série">
-<input id="disciplinaQuestao" placeholder="Disciplina">
-
 <textarea id="pergunta" placeholder="Pergunta"></textarea>
-
-<input id="a" placeholder="Alternativa A">
-<input id="b" placeholder="Alternativa B">
-<input id="c" placeholder="Alternativa C">
-<input id="d" placeholder="Alternativa D">
+<input id="a" placeholder="A">
+<input id="b" placeholder="B">
+<input id="c" placeholder="C">
+<input id="d" placeholder="D">
 
 <select id="correta">
 <option>A</option>
@@ -171,7 +85,7 @@ cursor:pointer;
 <option>D</option>
 </select>
 
-<button class="salvar" onclick="salvarQuestao()">Salvar Questão</button>
+<button id="btnSalvarQuestao" class="salvar">Salvar Questão</button>
 
 <div id="adminQuestoes"></div>
 
@@ -181,70 +95,53 @@ cursor:pointer;
 
 // ===== NAVEGAÇÃO =====
 function mostrar(id){
-document.querySelectorAll("section").forEach(sec=>sec.classList.remove("active"));
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-// ===== LOGIN =====
-function login(){
-if(prompt("Senha do professor:")=="1234"){
-mostrar("admin");
-}else{
-alert("Senha incorreta");
-}
-}
+// ===== BANCO =====
+let conteudos = JSON.parse(localStorage.getItem("conteudos")||"[]");
+let questoes = JSON.parse(localStorage.getItem("questoes")||"[]");
 
-// ===== BANCO LOCAL =====
-let conteudos = JSON.parse(localStorage.getItem("conteudos") || "[]");
-let questoes = JSON.parse(localStorage.getItem("questoes") || "[]");
+// ===== SALVAR CONTEÚDO =====
+document.getElementById("btnSalvarConteudo").addEventListener("click", function(){
 
-// ===== SALVAR CONTEÚDO (TOTALMENTE SEPARADO) =====
-function salvarConteudo(){
-
-let titulo = tituloConteudo.value.trim();
-let serie = serieConteudo.value.trim();
-let disciplina = disciplinaConteudo.value.trim();
-let file = pdfConteudo.files[0];
+let titulo = document.getElementById("tituloConteudo").value.trim();
+let serie = document.getElementById("serieConteudo").value.trim();
+let disciplina = document.getElementById("disciplinaConteudo").value.trim();
+let file = document.getElementById("pdfConteudo").files[0];
 
 if(!titulo || !serie || !disciplina || !file){
-alert("Preencha todos os campos!");
+alert("Preencha tudo!");
 return;
 }
 
 let reader = new FileReader();
 
 reader.onload = function(e){
-
-conteudos.push({
-titulo,
-serie,
-disciplina,
-pdf: e.target.result
-});
-
+conteudos.push({titulo,serie,disciplina,pdf:e.target.result});
 localStorage.setItem("conteudos", JSON.stringify(conteudos));
-
-alert("Conteúdo salvo com sucesso!");
+alert("Conteúdo salvo!");
 carregar();
-
 };
 
 reader.readAsDataURL(file);
-}
 
-// ===== SALVAR QUESTÃO (INDEPENDENTE) =====
-function salvarQuestao(){
+});
 
-if(!pergunta.value.trim()){
+// ===== SALVAR QUESTÃO =====
+document.getElementById("btnSalvarQuestao").addEventListener("click", function(){
+
+let pergunta = document.getElementById("pergunta").value.trim();
+
+if(!pergunta){
 alert("Digite a pergunta!");
 return;
 }
 
 questoes.push({
-tipo: tipoQuestao.value,
-serie: serieQuestao.value,
-disciplina: disciplinaQuestao.value,
-pergunta: pergunta.value,
+tipo: document.getElementById("tipoQuestao").value,
+pergunta,
 a: a.value,
 b: b.value,
 c: c.value,
@@ -253,26 +150,25 @@ correta: correta.value
 });
 
 localStorage.setItem("questoes", JSON.stringify(questoes));
-
-alert("Questão salva com sucesso!");
+alert("Questão salva!");
 carregar();
-}
 
-// ===== REMOVER CONTEÚDO =====
+});
+
+// ===== REMOVER =====
 function removerConteudo(i){
 conteudos.splice(i,1);
 localStorage.setItem("conteudos", JSON.stringify(conteudos));
 carregar();
 }
 
-// ===== REMOVER QUESTÃO =====
 function removerQuestao(i){
 questoes.splice(i,1);
 localStorage.setItem("questoes", JSON.stringify(questoes));
 carregar();
 }
 
-// ===== CARREGAR DADOS =====
+// ===== CARREGAR =====
 function carregar(){
 
 listaConteudos.innerHTML="";
@@ -283,15 +179,13 @@ listaSaeb.innerHTML="";
 adminConteudos.innerHTML="";
 adminQuestoes.innerHTML="";
 
-// CONTEÚDOS
+// conteúdos
 conteudos.forEach((c,i)=>{
-
 listaConteudos.innerHTML+=`
 <div class="card">
 <b>${c.titulo}</b><br>
-${c.serie} - ${c.disciplina}<br>
-<a href="${c.pdf}" target="_blank">📖 Ler PDF</a><br>
-<a href="${c.pdf}" download>📥 Baixar PDF</a>
+<a href="${c.pdf}" target="_blank">Abrir</a> |
+<a href="${c.pdf}" download>Baixar</a>
 </div>`;
 
 adminConteudos.innerHTML+=`
@@ -301,10 +195,10 @@ ${c.titulo}
 </div>`;
 });
 
-// QUESTÕES
+// questões
 questoes.forEach((q,i)=>{
 
-let bloco = `<div class="card"><b>${q.pergunta}</b></div>`;
+let bloco = `<div class="card">${q.pergunta}</div>`;
 
 if(q.tipo=="Atividade") listaAtividades.innerHTML+=bloco;
 if(q.tipo=="Simulado") listaSimulados.innerHTML+=bloco;
@@ -313,7 +207,7 @@ if(q.tipo=="SAEB") listaSaeb.innerHTML+=bloco;
 
 adminQuestoes.innerHTML+=`
 <div class="card">
-${q.pergunta} (${q.tipo})
+${q.pergunta}
 <button class="small-btn" onclick="removerQuestao(${i})">Excluir</button>
 </div>`;
 });
