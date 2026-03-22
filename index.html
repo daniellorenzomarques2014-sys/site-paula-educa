@@ -1,136 +1,64 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PAULA EDUCA</title>
-
-<link rel="icon" href="logo-escola.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-<style>
-body{margin:0;font-family:Poppins;background:#0b3d2e;color:#fff}
-header{display:flex;align-items:center;gap:10px;padding:15px;background:#003c28}
-header img{height:60px}
-nav{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;background:#00291d;padding:10px}
-nav button{padding:8px;border:none;background:#145a32;color:#fff;cursor:pointer;border-radius:6px}
-section{display:none;padding:15px}
-section.active{display:block}
-.card{background:#ffffff20;padding:10px;margin-top:10px;border-radius:8px}
-button{cursor:pointer}
-.small-btn{background:red;color:#fff;border:none;padding:5px;margin-left:5px}
-.salvar{background:orange;color:#000;border:none;padding:8px}
-input,textarea,select{width:100%;margin:5px 0;padding:6px}
-</style>
-</head>
-
-<body>
-
-<header>
-<img src="logo-escola.png">
-<h2>PAULA EDUCA</h2>
-</header>
-
-<nav>
-<button onclick="mostrar('conteudos')">📚 Conteúdos</button>
-<button onclick="mostrar('atividades')">📝 Atividades</button>
-<button onclick="mostrar('simulados')">🎯 Simulados</button>
-<button onclick="mostrar('ade')">📊 ADE</button>
-<button onclick="mostrar('saeb')">📈 SAEB</button>
-<button onclick="mostrar('admin')">⚙️ Admin</button>
-</nav>
-
-<section id="conteudos" class="active">
-<h3>Conteúdos</h3>
-<div id="listaConteudos"></div>
-</section>
-
-<section id="atividades"><h3>Atividades</h3><div id="listaAtividades"></div></section>
-<section id="simulados"><h3>Simulados</h3><div id="listaSimulados"></div></section>
-<section id="ade"><h3>ADE</h3><div id="listaAde"></div></section>
-<section id="saeb"><h3>SAEB</h3><div id="listaSaeb"></div></section>
-
-<section id="admin">
-
-<h3>Salvar Conteúdo (PDF)</h3>
-<input id="tituloConteudo" placeholder="Título">
-<input id="serieConteudo" placeholder="Série">
-<input id="disciplinaConteudo" placeholder="Disciplina">
-<input type="file" id="pdfConteudo">
-<button id="btnSalvarConteudo" class="salvar">Salvar Conteúdo</button>
-
-<div id="adminConteudos"></div>
-
-<hr>
-
-<h3>Salvar Questão</h3>
-
-<select id="tipoQuestao">
-<option>Atividade</option>
-<option>Simulado</option>
-<option>ADE</option>
-<option>SAEB</option>
-</select>
-
-<textarea id="pergunta" placeholder="Pergunta"></textarea>
-<input id="a" placeholder="A">
-<input id="b" placeholder="B">
-<input id="c" placeholder="C">
-<input id="d" placeholder="D">
-
-<select id="correta">
-<option>A</option>
-<option>B</option>
-<option>C</option>
-<option>D</option>
-</select>
-
-<button id="btnSalvarQuestao" class="salvar">Salvar Questão</button>
-
-<div id="adminQuestoes"></div>
-
-</section>
-
 <script>
 
+// ===== ESPERA CARREGAR =====
+document.addEventListener("DOMContentLoaded", function(){
+
+// ===== BANCO =====
+let conteudos = JSON.parse(localStorage.getItem("conteudos") || "[]");
+let questoes = JSON.parse(localStorage.getItem("questoes") || "[]");
+
 // ===== NAVEGAÇÃO =====
-function mostrar(id){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+window.mostrar = function(id){
+document.querySelectorAll("section").forEach(sec=>sec.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-// ===== BANCO =====
-let conteudos = JSON.parse(localStorage.getItem("conteudos")||"[]");
-let questoes = JSON.parse(localStorage.getItem("questoes")||"[]");
+// ===== LOGIN =====
+window.login = function(){
+if(prompt("Senha do professor:")=="1234"){
+mostrar("admin");
+carregarTudo();
+}else{
+alert("Senha incorreta");
+}
+}
 
-// ===== SALVAR CONTEÚDO =====
-document.getElementById("btnSalvarConteudo").addEventListener("click", function(){
+// ===== SALVAR CONTEÚDO (INDEPENDENTE) =====
+window.salvarConteudo = function(){
 
 let titulo = document.getElementById("tituloConteudo").value.trim();
 let serie = document.getElementById("serieConteudo").value.trim();
 let disciplina = document.getElementById("disciplinaConteudo").value.trim();
-let file = document.getElementById("pdfConteudo").files[0];
+let fileInput = document.getElementById("pdfConteudo");
 
-if(!titulo || !serie || !disciplina || !file){
-alert("Preencha tudo!");
+if(!titulo || !serie || !disciplina || fileInput.files.length === 0){
+alert("Preencha todos os campos!");
 return;
 }
 
 let reader = new FileReader();
 
 reader.onload = function(e){
-conteudos.push({titulo,serie,disciplina,pdf:e.target.result});
-localStorage.setItem("conteudos", JSON.stringify(conteudos));
-alert("Conteúdo salvo!");
-carregar();
-};
 
-reader.readAsDataURL(file);
-
+conteudos.push({
+titulo,
+serie,
+disciplina,
+pdf: e.target.result
 });
 
-// ===== SALVAR QUESTÃO =====
-document.getElementById("btnSalvarQuestao").addEventListener("click", function(){
+localStorage.setItem("conteudos", JSON.stringify(conteudos));
+
+alert("Conteúdo salvo!");
+carregarTudo();
+
+};
+
+reader.readAsDataURL(fileInput.files[0]);
+}
+
+// ===== SALVAR QUESTÃO (INDEPENDENTE) =====
+window.salvarQuestao = function(){
 
 let pergunta = document.getElementById("pergunta").value.trim();
 
@@ -141,82 +69,111 @@ return;
 
 questoes.push({
 tipo: document.getElementById("tipoQuestao").value,
-pergunta,
-a: a.value,
-b: b.value,
-c: c.value,
-d: d.value,
-correta: correta.value
+serie: document.getElementById("serieQuestao").value,
+disciplina: document.getElementById("disciplinaQuestao").value,
+pergunta: pergunta,
+a: document.getElementById("a").value,
+b: document.getElementById("b").value,
+c: document.getElementById("c").value,
+d: document.getElementById("d").value,
+correta: document.getElementById("correta").value
 });
 
 localStorage.setItem("questoes", JSON.stringify(questoes));
+
 alert("Questão salva!");
-carregar();
-
-});
-
-// ===== REMOVER =====
-function removerConteudo(i){
-conteudos.splice(i,1);
-localStorage.setItem("conteudos", JSON.stringify(conteudos));
-carregar();
+carregarTudo();
 }
 
-function removerQuestao(i){
+// ===== REMOVER CONTEÚDO =====
+window.removerConteudo = function(i){
+if(confirm("Remover conteúdo?")){
+conteudos.splice(i,1);
+localStorage.setItem("conteudos", JSON.stringify(conteudos));
+carregarTudo();
+}
+}
+
+// ===== REMOVER QUESTÃO =====
+window.removerQuestao = function(i){
+if(confirm("Remover questão?")){
 questoes.splice(i,1);
 localStorage.setItem("questoes", JSON.stringify(questoes));
-carregar();
+carregarTudo();
+}
 }
 
 // ===== CARREGAR =====
-function carregar(){
+function carregarTudo(){
 
-listaConteudos.innerHTML="";
-listaAtividades.innerHTML="";
-listaSimulados.innerHTML="";
-listaAde.innerHTML="";
-listaSaeb.innerHTML="";
-adminConteudos.innerHTML="";
-adminQuestoes.innerHTML="";
+let lc = document.getElementById("listaConteudos");
+let la = document.getElementById("listaAtividades");
+let ls = document.getElementById("listaSimulados");
+let lade = document.getElementById("listaAde");
+let lsaeb = document.getElementById("listaSaeb");
 
-// conteúdos
+let ac = document.getElementById("adminConteudos");
+let aq = document.getElementById("adminQuestoes");
+
+if(lc) lc.innerHTML="";
+if(la) la.innerHTML="";
+if(ls) ls.innerHTML="";
+if(lade) lade.innerHTML="";
+if(lsaeb) lsaeb.innerHTML="";
+if(ac) ac.innerHTML="";
+if(aq) aq.innerHTML="";
+
+// ===== CONTEÚDOS =====
 conteudos.forEach((c,i)=>{
-listaConteudos.innerHTML+=`
+
+if(lc){
+lc.innerHTML+=`
 <div class="card">
 <b>${c.titulo}</b><br>
-<a href="${c.pdf}" target="_blank">Abrir</a> |
-<a href="${c.pdf}" download>Baixar</a>
+${c.serie} - ${c.disciplina}<br>
+<a href="${c.pdf}" target="_blank">📖 Ler PDF</a><br>
+<a href="${c.pdf}" download>📥 Baixar PDF</a>
 </div>`;
+}
 
-adminConteudos.innerHTML+=`
+if(ac){
+ac.innerHTML+=`
 <div class="card">
 ${c.titulo}
 <button class="small-btn" onclick="removerConteudo(${i})">Excluir</button>
 </div>`;
+}
+
 });
 
-// questões
+// ===== QUESTÕES =====
 questoes.forEach((q,i)=>{
 
-let bloco = `<div class="card">${q.pergunta}</div>`;
+let bloco = `
+<div class="card">
+<b>${q.pergunta}</b>
+</div>`;
 
-if(q.tipo=="Atividade") listaAtividades.innerHTML+=bloco;
-if(q.tipo=="Simulado") listaSimulados.innerHTML+=bloco;
-if(q.tipo=="ADE") listaAde.innerHTML+=bloco;
-if(q.tipo=="SAEB") listaSaeb.innerHTML+=bloco;
+if(q.tipo=="Atividade" && la) la.innerHTML+=bloco;
+if(q.tipo=="Simulado" && ls) ls.innerHTML+=bloco;
+if(q.tipo=="ADE" && lade) lade.innerHTML+=bloco;
+if(q.tipo=="SAEB" && lsaeb) lsaeb.innerHTML+=bloco;
 
-adminQuestoes.innerHTML+=`
+if(aq){
+aq.innerHTML+=`
 <div class="card">
 ${q.pergunta}
 <button class="small-btn" onclick="removerQuestao(${i})">Excluir</button>
 </div>`;
+}
+
 });
 
 }
 
-carregar();
+// iniciar
+carregarTudo();
+
+});
 
 </script>
-
-</body>
-</html>
