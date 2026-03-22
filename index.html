@@ -1,189 +1,12 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PAULA EDUCA</title>
-
-<link rel="icon" type="image/png" href="logo-escola.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-
-<style>
-body{
-margin:0;
-font-family:'Poppins',sans-serif;
-background:url('fundo-amazonico.png') no-repeat center center fixed;
-background-size:cover;
-color:#fff;
-}
-
-header{
-background:linear-gradient(rgba(0,60,40,0.9), rgba(0,60,40,0.9));
-display:flex;
-align-items:center;
-gap:15px;
-padding:15px;
-border-bottom:5px solid orange;
-}
-
-header img{
-height:70px;
-}
-
-header h1{
-margin:0;
-font-size:28px;
-}
-
-nav{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-background:#003c28;
-padding:10px;
-gap:8px;
-}
-
-nav button{
-background:#145a32;
-color:#fff;
-border:none;
-padding:8px 12px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-}
-
-nav button:hover{
-background:#1e8449;
-}
-
-section{
-display:none;
-padding:20px;
-background:rgba(0,0,0,0.6);
-margin:15px;
-border-radius:12px;
-}
-
-section.active{
-display:block;
-}
-
-.admin-btn{
-position:fixed;
-top:15px;
-right:15px;
-font-size:24px;
-cursor:pointer;
-}
-
-input, textarea, select{
-width:100%;
-padding:8px;
-margin:5px 0;
-border-radius:6px;
-border:none;
-}
-
-button.salvar{
-background:orange;
-color:#000;
-font-weight:bold;
-padding:8px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-}
-
-.card{
-background:rgba(255,255,255,0.1);
-padding:12px;
-margin-top:10px;
-border-radius:8px;
-}
-
-.small-btn{
-background:red;
-color:#fff;
-border:none;
-padding:4px 8px;
-border-radius:5px;
-cursor:pointer;
-margin-left:5px;
-}
-</style>
-</head>
-
-<body>
-
-<header>
-<img src="logo-escola.png" alt="Logo">
-<h1>PAULA EDUCA</h1>
-</header>
-
-<nav>
-<button onclick="mostrar('inicio')">Início</button>
-<button onclick="mostrar('conteudos')">Conteúdos</button>
-<button onclick="mostrar('atividades')">Atividades</button>
-<button onclick="mostrar('simulados')">Simulados</button>
-<button onclick="mostrar('ade')">ADE</button>
-<button onclick="mostrar('saeb')">SAEB</button>
-<button onclick="mostrar('resultados')">Resultados</button>
-</nav>
-
-<div class="admin-btn" onclick="login()">⚙️</div>
-
-<section id="inicio" class="active">
-<h2>Bem-vindo ao PAULA EDUCA</h2>
-<p>Plataforma educacional interativa.</p>
-</section>
-
-<section id="conteudos">
-<h2>Conteúdos</h2>
-<div id="listaConteudos"></div>
-</section>
-
-<section id="atividades">
-<h2>Atividades</h2>
-<div id="listaAtividades"></div>
-</section>
-
-<section id="simulados"><h2>Simulados</h2></section>
-<section id="ade"><h2>Avaliações ADE</h2></section>
-<section id="saeb"><h2>Avaliações SAEB</h2></section>
-<section id="resultados"><h2>Resultados</h2></section>
-
-<section id="admin">
-<h2>Painel do Professor</h2>
-
-<h3>Cadastrar Conteúdo</h3>
-<input id="tituloConteudo" placeholder="Título">
-<input id="serieConteudo" placeholder="Série">
-<input id="disciplinaConteudo" placeholder="Disciplina">
-<input type="file" id="pdfConteudo">
-<button class="salvar" onclick="salvarConteudo()">Salvar Conteúdo</button>
-
-<div id="adminConteudos"></div>
-
-<hr>
-
-<h3>Cadastrar Atividade</h3>
-<button class="salvar" onclick="salvarAtividade()">Criar Atividade</button>
-
-<div id="adminAtividades"></div>
-
-</section>
-
 <script>
 
-// NAVEGAÇÃO
+// ================= NAVEGAÇÃO =================
 function mostrar(id){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.querySelectorAll("section").forEach(sec=>sec.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-// LOGIN
+// ================= LOGIN =================
 function login(){
 if(prompt("Senha do professor:")=="1234"){
 mostrar("admin");
@@ -193,157 +16,220 @@ alert("Senha incorreta");
 }
 }
 
-// DADOS
+// ================= DADOS =================
 let conteudos = JSON.parse(localStorage.getItem("conteudos")) || [];
-let atividades = JSON.parse(localStorage.getItem("atividades")) || [];
+let questoes = JSON.parse(localStorage.getItem("questoes")) || [];
 
-// SALVAR CONTEÚDO
+// ================= SALVAR CONTEÚDO =================
 function salvarConteudo(){
 
-let titulo = document.getElementById("tituloConteudo").value;
-let serie = document.getElementById("serieConteudo").value;
-let disciplina = document.getElementById("disciplinaConteudo").value;
+let titulo = document.getElementById("tituloConteudo").value.trim();
+let serie = document.getElementById("serieConteudo").value.trim();
+let disciplina = document.getElementById("disciplinaConteudo").value.trim();
 let file = document.getElementById("pdfConteudo").files[0];
 
 if(!titulo || !serie || !disciplina || !file){
-alert("Preencha tudo!");
+alert("Preencha todos os campos e selecione o PDF!");
 return;
 }
 
 let reader = new FileReader();
 
 reader.onload = function(){
-conteudos.push({titulo,serie,disciplina,pdf:reader.result});
+
+conteudos.push({
+titulo,
+serie,
+disciplina,
+pdf: reader.result
+});
+
 localStorage.setItem("conteudos", JSON.stringify(conteudos));
-alert("Salvo com sucesso!");
+
+alert("Conteúdo salvo com sucesso!");
+
+document.getElementById("tituloConteudo").value="";
+document.getElementById("serieConteudo").value="";
+document.getElementById("disciplinaConteudo").value="";
+document.getElementById("pdfConteudo").value="";
+
 carregarTudo();
 };
 
 reader.readAsDataURL(file);
 }
 
-// CRIAR ATIVIDADE
-function salvarAtividade(){
-
-let titulo = prompt("Nome da atividade:");
-if(!titulo) return;
-
-let qtd = parseInt(prompt("Quantidade de questões:"));
-let questoes = [];
-
-for(let i=0;i<qtd;i++){
-
-let pergunta = prompt("Pergunta "+(i+1));
-let a = prompt("A");
-let b = prompt("B");
-let c = prompt("C");
-let d = prompt("D");
-let correta = prompt("Resposta correta (A/B/C/D)");
-
-questoes.push({pergunta,a,b,c,d,correta});
-}
-
-atividades.push({titulo,questoes});
-localStorage.setItem("atividades", JSON.stringify(atividades));
-
-alert("Atividade criada!");
-carregarTudo();
-}
-
-// INICIAR ATIVIDADE
-function iniciarAtividade(i){
-
-let area = document.getElementById("listaAtividades");
-let a = atividades[i];
-
-area.innerHTML = `<h3>${a.titulo}</h3>`;
-
-a.questoes.forEach((q,index)=>{
-area.innerHTML += `
-<div class="card">
-<b>${q.pergunta}</b><br>
-<label><input type="radio" name="q${index}" value="A"> A) ${q.a}</label><br>
-<label><input type="radio" name="q${index}" value="B"> B) ${q.b}</label><br>
-<label><input type="radio" name="q${index}" value="C"> C) ${q.c}</label><br>
-<label><input type="radio" name="q${index}" value="D"> D) ${q.d}</label><br>
-</div>`;
-});
-
-area.innerHTML += `<button onclick="corrigir(${i})">Finalizar</button><p id="resultado"></p>`;
-}
-
-// CORRIGIR
-function corrigir(i){
-
-let a = atividades[i];
-let acertos = 0;
-
-a.questoes.forEach((q,index)=>{
-let marcada = document.querySelector(`input[name="q${index}"]:checked`);
-if(marcada && marcada.value == q.correta) acertos++;
-});
-
-document.getElementById("resultado").innerHTML =
-"Acertos: "+acertos+" / "+a.questoes.length;
-}
-
-// REMOVER
+// ================= REMOVER CONTEÚDO =================
 function removerConteudo(i){
+if(confirm("Deseja remover este conteúdo?")){
 conteudos.splice(i,1);
 localStorage.setItem("conteudos", JSON.stringify(conteudos));
 carregarTudo();
 }
+}
 
-function removerAtividade(i){
-atividades.splice(i,1);
-localStorage.setItem("atividades", JSON.stringify(atividades));
+// ================= SALVAR QUESTÃO =================
+function salvarQuestao(){
+
+let pergunta = document.getElementById("pergunta").value.trim();
+
+if(!pergunta){
+alert("Digite a pergunta!");
+return;
+}
+
+questoes.push({
+
+tipo: document.getElementById("tipoQuestao").value,
+serie: document.getElementById("serieQuestao").value,
+disciplina: document.getElementById("disciplinaQuestao").value,
+pergunta: pergunta,
+a: document.getElementById("a").value,
+b: document.getElementById("b").value,
+c: document.getElementById("c").value,
+d: document.getElementById("d").value,
+correta: document.getElementById("correta").value
+
+});
+
+localStorage.setItem("questoes", JSON.stringify(questoes));
+
+alert("Questão salva com sucesso!");
+
+// limpar campos
+document.getElementById("pergunta").value="";
+document.getElementById("a").value="";
+document.getElementById("b").value="";
+document.getElementById("c").value="";
+document.getElementById("d").value="";
+
 carregarTudo();
 }
 
-// CARREGAR
+// ================= REMOVER QUESTÃO =================
+function removerQuestao(i){
+if(confirm("Deseja remover esta questão?")){
+questoes.splice(i,1);
+localStorage.setItem("questoes", JSON.stringify(questoes));
+carregarTudo();
+}
+}
+
+// ================= CORREÇÃO =================
+function corrigir(){
+
+let acertos = 0;
+let total = 0;
+
+questoes.forEach((q,i)=>{
+
+let marcada = document.querySelector(`input[name="q${i}"]:checked`);
+
+if(marcada){
+total++;
+if(marcada.value == q.correta){
+acertos++;
+}
+}
+
+});
+
+alert("Resultado: "+acertos+" acertos de "+total+" respondidas.");
+
+}
+
+// ================= CARREGAR =================
 function carregarTudo(){
 
 let lc = document.getElementById("listaConteudos");
 let la = document.getElementById("listaAtividades");
-let ac = document.getElementById("adminConteudos");
-let aa = document.getElementById("adminAtividades");
+let ls = document.getElementById("listaSimulados");
+let lade = document.getElementById("listaAde");
+let lsaeb = document.getElementById("listaSaeb");
 
+let ac = document.getElementById("adminConteudos");
+let aq = document.getElementById("adminQuestoes");
+
+// limpar
 if(lc) lc.innerHTML="";
 if(la) la.innerHTML="";
+if(ls) ls.innerHTML="";
+if(lade) lade.innerHTML="";
+if(lsaeb) lsaeb.innerHTML="";
 if(ac) ac.innerHTML="";
-if(aa) aa.innerHTML="";
+if(aq) aq.innerHTML="";
 
-// CONTEÚDOS
+// ================= CONTEÚDOS =================
 conteudos.forEach((c,i)=>{
-lc.innerHTML += `<div class="card">
-<b>${c.titulo}</b><br>${c.serie} - ${c.disciplina}<br>
+
+if(lc){
+lc.innerHTML+=`
+<div class="card">
+<b>${c.titulo}</b><br>
+${c.serie} - ${c.disciplina}<br>
 <a href="${c.pdf}" download>Baixar PDF</a>
 </div>`;
+}
 
-ac.innerHTML += `<div class="card">
+if(ac){
+ac.innerHTML+=`
+<div class="card">
 ${c.titulo}
 <button class="small-btn" onclick="removerConteudo(${i})">Excluir</button>
 </div>`;
+}
+
 });
 
-// ATIVIDADES
-atividades.forEach((a,i)=>{
-la.innerHTML += `<div class="card">
-<b>${a.titulo}</b><br>
-<button onclick="iniciarAtividade(${i})">Iniciar</button>
+// ================= QUESTÕES =================
+questoes.forEach((q,i)=>{
+
+let bloco = `
+<div class="card">
+<b>${q.pergunta}</b><br>
+
+<label><input type="radio" name="q${i}" value="A"> A) ${q.a}</label><br>
+<label><input type="radio" name="q${i}" value="B"> B) ${q.b}</label><br>
+<label><input type="radio" name="q${i}" value="C"> C) ${q.c}</label><br>
+<label><input type="radio" name="q${i}" value="D"> D) ${q.d}</label><br>
+
 </div>`;
 
-aa.innerHTML += `<div class="card">
-${a.titulo}
-<button class="small-btn" onclick="removerAtividade(${i})">Excluir</button>
+// distribuir corretamente por tipo
+if(q.tipo=="Atividade" && la) la.innerHTML+=bloco;
+if(q.tipo=="Simulado" && ls) ls.innerHTML+=bloco;
+if(q.tipo=="ADE" && lade) lade.innerHTML+=bloco;
+if(q.tipo=="SAEB" && lsaeb) lsaeb.innerHTML+=bloco;
+
+if(aq){
+aq.innerHTML+=`
+<div class="card">
+${q.pergunta}
+<button class="small-btn" onclick="removerQuestao(${i})">Excluir</button>
 </div>`;
+}
+
 });
+
+// botão finalizar (somente se houver questões)
+if(la && la.innerHTML!=""){
+la.innerHTML += `<button onclick="corrigir()">Finalizar Atividade</button>`;
+}
+
+if(ls && ls.innerHTML!=""){
+ls.innerHTML += `<button onclick="corrigir()">Finalizar Simulado</button>`;
+}
+
+if(lade && lade.innerHTML!=""){
+lade.innerHTML += `<button onclick="corrigir()">Finalizar ADE</button>`;
+}
+
+if(lsaeb && lsaeb.innerHTML!=""){
+lsaeb.innerHTML += `<button onclick="corrigir()">Finalizar SAEB</button>`;
+}
 
 }
 
 carregarTudo();
 
 </script>
-
-</body>
-</html>
